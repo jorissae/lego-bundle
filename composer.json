@@ -1,7 +1,7 @@
 {
-    "name": "ideak/legobundle",
+    "name": "prestigejo/legobundle",
     "description": "legobundle bundle for Symfony 3",
-    "keywords": ["Ideak","bundle"],
+    "keywords": ["Lego","bundle"],
     "type": "symfony-bundle",
     "license": "Commercial",
     "authors": [
