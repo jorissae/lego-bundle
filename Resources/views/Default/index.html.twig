@@ -1,0 +1,14 @@
+{% extends '::lego.html.twig' %}
+{% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
+{% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}
+
+
+
+{% block content %}
+
+    {% for component in configurator.indexComponents %}
+        {% include component.template with component.parameters %}
+    {%  endfor %}
+
+{% endblock %}

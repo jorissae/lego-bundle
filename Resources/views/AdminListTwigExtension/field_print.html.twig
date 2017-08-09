@@ -1,0 +1,11 @@
+{% if string_value is same as("oui") or string_value is same as("non") %}
+    {% if string_value is  same as("oui") %}
+        <i style="color:green" class="fa fa-check-square-o"></i>
+    {% else %}
+        <i style="color:#dcdada" class="fa fa-square-o"></i>
+    {% endif %}
+{% elseif field.isColor %}
+    <div style="background-color:{{real_value}}; border:1px solid black; width:20px; height:20px; display:inline-block;"></div>&nbsp;{{ string_value|raw }}
+{% else %}
+    {{ string_value|raw }}
+{% endif %}

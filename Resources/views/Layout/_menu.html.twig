@@ -1,0 +1,51 @@
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+
+        {%  if menu.search  %}
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control"  placeholder="Search...">
+                  <span class="input-group-btn">
+                    <button type="submit" name="search"  id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+            </form>
+        {%  endif %}
+
+
+        <ul class="sidebar-menu">
+            {%  for item in menu.items %}
+                {%  if item.type == 'header' %}
+                    <li class="header">{{ item.libelle }}</li>
+                {%  else %}
+                    <li class="treeview">
+                        <a href="{{ path(item.path) }}">
+                            <i class="fa fa-{{ item.icon }}"></i> <span>{{ item.libelle }}</span>
+                            <span class="pull-right-container">
+                                {%  if item.children %}<i class="fa fa-angle-left pull-right"></i>{%  endif %}
+                                {%  if item.labels %}
+                                    {%  for label in item.labels %}
+                                        <small class="label pull-right {{ label.class }}">{{ label.libelle }}</small>
+                                    {%  endfor %}
+                                {%  endif %}
+                            </span>
+                        </a>
+                        {%  if item.children %}
+                            <ul class="treeview-menu">
+                                {%  for child in item.children %}
+                                    <li><a href="{{ path(child.path) }}"><i class="fa fa-{{ child.icon }}"></i>{{ child.libelle }}</a></li>
+                                {%  endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {%  endif  %}
+            {%  endfor %}
+        </ul>
+
+
+    </section>
+    <!-- /.sidebar -->
+</aside>

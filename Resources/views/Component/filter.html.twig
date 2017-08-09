@@ -1,0 +1,40 @@
+{% if filter.filters|length > 0 %}
+    <div class="adminlist-filter">
+        <form method="POST" action="{{ path(configurator.getPathRoute()) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
+
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;Filtre</h4>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        {% for columnname, value in filter.filters %}
+                                {% set data = null %}
+                                {% for curfilter in filter.currentfilters %}
+                                    {% if curfilter.columnName == columnname %}
+                                        {% set data = curfilter.data %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 {% if value.isHidden() %} hidden {% endif %}" style="min-height:50px">
+                                    <div class="form-group">
+                                        <label for="{{value.name}}" class="col-sm-4 control-label text-nowrap">
+                                            {{value.name|trans}}
+                                        </label>
+                                        <div class="col-sm-8">
+                                            {% include value.template with {'filtertype': value, 'data': data, 'options': value.options, 'nameprefix': "filter_", 'namesuffix': "_" ~ columnname } %}
+                                        </div>
+                                    </div>
+                                </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="box-footer">
+                    <button class="btn btn-primary apply_filter" name="filter" value="filter" type="submit">Filtrer</button>
+                    <a href="{{ path(configurator.getPathRoute(), {reset:1}) }}" class="btn btn-default">Effacer</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endif %}

@@ -1,0 +1,24 @@
+{% if zones|length > 0 %}
+	{% for zoneCode,zone in zones %}
+		<span id="attachement-zone-{{zoneCode}}" class="attachement-zone lle-ajax btn btn-default" data-url="{{ path('lleadminlistbundle_attachable_show_zone') }}" data-donnes="{ 'zoneCode':'{{ zoneCode }}', 'class': '{{ class }}', 'itemId': {{ itemId }}}" data-callback="browser_showfolder" data-type="html">{{ zone.libelle }} 
+			{% if zone.nb> 0 %}<span class="badge">{{ zone.nb }}</span>{% endif %}
+		</span>
+	{% endfor %}
+{% endif %}
+<div class="lle-browser" id="lle-finder-folder">
+	{% include 'LleAdminListBundle:Attachable:_folder.html.twig' with {'files':files, 'curFolder': curFolder,'class': class, 'itemId': itemId, 'options': options} %}
+</div>
+<script>
+	function browser_retour(data){
+		$('#lle-finder-folder').html(data);
+	}
+
+	function browser_showfolder(elm,data){
+		$('#lle-finder-folder').html(data);
+	}
+
+	function currentZone(code){
+		$('.attachement-zone').removeClass('active');
+		$('#attachement-zone-'+code).addClass('active');
+	}
+</script>

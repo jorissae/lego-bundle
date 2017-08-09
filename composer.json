@@ -1,0 +1,21 @@
+{
+    "name": "ideak/legobundle",
+    "description": "legobundle bundle for Symfony 3",
+    "keywords": ["Ideak","bundle"],
+    "type": "symfony-bundle",
+    "license": "Commercial",
+    "authors": [
+        {
+            "name": "Joris saenger",
+            "email": "joris.saenger@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "3.*",
+        "twig/twig": "1.*"
+    },
+    "autoload": {
+        "psr-0": { "Idk\\LegoBundle": "" }
+    },
+    "target-dir": "Idk/LegoBundle"
+}

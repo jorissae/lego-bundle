@@ -1,0 +1,94 @@
+<form id="lle-dropzone"  class="lle-dropzone" action="{{ path('lleadminlistbundle_attachable_uploader',{'id':folder.id  }) }}">
+  <input type="hidden" name="class" value="{{ class }}"/>
+  <input type="hidden" name="itemId" value="{{ itemId }}"/>
+  <input type="hidden" name="zoneCode" value="{{ folder.zoneCode }}"/>
+  <div class="dz-default dz-message"><span>Déposez vos photos ici ou cliquez</span></div>
+</form>
+ 
+<script>
+    var fileUrlList = [];
+$(function() {
+  var limiter = function(file, done) {
+      if(file.size > 100000000){
+        alert('Le fichier est trop lourd (> 100 MO)');
+      }else{
+        done();
+      }
+  };
+  var myDropzone = new Dropzone("#lle-dropzone",{addRemoveLinks: true,dictRemoveFile : 'Supprimer',clickable : true ,addHtml:"",previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div><input type=\"hidden\" class=\"url\" data-id=\"\" data-dz-name/></div>",accept: limiter
+    });
+  //var miniDropzone = new Dropzone("#dz-form",{accept: limiter});
+  myDropzone.on("removedfile", function(file) {
+    $.ajax({
+        url: "{{ path('lleadminlistbundle_attachable_delete_file') }}",
+        type: "post",
+        dataType:"json",
+        data:{'file':file.name,'id':file.id}
+    });
+  });
+
+  myDropzone.on("complete", function(file) {
+    var data = JSON.parse(file.xhr.response);
+    file.id = data.id;
+    $('.dz-details img').each(function(){
+      if($(this).attr('alt') == file.name){
+        $(this).parent().parent().find('.url').val(data.url);
+      }
+    });
+  });
+
+  /*
+  miniDropzone.on("uploadprogress",function(data, percent,octets){
+    //$('#dl_zone_<?php echo str_replace(' ', '',$zone); ?>').css('height','5px');
+    //$('#dl_zone_<?php echo str_replace(' ', '',$zone); ?>').css('width',percent + '%');
+  });
+  miniDropzone.on("complete", function(file,a,b,c) {
+    var url = file.xhr.response;
+    var mockFile = { legende: "", name: file.name, size: file.size };
+    //dropzone['<?php echo $zone; ?>'].options.addedfile.call(myDropzone, mockFile);
+    //dropzone['<?php echo $zone; ?>'].options.thumbnail.call(myDropzone, mockFile,url );
+  });
+  /*
+  $('.legende').change(function(evt){
+    var name = $(this).attr('data-id');
+    var val = $(this).val();
+    $.ajax({
+        url: "<?php echo url_for('bien/setLegendePhoto');?>",
+        type: "post",
+        dataType:"json",
+        data:{'legende':val,'file':name,'bien':'<?php echo $bien->getId(); ?>'}
+    });
+  });
+*/
+  /**/
+    {% for file in files %}
+        var mockFile = { attrplus: "{{ file.url }}", name: "{{ file.nom }}", size: {{ file.taille }},id: {{ file.id }} };
+        fileUrlList['{{ file.nom }}'] = '{{ file.url }}';
+        myDropzone.options.addedfile.call(myDropzone, mockFile);
+        myDropzone.options.thumbnail.call(myDropzone, mockFile, "{{ file.preview | imagine_filter('attachable_thumb') }}");
+    {% endfor %}
+  /**/
+  //dropzone['<?php echo $zone; ?>'] = myDropzone;
+  //mdropzone['<?php echo $zone; ?>'] = miniDropzone;
+}); 
+/*
+$(function(){
+      $('body').on('click','.dz-details img',function(){
+      });
+});
+*/
+{% if options['clickableFile'] %}
+    $(function(){
+        $('.dz-details img').click(function(){
+            var url = fileUrlList[$(this).attr('alt')];
+            var link = document.createElement('a');
+            link.href = url;
+            //link.target = '_blank';
+            link.download = $(this).attr('alt');
+            document.body.appendChild(link);
+            link.click();
+            $(link).remove();
+        });
+    });
+{%  endif %}
+</script>

@@ -1,0 +1,62 @@
+{% if item.isList %}
+	{% set icon = 'fa-plus-square' %}
+	{% set value = item.options["list"] %}
+	{% for v in value %}
+		<span class="label bg-green lle-ajax"
+		data-callback="removeOptionAttribut"
+		data-donnes="{ 'val':'{{ v }}','cls':'{{ adminlist.repositoryName }}' }"
+		data-confirm="Voulez vous vraiment supprimer {{ v }}"
+		data-url="{{ path("lleadminlistbundle_attribut_remove_option",{"id":item.id}) }}">
+			{{ v }} <i class="fa fa-close"></i>
+		</span>&nbsp;
+	{% endfor %}
+{% elseif item.isNumber %}
+	{% set icon = 'fa-cog' %}
+	{% set value = item.options %}
+	De {% if value["min"] is defined %}{{ value["min"] }} {% else %} -&infin;{% endif %} à
+	{% if value["max"] is defined %}{{ value["max"] }} {% else %} +&infin;{% endif %}
+	{% if value["step"] is defined  %} / step {{ value['step'] }} {% endif %}
+	{% if value["unite"] is defined  and value["unite"]|length %} ({{ value['unite'] }}) {% endif %}
+    {% if value["slide"] is defined  and value['slide'] %} Avec slider {% endif %}
+    {% if value["multiplicator"] is defined and  value["multiplicator"] > 1 %} *{{ value['multiplicator'] }} {% endif %}
+{% endif %}
+
+{% if icon is defined %}
+	<a class="open-dialog-form"
+	data-target="#dialog-form-{{ item.id }}"
+	href="{{ path("lleadminlistbundle_attribut_add_option",{"id":item.id}) }}"><i class="fa {{ icon }}"></i></a>
+	<div class="hidden">
+	    <div  id="dialog-form-{{ item.id }}">
+	      <form method="post">
+	      		<input type="hidden" name="cls" value="{{ adminlist.repositoryName }}">
+	      		{% if item.isNumber %}
+	      			<label>Valeur minimum</label>
+	          		<input type="text" name="min" value="{% if value["min"] is defined %}{{ value["min"] }}{% endif %}"/>
+	          		<label>Valeur maximum</label>
+	          		<input type="text" name="max" value="{% if value["max"] is defined %}{{ value["max"] }}{% endif %}"/>
+	          		<label>Valeur du step</label>
+	          		<input type="text" name="step" value="{% if value["step"] is defined %}{{ value["step"] }}{% endif %}"/>
+	          		<label>L'unité est</label>
+	          		<input type="text" name="unite" value="{% if value["unite"] is defined %}{{ value["unite"] }}{% endif %}"/>
+                    <label>Multiplicateur</label>
+	          		<input type="text" name="multiplicator" value="{% if value["multiplicator"] is defined %}{{ value["multiplicator"] }}{% endif %}"/><br/>
+                    <label>Slider</label>
+                    {% set slider = true %}
+                    {% if value["slide"] is defined and not value["slide"] %}
+                        {% set slider = false %}
+                    {% endif %}
+	          		<input type="radio" name="slide" value="1" {% if slider %} checked {% endif %}/> Oui
+                    <input type="radio" name="slide" value="0" {% if not slider %} checked {% endif %}/> Non
+	      		{% else %}
+	          		<label for="name">Nouvelle valeur</label>
+	          		<input type="text" name="val" value="">
+	            {% endif %}
+	      </form>
+	    </div>
+	</div>
+{% endif %}
+<script>
+  function removeOptionAttribut(elm,data){
+  	elm.remove();
+  }
+</script>

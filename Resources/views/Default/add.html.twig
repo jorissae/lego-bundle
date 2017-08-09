@@ -1,0 +1,35 @@
+{% extends '::lego.html.twig' %}
+
+{% block title %}{{ parent() }} - {{adminlistconfigurator.getTitle()}}{% endblock %}
+{% block page_title %}{{adminlistconfigurator.getTitle()}}{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% form_theme form theme %}
+
+{% block content %}
+    {{ form_errors(form) }}
+    {{ form_start(form, {'role': 'form' ,'method': 'post', 'action': path(app.request.attributes.get('_route'), my_router_params()) }) }}
+        {% if  referer_sublist is defined and referer_sublist %}
+            <input name="referer_sublist" type="hidden" value="{{ referer_sublist }}"/>
+        {% else %}
+            {% set referer_sublist = null %}
+        {% endif %}
+        <div class="box box-primary">
+
+            <div class="box-header">
+                <h3>Ajouter</h3>
+            </div>
+
+            <div class="box-body">
+                {% block form_content %}
+                    {% include adminlistconfigurator.getFormTemplate('add') with {'groups':groups, 'form': form } %}
+                {% endblock %}
+
+                {% block main_actions %}
+                {% include 'IdkLegoBundle:Default:_form_actions.html.twig' with {'adminlistconfigurator': adminlistconfigurator, 'referer_sublist':referer_sublist } %}
+                {% endblock %}
+            </div>
+        </div>
+    {{ form_end(form) }}
+    {% include adminlistconfigurator.getScriptTemplate() with {'template':'add'} %}
+{% endblock %}

@@ -1,0 +1,71 @@
+
+{%  set configurator = component.configurator  %}
+{% if not configurator.hideItemAction() %}
+
+    {% set canEdit = configurator.canEdit(item)  %}
+    {% set canDelete = configurator.canDelete(item) %}
+    {% set canWf = configurator.workflows(item,app.user)  %}
+    {% set itemActionsPossible = false %}
+    {% set canItemAction = configurator.hasItemActions() %}
+
+    <td class="actions">
+        {% if  canEdit %}
+            {% set itemActionsPossible = true %}
+            <a class="btn btn-primary btn-xs" href="{{ path(configurator.getPathRoute('edit'),  configurator.getPathParams(item) ) }}"><i class="glyphicon glyphicon-pencil"></i>{{ 'Modifier' | trans }}</a>
+        {% endif %}
+        {% if canDelete %}
+            {% set itemActionsPossible = true %}
+            {% include 'IdkLegoBundle:AdminListTwigExtension:sure-modal.html.twig' %}
+            <a href="#" data-toggle="modal" data-target="#sure-modal-{{ item.id }}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>{{ 'Supprimer' | trans }}</a>
+        {% endif %}
+        {% if canItemAction %}
+            {% set itemActionsPossible = true %}
+            {% for itemAction in configurator.getItemActions() %}
+                {% if itemAction.isShow(adminlist,item) %}
+                    {% set url = itemAction.getUrlFor(adminlist,item) %}
+                    {% if itemAction.template is not null %}
+                        {% include itemAction.template with {'item': item, 'action': itemAction, 'url': url} %}
+                    {% else %}
+                        {% if url %}
+                            {% if itemAction.isXhr %}
+                                <span
+                                    data-line="line-{{ item.id }}"
+                                    data-confirm="Voulez vous vraiment effectuer cette action ?"
+                                    data-donnes="{'index':{{ index }} }"
+                                    data-type="html"
+                                    data-callback="reloadLine"
+                                    data-url="{{ path(url["path"],url[("params")] ) }}"
+                                    class="lle-ajax btn btn-primary btn-xs">
+                                    {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
+                                    {{ itemAction.getLabelFor(item) }}
+                                </span>
+                            {% elseif itemAction.isPopup %}
+                                <span
+                                    data-url="{{ path(url["path"],url[("params")] ) }}"
+                                    class="lle-popup btn btn-primary btn-xs">
+                                    {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
+                                    {{ itemAction.getLabelFor(item) }}
+                                </span>
+                            {% else %}
+                            {% if configurator.isSubList() %}
+                                 <a {% if itemAction.target %} target="{{ itemAction.target }}" {% endif %}
+                                   id="action-{{index}}-{{itemAction.getLabelFor(item) }}" href="{{ path(url["path"], url[("params")]|merge({'sublist' : true })) }}" class="btn btn-primary btn-xs">
+                                    {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item) }}
+                                </a>
+
+                            {% else %}
+                                 <a {% if itemAction.target %} target="{{ itemAction.target }}" {% endif %}
+                               id="action-{{index}}-{{itemAction.getLabelFor(item) }}" href="{{ path(url["path"], url[("params")]) }}" class="btn btn-primary btn-xs">
+                                {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item) }}
+                            </a>
+                            {% endif %}
+
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+    </td>
+{% endif %}

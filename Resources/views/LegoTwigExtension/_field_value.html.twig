@@ -1,0 +1,119 @@
+{% set columnName = field.name %}
+{% set real_value = configurator.getValue(item, columnName) %}
+{% if field.isEditInPlace(configurator,item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
+    {% set type = configurator.editInplaceInputType(item,columnName,field.editInPlaceClass) %}
+    {% if type == 'bool'  %}
+        {% if configurator.getValue(item, columnName) %}
+            <i class="fa fa-check-square-o edit-in-place-bool"
+               data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
+               data-item-id="{{ item.id }}"
+               data-column-name="{{ columnName }}"
+               data-line="line-{{ item.id }}"
+               data-reload="{{ field.editInPlaceReload }}"
+               data-value="1"></i>
+        {% else %}
+            <i class="fa fa-square-o edit-in-place-bool"
+               data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
+               data-item-id="{{ item.id }}"
+               data-column-name="{{ columnName }}"
+               data-line="line-{{ item.id }}"
+               data-reload="{{ field.editInPlaceReload }}"
+               data-value="0"></i>
+        {% endif %}
+    {% else %}
+        <span class="edit-in-place " id="span-{{ columnName }}-{{ item.id }}" data-column-name="{{ columnName }}" data-item-id="{{ item.id }}">
+            {% if string_value != '' and string_value is not null %}
+                {% if real_value and type == 'date' %}
+                    {{ real_value| date('d/m/Y') }}
+                {% elseif real_value and type == 'datetime' %}
+                    {{ real_value| date('d/m/Y H:i') }}
+                {% elseif real_value and type == 'time' %}
+                    {{ real_value| date('H:i') }}
+                {% else %}
+                    {{ configurator.getValue(item, columnName)|nl2br }}
+                {% endif %}
+            {% else %}
+                <em></em>
+            {% endif %}
+        </span>
+        <span id="span-in-{{ columnName }}-{{ item.id }}" style="display:none;">
+            {% if type == 'object' %}
+                <select  id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ string_value }}" class="form-control col-md-12">
+                    {% for v,l in configurator.listOptionsForCombobox(item,field) %}
+                        <option value="{{ v }}" {% if configurator.getValue(item, columnName) and configurator.getValue(item, columnName).id == v %} selected {% endif %}>{{ l }}</option>
+                    {% endfor %}
+                </select>
+            {% elseif type == 'date' %}
+                <input  {% if field.editInPlacePlaceholder %} placeholder="{{ field.editInPlacePlaceholder }}" {% endif %}  class="edit-in-place-input form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y') }}"/>
+                {% if field.editInPlaceJs %}
+                <script>
+                    $(function(){
+                        $('#input-{{ columnName }}-{{ item.id }}').datepicker({
+                            'dateFormat':'dd/mm/yy',
+                        });
+                    });
+                </script>
+                {% endif %}
+            {% elseif type == 'datetime' %}
+                <input  class="edit-in-place-input form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y H:i') }}"/>
+                {% if field.editInPlaceJs %}
+                <script>
+                    $(function(){
+                        $('#input-{{ columnName }}-{{ item.id }}').datetimepicker({
+                            'dateFormat':'dd/mm/yy',
+                            'timeFormat':'HH:mm',
+                        });
+                    });
+                </script>
+                {% endif %}
+            {% elseif type == 'time' %}
+                <input  class="edit-in-place-input form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('H:i') }}"/>
+                <script>
+                    $(function(){
+                        $('#input-{{ columnName }}-{{ item.id }}').timepicker({
+                            'timeFormat':'HH:mm',
+                        });
+                    });
+                </script>
+            {% else %}
+                {% if '\n' in configurator.getValue(item, columnName) %}
+                    <textarea  class=" form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}">{{ configurator.getValue(item, columnName) }}</textarea>
+                {% else %}
+                    <input  class="edit-in-place-input form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ configurator.getValue(item, columnName) }}"/>
+            {% endif %}
+            {% endif %}
+            <span
+                    {#  Attention: appeler avec siblings de edit-in-place-input #}
+                    data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
+                    data-item-id="{{ item.id }}" data-column-name="{{ columnName }}"
+                    data-class="{{ field.editInPlaceClass }}"
+                    data-line="line-{{ item.id }}"
+                    data-reload="{{ field.editInPlaceReload }}"
+                    class="edit-in-place-ok">
+                    <i class="fa fa-check-circle" title="Enregistrer"></i>
+            </span>
+            <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="edit-in-place-close">
+                <i class="fa fa-close" title="Annuler"></i>
+            </span>
+            {% if type == 'object' %}
+                <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="edit-in-place-eraser">
+                <i class="fa fa-eraser" title="Supprimer"></i>
+            </span>
+            {% endif %}
+        </span>
+    {% endif %}
+
+{% else %}
+    {% set type = configurator.getType(item,columnName) %}
+    {% if type == 'boolean' %}
+        {% if string_value is  same as("oui") %}
+            <i style="color:green" class="fa fa-check-square-o"></i>
+        {% else %}
+            <i style="color:#dcdada" class="fa fa-square-o"></i>
+        {% endif %}
+    {% elseif field.isColor %}
+        <div style="background-color:{{real_value}}; border:1px solid black; width:20px; height:20px; display:inline-block;"></div>&nbsp;{{ string_value|raw }}
+    {% else %}
+        {{ string_value|raw }}
+    {% endif %}
+{% endif %}

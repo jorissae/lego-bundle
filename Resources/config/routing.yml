@@ -1,0 +1,3 @@
+lleadminlistbundle:
+    resource: @LleAdminListBundle/Controller
+    type:     annotation

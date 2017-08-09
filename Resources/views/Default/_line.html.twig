@@ -1,0 +1,26 @@
+<tr id="line-{{ item.id }}" >
+{% if component.hasBulkActions %}
+    <td>
+        <input type="checkbox" name="ids[]" value="{{ item.id }}" class="js-bulk-checkbox">
+    </td>
+{% endif %}
+{% for column in component.columns%}
+    {% if column.autoDisplay %}
+        {% set columnName = column.name %}
+        {% set template = column.template %}
+        {% set custom = column.custom %}
+        {% set url = null %}
+        {% if column.linkTo %}
+            {% set url = adminlist.getShowUrl(item,column) %}
+        {% endif %}
+        <td> {% if url %} <a href="{{ path(url["path"],url["params"]) }}"> {% endif %}
+        {% if template is not null %}
+            {% include template with {'row': item, 'columnName': columnName, 'value': adminlist.getValue(item, columnName), 'adminlist': adminlist} %}
+        {% else %}
+            {{ render_field_value(component, column, item) }}
+        {% endif %}
+        {% if url %} </a> {% endif %}</td>
+    {% endif %}
+{% endfor %}
+{% include 'IdkLegoBundle:Default:_item_actions.html.twig' with {'component':component, 'item':item} %}
+</tr>

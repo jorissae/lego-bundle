@@ -1,0 +1,117 @@
+
+
+
+
+{# Rows #}
+{% block form_row %}
+{% spaceless %}
+    <dl class="dl-horizontal">
+        <dt>{{ form_label(form) }}</dt>
+        <dd {% if errors|length > 0 %} class="warning bg-red" {% endif %}>{{ form_widget(form) }}
+        {{ form_errors(form) }}</dd>
+    </dl>
+{% endspaceless %}
+{% endblock form_row %}
+
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+
+        <div class="alert alert-block alert-danger">
+        {% for error in errors %}
+
+            <span style="color:#fff; padding:3px;"><i class="fa fa-close"></i>{{
+                error.messagePluralization is null
+                ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+                }}</span>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+
+{% block checkbox_widget %}
+{% spaceless %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}>
+            {% if required %}<span class="form-group__required-icon">*</span>{% endif %}
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
+
+{% block form_label %}
+{% spaceless %}
+        {% set label_attr = label_attr|merge({'class': label_attr.class|default('')|trim}) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is not sameas(false) %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {{ label|trans({}, translation_domain) }}{% if required %} *{% endif %}
+            </label>
+        {% endif %}
+{% endspaceless %}
+{% endblock form_label %}
+
+
+{% block textarea_widget %}
+{% spaceless %}
+    <textarea {{ block('widget_attributes') }} class="input-block-level form-control{% if attr['maxlength'] is defined %} js-max-length-input{% endif %}" rows="5">{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}"{% endif %} class="form-control{% if attr['maxlength'] is defined %} js-max-length-input{% endif %}">
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{%- block radio_widget -%}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget -%}
+
+{%- block choice_widget_expanded -%}
+    {%- for child in form %}
+        &nbsp;{{- form_widget(child) -}}&nbsp;
+        {{ form_label(child) }}
+    {% endfor -%}
+{%- endblock choice_widget_expanded -%}
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+    {% set attr = attr|merge({ 'class': (attr.class|default('') ~ ' form-control')|trim }) %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value="" {% if required and value is empty %}selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('choice_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block radio_label -%}
+    <label for="{{ id }}">{{ label }}</label>
+{%- endblock radio_label %}

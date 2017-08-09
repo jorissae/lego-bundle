@@ -1,0 +1,43 @@
+{% extends '::layout.html.twig' %}
+{% block page_title %}Historique{% endblock %}
+
+
+
+{% block content %}
+<div class="box">
+    
+    <div class="table_overflow_fix">
+    <table class="table table-striped table-hover table-bordered responsive">
+        <thead>
+        	<tr>
+        		<th>Type</th>
+        		<th>Action</th>
+        		<th>Utilisateur</th>
+        		<th>Version</th>
+        		<th>Objet</th>
+        		<th>Date</th>
+        		<th>Data</th>
+        		<th>Appliquer</th>
+        	</tr>
+        </thead>
+        <tbody>
+        	{% for log in logs %}
+        		<tr>
+        			<td>{{ log.log.objectClass }}</td>
+	        		<td>{{ log.log.action }}</td>
+	        		<td>{{ log.log.username }}</td>
+	        		<td>{{ log.log.version }}</td>
+	        		<td>{{ log.log.objectId }}: {{ log.entity }}</td>
+	        		<td>{{ log.log.loggedAt|date('d/m/Y H:i:s') }}</td>
+	        		<td>{% for k,n in log.data %}<strong>{{ k }}:</strong> {{ n }}<br/>{% endfor %}</td>
+	        		<td><a href="{{ path('lleadminlistbundle_log_revert',{'id':log.log.objectId,'class':log.log.objectClass,'version':log.log.version}) }}" class="btn btn-warning">Retour à la version {{ log.log.version }}</a></td>
+        		</tr>
+        	{% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% if pf.haveToPaginate() %}
+    {{ pagerfanta(pf, 'twitter_bootstrap3_translated') }}
+{% endif %}
+{% endblock %}

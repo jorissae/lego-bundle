@@ -1,0 +1,15 @@
+{% set rupteurs = adminlist.rupteurs(item) %}
+{% for rupteur in rupteurs|reverse %}
+    {% if rupteur.isFooter and not first %}
+        <tr class="{{ rupteur.classCssFooter }} {{ rupteur.classCss }}"><td colspan="{{ nbCol }}">{{ rupteur.getFooter()|raw }}</td></tr>
+    {% endif %}
+{% endfor %}
+{% for rupteur in rupteurs%}
+        <tr class="{{ rupteur.classCssHeader }} {{ rupteur.classCss }}"><td colspan="{{ nbCol }}">
+            {% if rupteur.getTemplateHeader(item) %}
+                {% include rupteur.getTemplateHeader(item).tmp with rupteur.getTemplateHeader(item).vars %}
+            {% else %}
+                {{ rupteur.getHeader(item)|raw }}
+            {% endif %}
+        </td></tr>
+{% endfor %}

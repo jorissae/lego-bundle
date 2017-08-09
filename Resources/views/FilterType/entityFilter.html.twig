@@ -1,0 +1,6 @@
+<select name="{{nameprefix}}value{{namesuffix}}{% if filtertype.multiple %}[]{% endif %}" class="form-control select2" {% if filtertype.multiple %} multiple {% endif %}>
+    {% if not filtertype.multiple %}<option value=""></option>{% endif %}
+    {% for entity in filtertype.entities(data) %}
+        <option value="{{ entity.id }}" {% if data is defined and filtertype.isSelected(data,entity) %} selected {% endif %}>{{ entity }}</option>
+    {% endfor %}
+</select>

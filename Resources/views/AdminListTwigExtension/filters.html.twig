@@ -1,0 +1,42 @@
+{% if filter.filters|length > 0 %}
+<div class="adminlist-filter {{adminlist.getFiltersClass()}}">
+    <form method="POST" action="{{ path(basepath) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
+
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;{{adminlist.getFiltersTitle()}}</h4>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                {% for columnname, value in filter.filterss %}
+                    {% if value['main'] %}
+                        {% set data = null %}
+                        {% for curfilter in filter.currentfilters %}
+                            {% if curfilter.columnName == columnname %}
+                                {% set data = curfilter.data %}
+                            {% endif %}
+                        {% endfor %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 {% if value.type.isHidden() %} hidden {% endif %}" style="min-height:50px">
+                            <div class="form-group">
+                                <label for="{{value.filtername}}" class="col-sm-4 control-label text-nowrap">
+                                    {{value.label|trans}}
+                                </label>
+                                <div class="col-sm-8">
+                                    {% include value.type.template with {'filtertype': value.type, 'data': data, 'options': value.options, 'nameprefix': "filter_", 'namesuffix': "_" ~ columnname } %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="box-footer">
+            <button class="btn btn-primary apply_filter" name="filter" value="filter" type="submit">Filtrer</button>
+            <a href="{{ path(basepath, {reset:1}) }}" class="btn btn-default">Effacer</a>
+        </div>
+    </div>
+
+    </form>
+</div>
+{% endif %}

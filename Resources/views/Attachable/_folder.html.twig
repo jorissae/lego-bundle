@@ -1,0 +1,48 @@
+{% if displayFolder == true %}
+	<h1><span id="idk-finder-path">{{ curFolder.nom }}</span></h1>
+	<span class="lle-click" onclick="$('#create-folder-form').show();" href="#">
+		<img src="{{ asset('bundles/lleadminlist/images/addfolder.png') }}" alt="addfolder"/>
+	</span>
+	{% if curFolder.folder %}
+	<span class="lle-ajax" data-url="{{ path('lleadminlistbundle_attachable_show_folder') }}"  data-donnes="{ 'id': {{ curFolder.folder.id }}, 'class': '{{ class }}', 'itemId': {{ itemId }} }" data-callback="browser_showfolder">
+		<img src="{{ asset('bundles/lleadminlist/images/back.png') }}" alt="back"/>
+	</span>
+	{% elseif curFolder.id %}
+	<span class="lle-ajax" data-url="{{ path('lleadminlistbundle_attachable_show_folder') }}"  data-donnes="{ 'id': 0,'zoneCode': '{{ curFolder.zoneCode }}','class': '{{ class }}', 'itemId': {{ itemId }} }" data-callback="browser_showfolder">
+		<img src="{{ asset('bundles/lleadminlist/images/back.png') }}" alt="back"/>
+	</span>
+	{% endif %}
+	<div >
+		<form  id="create-folder-form" action="{{ path('lleadminlistbundle_attachable_add_folder',{'id':curFolder.id}) }}" method="post" class="collapse">
+	    	{{ form_widget(form) }}
+	    	<input type="hidden" name="class" value="{{ class }}"/>
+	    	<input type="hidden" name="itemId" value="{{ itemId }}"/>
+	    	<input type="hidden" name="zoneCode" value="{{ curFolder.zoneCode }}"/>
+	    	<input class="lle-send-form-ajax btn btn-default" data-form="create-folder-form" data-callback="browser_retour" data-type="html" type="submit" value="Nouveau dossier"/>
+		</form>
+	</div>
+
+	<div class="idk-line"></div>
+
+	<ul class="folders-list">
+		{% for folder in folders %}
+			<li class="lle-ajax" data-url="{{ path('lleadminlistbundle_attachable_show_folder') }}" data-donnes="{ 'id':{{ folder.id }}, 'class': '{{ class }}', 'itemId': {{ itemId }},'zoneCode': '{{ curFolder.zoneCode }}'}" data-callback="browser_showfolder">
+				<img src="{{ asset('bundles/lleadminlist/images/folder.png') }}" alt="folder"/>
+				<div class="folder-name">
+					{{ folder.nom }}
+					<span class="lle-ajax" data-url="{{ path('lleadminlistbundle_attachable_delete_folder',{'id':folder.id}) }}" data-callback="browser_showfolder" data-donnes="{ 'class': '{{ class }}', 'itemId': {{ itemId }},'zoneCode': '{{ curFolder.zoneCode }}'}"><i class="fa fa-remove"></i></span>
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+	<div style="clear:both"></div>
+{% endif %}
+<div >
+	{% include 'LleAdminListBundle:Attachable:_dropzone.html.twig' with {'files':files, 'folder':curFolder, 'class':class,'itemId':itemId, 'options': options} %}
+</div>
+
+<script>
+	$(function(){
+		currentZone('{{ curFolder.zoneCode }}');
+	});
+</script>
