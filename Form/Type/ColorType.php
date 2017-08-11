@@ -1,6 +1,6 @@
 <?php
 
-namespace Lle\AdminListBundle\Form\Type;
+namespace Idk\LegoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;

@@ -22,5 +22,5 @@
         {% if url %} </a> {% endif %}</td>
     {% endif %}
 {% endfor %}
-{% include 'IdkLegoBundle:Default:_item_actions.html.twig' with {'component':component, 'item':item} %}
+{% include component.partial('item_actions') with {'component':component, 'item':item} %}
 </tr>

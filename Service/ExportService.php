@@ -1,6 +1,6 @@
 <?php
 
-namespace Lle\AdminListBundle\Service;
+namespace Idk\LegoBundle\Service;
 
 use Lle\AdminListBundle\AdminList\AdminList;
 use Symfony\Component\HttpFoundation\Response;

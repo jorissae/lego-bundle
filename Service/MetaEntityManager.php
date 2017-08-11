@@ -27,7 +27,7 @@ class MetaEntityManager
                     /* @var Annotation\Field $field */
                     $field = $annotation;
                     $field->setName($p->getName());
-                    $return[] = $field;
+                    $return[$p->getName()] = $field;
                 }
             }
         }
@@ -45,7 +45,7 @@ class MetaEntityManager
                     /* @var Annotation\Filter\AbstractFilter $filter */
                     $filter = $annotation;
                     $filter->setName($p->getName());
-                    $return[] = $filter;
+                    $return[$p->getName()] = $filter;
                 }
             }
         }

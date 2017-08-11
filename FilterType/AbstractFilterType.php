@@ -24,6 +24,8 @@ abstract class AbstractFilterType implements FilterTypeInterface
 
     protected $config = null;
 
+    protected $label;
+
     /**
      * @param string $columnName The column name
      * @param string $alias      The alias
@@ -32,12 +34,16 @@ abstract class AbstractFilterType implements FilterTypeInterface
     {
         $this->config = $config;
         $this->columnName = $columnName;
+        $this->label = (isset($config['label']))? $config['label']:$columnName;
         $this->alias      = $alias;
-        $this->hidden = (isset($config['hidden']))? $config['hidden']:false;
+        $this->hidden = (isset($confi['hidden']))? $config['hidden']:false;
     }
 
     public function getName(){
         return $this->columnName;
+    }
+    public function getLabel(){
+        return $this->label;
     }
 
     /**

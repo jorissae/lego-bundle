@@ -8,7 +8,7 @@
 {% block content %}
 
     {% for component in configurator.indexComponents %}
-        {% include component.template with component.parameters %}
+        {% include component.template with component.templateParameters %}
     {%  endfor %}
 
 {% endblock %}

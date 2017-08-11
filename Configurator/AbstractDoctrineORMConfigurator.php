@@ -2,6 +2,7 @@
 
 namespace Idk\LegoBundle\Configurator;
 
+use Idk\LegoBundle\Component\Component;
 use Traversable;
 
 use Doctrine\ORM\EntityManager;
@@ -10,9 +11,9 @@ use Doctrine\ORM\Query;
 
 use Idk\LegoBundle\AdminList\FilterType\ORM\AbstractORMFilterType;
 use Idk\LegoBundle\AdminList\Lib\QueryHelper;
-use Idk\LegoBundle\AdminList\Filter;
 
-use Idk\LegoBundle\AdminList\Field;
+
+use Idk\LegoBundle\Annotation\Entity\Field;
 
 /**
  * An abstract admin list configurator that can be used with the orm query builder
@@ -34,14 +35,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      * @param EntityManager $em        The entity manager
      * @param AclHelper     $aclHelper The acl helper
      */
-    public function __construct($container,$forCompatibilityAsc=null)
+    public function __construct($container)
     {
-        if($container instanceof EntityManager){
-            $this->em = $container;
-        }else{
-            $this->em = $container->get('doctrine.orm.entity_manager');
-            $this->setContainer($container);
-        }
+        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->setContainer($container);
     }
 
     /**
@@ -138,16 +135,11 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
             $this->subQuery($queryBuilder);
             $queryHelper = new QueryHelper();
 
-            // Apply filters
-            $filters = $this->getFilterBuilder()->getCurrentFilters();
-            /* @var Filter $filter */
-
-            foreach ($filters as $filter) {
-                /* @var AbstractORMFilterType $type */
-                $type = $filter->getType();
-                $type->setQueryBuilder($queryBuilder);
-                $filter->apply();
+            foreach($this->getIndexComponents() as $component){
+                /* @var Component $component */
+                $component->catchQueryBuilder($queryBuilder);
             }
+
 
             foreach($this->getRupteurs() as $k => $rupteur){
                 if(count($this->currentRupteurs)){

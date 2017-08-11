@@ -1,7 +1,6 @@
 <?php
 
-namespace Lle\AdminListBundle\Form\Type;
-
+namespace Idk\LegoBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Lle\AdminListBundle\Entity\AbstractAttribut;

@@ -1,5 +1,5 @@
 <?php
-namespace Lle\AdminListBundle\Service;
+namespace Idk\LegoBundle\Service;
 
 
 use Pagerfanta\Pagerfanta;

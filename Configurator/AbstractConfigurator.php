@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use Idk\LegoBundle\AdminList\FilterType\FilterTypeInterface;
 use Idk\LegoBundle\AdminList\FilterBuilder;
-use Idk\LegoBundle\AdminList\Field;
+use Idk\LegoBundle\Annotation\Entity\Field;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\AdminList\SubList;
@@ -744,18 +744,12 @@ abstract class AbstractConfigurator
      *
      * @return AbstractAdminListConfigurator
      */
-    //utiliser cette methode commme suite: addField($name,array $options)
-    public function addField($name, $options = array(), $sort = null, $template = null, $link_to = null)
+    public function addField($name, $options = [])
     {
-        //ATTENTION (cette condition existe pour des raison de retrecompatibilite)
-        if(is_array($options)){
-            //si header est un array il correspond a $option
-            $this->fields[strtolower($name)] = new Field($name, $options);
-        }else{
-            //sinon les options sont repartie dans les 4 arguments de la methode
-            $this->fields[strtolower($name)] = new Field($name, array('label'=>$options,'sort'=>$sort,'tmp'=>$template,'link_to'=>$link_to));
-        }
 
+        $field = new Field($options);
+        $field->setName($name);
+        $this->fields[] = $field;
         return $this;
     }
 
@@ -1475,17 +1469,7 @@ abstract class AbstractConfigurator
         return $entity;
     }
 
-    /**
-     * @return FilterBuilder
-     */
-    public function getFilterBuilder()
-    {
-        if (is_null($this->filterBuilder)) {
-            $this->filterBuilder = new FilterBuilder($this,get_class($this));
-        }
 
-        return $this->filterBuilder;
-    }
 
     /**
      * @param FilterBuilder $filterBuilder
@@ -1507,61 +1491,12 @@ abstract class AbstractConfigurator
      */
     public function bindRequest(Request $request)
     {
-        $query      = $request->query;
-        $session    = $request->getSession();
-        $adminListName = 'listconfig_' . $request->get('_route');
-
-
-
-        $this->page             = ($query->get('page'))? (int)$query->get('page'):1;
-        $this->orderBy          = preg_replace('/[^[a-zA-Z0-9\_\.]]/', '', $query->get('orderBy', $this->getOrderBy()));
-        $this->orderDirection   = $query->getAlpha('orderDirection', $this->getOrderDirection());
-        if($query->get('rupteurs')){
-            $this->currentRupteurs = explode('/',$request->query->get('rupteurs'));
+        foreach($this->indexComponents as $components){
+            $components->bindRequest($request);
         }
-
-        // there is a session and the filter param is not set
-        if ($session and $session->has($adminListName)) {
-            $adminListSessionData = $request->getSession()->get($adminListName);
-            if(!$query->has('filter')){
-                if (!$query->has('orderBy') and $adminListSessionData['orderBy']) {
-                    $this->orderBy = $adminListSessionData['orderBy'];
-                }
-
-                if (!$query->has('orderDirection') and $adminListSessionData['orderDirection']) {
-                    $this->orderDirection = $adminListSessionData['orderDirection'];
-                }
-            }
-            if (!$query->has('rupteurs') and isset($adminListSessionData['rupteurs']) and $adminListSessionData['rupteurs']){
-                $this->currentRupteurs = $adminListSessionData['rupteurs'];
-            }
-        }
-        //default rupteurs
-        if(!count($this->currentRupteurs)){
-            foreach($this->getRupteurs() as $r){
-                if($r->isActive()){
-                    $this->currentRupteurs[] = $r->getKey();
-                }
-            }
-        }
-
-
-        // save current parameters
-        if($session){
-            $session->set($adminListName, array(
-                'page'              => $this->page,
-                'orderBy'           => $this->orderBy,
-                'orderDirection'    => $this->orderDirection,
-                'rupteurs'          => $this->currentRupteurs,
-            ));
-        }
-
-        $this->getFilterBuilder()->bindRequest($request,$this->defaultValueFilter());
     }
 
-    public function valueFilter($id){
-        return $this->getFilterBuilder()->getValueFilter($id);
-    }
+
 
     /**
      * Return current page.
@@ -1573,9 +1508,7 @@ abstract class AbstractConfigurator
         return $this->page;
     }
 
-    public function defaultValueFilter(){
-        return array();
-    }
+
 
     /**
      * Return current sorting column.
@@ -1819,8 +1752,9 @@ abstract class AbstractConfigurator
 
     public function addIndexComponent($className, array $options, AbstractConfigurator $configurator = null)
     {
-        $this->indexComponents[] = $this->generateComponent($className, $options, $configurator);
-        return $this;
+        $component = $this->generateComponent($className, $options, $configurator);
+        $this->indexComponents[] = $component;
+        return $component;
     }
 
     private function generateComponent($className, array $options, AbstractConfigurator $configurator = null)
@@ -1837,24 +1771,17 @@ abstract class AbstractConfigurator
 
     public function getFields(array $columns = null)
     {
-        return $this->get('lego.service.meta_entity_manager')->generateFields($this->getEntityName(), $columns);
+        return array_merge($this->fields, $this->get('lego.service.meta_entity_manager')->generateFields($this->getEntityName(), $columns));
     }
 
-    public function buildFilter(array $columns = null)
-    {
-        foreach($this->get('lego.service.meta_entity_manager')->generateFilters($this->getEntityName(), $columns) as $filter){
-            /* @var \Idk\LegoBundle\Annotation\Entity\Filter\AbstractFilter $filter */
-            $this->getFilterBuilder()->add($filter->newInstanceOfType());
-        }
-        return $this;
-    }
+
 
     public function getPathRoute($sufix = 'index'){
         return $this->getControllerPath().'_'.$sufix;
     }
 
     public function getPathParams($item){
-        return ['id' => $item->getId()];
+            return ['id' => $item->getId()];
     }
 
     abstract function buildIndex();

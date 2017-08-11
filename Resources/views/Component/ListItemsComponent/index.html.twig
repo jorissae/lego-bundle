@@ -28,7 +28,7 @@
                     {% else %}
                         {% set extraHeaderClass = "sorting" %}
                     {% endif %}
-                    <th {% if column.style %} style="{{ column.style }}"  {% endif %} class="{{extraHeaderClass}}" onclick="window.location = '{{ path('app_jeulego_index', { 'orderBy': columnName, "orderDirection": orderDirection })}}'">
+                    <th {% if column.style %} style="{{ column.style }}"  {% endif %} class="{{extraHeaderClass}}" onclick="window.location = '{{ path(configurator.getPathRoute('index'), { 'orderBy': columnName, "orderDirection": orderDirection })}}'">
                         <span class="pull-right sort-icon"></span>
                         {{ columnkey | trans }}
                     </th>
@@ -43,7 +43,7 @@
 
         {% for item in configurator.items() %}
             {# {% include 'IdkLegoBundle:Default:_rupture.html.twig' with {'adminlist':adminlist,'item':item,'first':loop.first} %} #}
-            {% include 'IdkLegoBundle:Default:_line.html.twig' with {'component':component ,'item':item} %}
+            {% include component.partial('line') with {'component':component ,'item':item} %}
         {% endfor %}
 
         </tbody>
