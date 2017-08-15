@@ -1491,9 +1491,11 @@ abstract class AbstractConfigurator
      */
     public function bindRequest(Request $request)
     {
+        $componentResponse = [];
         foreach($this->indexComponents as $components){
-            $components->bindRequest($request);
+            $componentResponse[] = $components->bindRequest($request);
         }
+        return $componentResponse;
     }
 
 

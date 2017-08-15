@@ -7,7 +7,7 @@ use Idk\LegoBundle\Annotation\Entity\Field;
 
 class ListItems extends Component{
 
-    private $fields;
+    private $fields = [];
 
     protected function init(){
         return;

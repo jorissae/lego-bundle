@@ -4,6 +4,7 @@ namespace Idk\LegoBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Idk\LegoBundle\AdminList\AdminList;
+use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +58,13 @@ abstract class LegoController extends Controller
 
     protected function doIndexAction(AbstractConfigurator $configurator, Request $request)
     {
-        $configurator->bindRequest($request);
+
+        $componentResponses = $configurator->bindRequest($request);
+        foreach($componentResponses as $componentResponse){
+            if($componentResponse instanceof MessageComponentResponse) {
+                $this->addFlash($componentResponse->getType(),$componentResponse->getMessage());
+            }
+        }
         return new Response($this->renderView($configurator->getIndexTemplate(), [ 'configurator' => $configurator]));
     }
 
@@ -236,7 +243,7 @@ abstract class LegoController extends Controller
      * @throws NotFoundHttpException
      * @return Response
      */
-    protected function doDeleteAction(AbstracConfigurator $configurator, $entityId, Request $request = null)
+    protected function doDeleteAction(AbstractConfigurator $configurator, $entityId, Request $request = null)
     {
         /* @var $em EntityManager */
         $em = $this->getEntityManager();
@@ -568,26 +575,7 @@ abstract class LegoController extends Controller
         return $this->redirect($referer);
     }
 
-    protected function uploader($configurator,$obj){
-        if($configurator->getUploadFileGetter()) {
-            if(is_array($configurator->getUploadFileGetter())){
-                foreach($configurator->getUploadFileGetter() as $method){
-                    $uploadFile = call_user_func(array($obj, $method));
-                    $this->upload($obj, $uploadFile);
-                }
-            }else{
-                $uploadFile = call_user_func(array($obj, $configurator->getUploadFileGetter()));
-                $this->upload($obj, $uploadFile);
-            }
-        }
-    }
 
-    protected function upload($obj, $uploadFile){
-        if($uploadFile instanceof UploadedFile){
-            $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
-            $uploadableManager->markEntityToUpload($obj, $uploadFile);
-        }
-    }
 
     protected function getAllErrorMessagesByForm(Form $form) {
         $errors = array();

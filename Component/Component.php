@@ -50,8 +50,6 @@ abstract class Component{
         return $this->configurator->get($name);
     }
 
-
-
     public function getConfigurator(){
         return $this->configurator;
     }

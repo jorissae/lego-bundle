@@ -285,15 +285,19 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
 
     // return ClassMetadata
-    public function getClass(){
+    public function getClassMetaData(){
         $em = $this->getEntityManager();
         return $em->getClassMetadata($this->getRepositoryName());
+    }
+
+    public function newInstance(){
+        return $this->getClassMetaData()->newInstance();
     }
 
 
     // return schema column array string
     public function getClassFields(){
-        return $this->getClass()->getColumnNames();
+        return $this->getClassMetaData()->getColumnNames();
     }
     //$em->getClassMetadata(get_class($attribut))->getName())
 
@@ -344,5 +348,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         }
         return $item;
     }
+
+
 
 }

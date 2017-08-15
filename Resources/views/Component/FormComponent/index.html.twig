@@ -1,0 +1,19 @@
+{% form_theme form theme %}
+<div class="box box-info">
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'}}) }}
+    <div class="box-header with-border">
+        <h4 class="box-title"><i class="icon fa fa-pencil"></i>&nbsp;Form</h4>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <button type="submit" class="btn btn-primary">{{ 'Enregistrer' | trans }}</button>
+    </div>
+    {{ form_end(form) }}
+</div>
+

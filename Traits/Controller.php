@@ -86,7 +86,7 @@ trait Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        return parent::doDeleteAction($this->getAdminListConfigurator(), $id, $request);
+        return parent::doDeleteAction($this->getConfigurator(), $id, $request);
     }
 
     /**
