@@ -40,6 +40,11 @@ abstract class AbstractConfigurator
     const SUFFIX_LOG = 'log';
     const SUFFIX_WORKFLOW = 'wf';
 
+    const ROUTE_SUFFIX_INDEX = 'index';
+    const ROUTE_SUFFIX_ADD = 'add';
+    const ROUTE_SUFFIX_EDIT = 'edit';
+    const ROUTE_SUFFIX_SHOW = 'show';
+
 
     /**
      * @var EntityManager
@@ -1489,10 +1494,13 @@ abstract class AbstractConfigurator
      *
      * @param Request $request
      */
-    public function bindRequest(Request $request)
+    public function bindRequest(Request $request, $entityId = null)
     {
+        $lastUnserscore = strrchr( $request->get('_route'), '_');
+
+        $index = substr($lastUnserscore, 1);
         $componentResponse = [];
-        foreach($this->indexComponents as $components){
+        foreach($this->components[$index] as $components){
             $componentResponse[] = $components->bindRequest($request);
         }
         return $componentResponse;
@@ -1723,7 +1731,7 @@ abstract class AbstractConfigurator
      */
     private $indexTemplate = 'IdkLegoBundle:Default:index.html.twig';
 
-    private $indexComponents = [];
+    private $components = [];
 
     private $parent = null;
 
@@ -1738,7 +1746,26 @@ abstract class AbstractConfigurator
     }
 
     public function getIndexComponents(){
-        return $this->indexComponents;
+        return $this->components[self::ROUTE_SUFFIX_INDEX];
+    }
+
+    public function getAddComponents(){
+        return $this->components[self::ROUTE_SUFFIX_ADD];
+    }
+
+    public function getEditComponents(){
+        return $this->components[self::ROUTE_SUFFIX_EDIT];
+    }
+
+    public function getShowComponents(){
+        return $this->components[self::ROUTE_SUFFIX_SHOW];
+    }
+
+    public function getComponents($routeSuffix){
+        if(isset($this->components[$routeSuffix])){
+            return $this->components[$routeSuffix];
+        }
+        return [];
     }
 
     public function getIndexTemplate()
@@ -1754,8 +1781,30 @@ abstract class AbstractConfigurator
 
     public function addIndexComponent($className, array $options, AbstractConfigurator $configurator = null)
     {
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $configurator);
+    }
+
+    public function addAddComponent($className, array $options, AbstractConfigurator $configurator = null)
+    {
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_ADD, $configurator);
+    }
+
+    public function addEditComponent($className, array $options, AbstractConfigurator $configurator = null)
+    {
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_EDIT, $configurator);
+    }
+
+    public function addShowComponent($className, array $options, AbstractConfigurator $configurator = null)
+    {
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_SHOW, $configurator);
+    }
+
+    public function addComponent($className, array $options, $routeSuffix, AbstractConfigurator $configurator = null){
+        if(!isset($this->components[$routeSuffix])){
+            $this->components[$routeSuffix] = [];
+        }
         $component = $this->generateComponent($className, $options, $configurator);
-        $this->indexComponents[] = $component;
+        $this->components[$routeSuffix][] = $component;
         return $component;
     }
 

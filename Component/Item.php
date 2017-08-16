@@ -5,7 +5,7 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\Annotation\Entity\Field;
 
-class ListItems extends Component{
+class Item extends Component{
 
     private $fields = [];
 
@@ -28,15 +28,12 @@ class ListItems extends Component{
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\ListItemsComponent:'.$name.'.html.twig';
+        return 'IdkLegoBundle:Component\\ItemComponent:'.$name.'.html.twig';
     }
 
     public function getTemplateParameters(){
-        return ['component' => $this];
+        return ['entity' => $this->getConfigurator()->getRepository()->find($this->getRequest()->get('id'))];
     }
 
-    public function hasBulkActions(){
-        return $this->getOption('bulk',false);
-    }
 
 }

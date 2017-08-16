@@ -1,114 +1,13 @@
-{% extends '::layout.html.twig' %}
-{% block title %}{{ parent() }} - {{adminlist.getTitle()}}{% endblock %}
-{% block page_title %}{{adminlist.getTitle()}}{% endblock %}
-{% set firstField = adminlist.showFields|first %}
-{% block page_subtitle %}{{adminlist.getShowSubtitle(item)}}{% endblock %}
+{% extends '::lego.html.twig' %}
+{% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
+{% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}
 
-{% block extra_actions_header %}
-        <div class="extra_actions_header">
-            <div class="btn-group pull-right">
-                <a href="{{ path( adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()['params'] ) }}" class="btn btn-default">
-                    Retour
-                </a>
-                {% if adminlist.isLoggable() %}
-                    {% set url = adminlist.getLogUrl(item) %}
-                    <a class="btn btn-default" href="{{ path(url["path"],url["params"]) }}">Historique</a>
-                {% endif %}
-                {% set canWf = adminlist.workflows(item,app.user) and is_granted('ROLE_ADMIN_' ~ adminlist.getRoleName()|upper ~ '_WF') %}
-                {% if canWf %}
-                    {% for work in adminlist.workflows(item,app.user) %}
-                        <a href="{{ path(adminlist.getWorkflowUrlFor(item,work)["path"], adminlist.getWorkflowUrlFor(item,work)[("params")] ) }}"
-                            class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i>
-                            {{ work }}
-                        </a>
-                    {% endfor %}
-                {% endif %}
-                {% if adminlist.canEditInShow(item) and is_granted('ROLE_ADMIN_' ~ adminlist.getRoleName()|upper ~ '_EDIT') %}
-                    <a class="btn btn-info" href="{{ path(adminlist.getEditUrlFor(item)["path"], adminlist.getEditUrlFor(item)[("params")] ) }}"> Modifier</a>
-                {% endif %}
-            </div>
-        </div>
-{% endblock %}
+
+
 {% block content %}
-{% include 'LleAdminListBundle:Default:_html_element.html.twig' with {'adminlist':adminlist,'position':'header_show','item':item} %}
-<div class="box">
-  <div class="box-body">
-    <div class="row">
-    {% for group in adminlist.showGroups %}
-        <div class="col-md-{{ group.cols.md }} col-xs-{{ group.cols.xs }} col-lg-{{ group.cols.lg }} col-sm-{{ group.cols.sm }}">
-            {% if group.title %}
-                {% if group.customTitle %}
-                    {{ group.customTitleRender()|raw }}
-                {% else %}
-                    <h2 class="col-md-12">{{ group.title }}</h2>
-                {% endif %}
-            {% endif %}
-            {% for line in group.fields %}
-                {% if line.autoDisplay %}
-                    {% set columnName = line.name %}
-                    {% set template = line.template %}
-                    {% if template is not null %}
-                        {% include template with {'row': item, 'columnName': columnName, 'object': adminlist.getValue(item, columnName), 'adminlist': adminlist} %}
-                    {% elseif group.template %}
-                        {% include group.template with {'label': line.header, 'value': render_field_value(adminlist,line,item)} %}
-                    {% elseif group.custom %}
-                        {{ group.customRender(line.header,render_field_value(adminlist,line,item))|raw }}
-                    {% else %}
-                        <dl class="dl-horizontal">
-                            <dt>{{ line.header }}</dt>
-                            <dd>{{ render_field_value(adminlist,line,item) }}</dd>
-                        </dl>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endfor %}
-    </div>
-  </div>
-</div>
-    {% if adminlist.showOnglets|length or subadminlists|length %}
-        <div id="show-adminlist-onglet" class="lle-tabs">
-            <ul>
-                {% for subadminlist in subadminlists %}
-                    <li {% if loop.index == 1 %}class="active"{% endif %}><a href="#section-sublist-{{ subadminlist.name }}">{{subadminlist.getTitle()}}</a></li>
-                {% endfor %}
-                {% for onglet in adminlist.showOnglets %}
-                    {% if onglet.template or onglet.controller or onglet.widget %}
-                        <li><a href="#section-onglet-{{ loop.index }}">{{ onglet.name }}</a></li>
-                    {% else %}
-                        <li><a href="{{ path(onglet.route,onglet.params(item)) }}">{{ onglet.name }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            {% for subadminlist in subadminlists %}
-                <div id="section-sublist-{{ subadminlist.name }}">
-                    {{ sub_adminlist_widget(subadminlist,adminlist,item) }}
-                </div>
-            {% endfor %}
-            {% for onglet in adminlist.showOnglets %}
-                <div id="section-onglet-{{ loop.index }}">
-                {% if onglet.template %}
-                    {% include onglet.template with {'item': item, 'adminlist': adminlist} %}
-                {% elseif onglet.controller %}
-                    {{ render(controller(onglet.controller ,{'request':app.request,'adminlist':adminlist,'item':item})) }}
-                {% elseif onglet.widget %}
-                    {% if onglet.widget == 'attach_browser' or onglet.widget == 'attach_dropzone' %}
-                        {{ attach_browser(adminlist,item) }}
-                    {% endif %}
-                {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-        {% if app.request.query.get("onglet") %}
-            <script>
-                var index = $('#show-adminlist-onglet li a').index($('a[href="#{{ app.request.query.get("onglet") }}"]').get(0));
-                if(!index){
-                    index = $('#show-adminlist-onglet li a').index($('#{{ app.request.query.get("onglet") }}'));
-                }
-                $("#show-adminlist-onglet").tabs({ active: index });
-            </script>
-        {% endif %}
-    {% endif %}
-    {% include 'LleAdminListBundle:Default:_html_element.html.twig' with {'adminlist':adminlist,'position':'footer_show','item':item} %}
-    {% include adminlist.getScriptTemplate() with {'template':'show'} %}
+    {%  include 'IdkLegoBundle:Default:_flash.html.twig' %}
+    {% for component in configurator.showComponents %}
+        {% include component.template with component.templateParameters %}
+    {%  endfor %}
 {% endblock %}

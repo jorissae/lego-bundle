@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-12">
+    {% for action in component.actions %}
+        {% if (action.role and is_granted(action.role)) or not action.role %}
+            {% if action.template is not null %}
+                {% include action.template with {'action': action, 'parentItem': parentItem} %}
+            {% else %}
+                {% set url = action.getUrl(component) %}
+                {% if url is iterable %}
+                   {%  set url = path(url["route"], url[("params")] ) %}
+                {%  endif %}
+                <a href="{{ url }}" {% if action.target %} target="{{ action.target }}" {% endif %} class="btn btn-primary pull-right">
+                    {% if action.getIcon() is not null %}
+                        <i class="icon-{{ action.getIcon() }} }}"></i> {{ action.getLabel()|trans }}
+                    {% else %}
+                        {{ action.getLabel()|trans }}
+                    {% endif %}
+                </a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </div>
+ </div>
+<div style="height:5px;"></div>

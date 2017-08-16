@@ -179,10 +179,12 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     protected function getQueryBuilder()
     {
-        $queryBuilder = $this->em
-            ->getRepository($this->getRepositoryName())
-            ->createQueryBuilder('b');
+        $queryBuilder = $this->getRepository()->createQueryBuilder('b');
         return $queryBuilder;
+    }
+
+    public function getRepository(){
+        return  $this->em->getRepository($this->getRepositoryName());
     }
 
     /**

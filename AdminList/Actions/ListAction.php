@@ -13,6 +13,8 @@ class ListAction
      */
     private $route;
 
+    private $url;
+
     /**
      * @var string
      */
@@ -65,6 +67,7 @@ class ListAction
         $this->position = (isset($options['position']))? $options['position']:'top';
         $this->target = (isset($options['target']))? $options['target']:null;
         $this->role = (isset($options['role']))? $options['role']:null;
+        $this->url = (isset($options['url']))? $options['url']:null;
     }
 
     public function getId(){
@@ -82,16 +85,13 @@ class ListAction
     /**
      * @return array
      */
-    public function getUrl($adminlist,$itemOfParentList = null)
+    public function getUrl()
     {
-
-        if($this->type){
-            $return = $adminlist->getListActionUrl($this->type,$this->id);
+        $return = null;
+        if($this->url){
+            $return = $this->url;
         }else{
-            $return = array('path'=>$this->route,'params'=>$this->getParams());
-        }
-        if($this->sublist and $itemOfParentList){
-            $return['params']['id'] = $itemOfParentList->getId();
+            $return = ['route'=>$this->route,'params'=>$this->getParams()];
         }
         return $return;
     }

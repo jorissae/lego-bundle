@@ -1,32 +1,13 @@
 {% extends '::lego.html.twig' %}
+{% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
+{% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}
 
-{% block title %}{{ parent() }} - {{adminlistconfigurator.getTitle()}}{% endblock %}
-{% block page_title %}{{adminlistconfigurator.getTitle()}}{% endblock %}
-{% block page_subtitle %}Modification{% endblock %}
 
-{% form_theme form theme %}
 
 {% block content %}
-    {{ form_start(form, {'role': 'form' ,'method': 'post', 'action': path(app.request.attributes.get('_route'), my_router_params()) }) }}
-        {% if adminlistconfigurator.getEditFormTopBtn() %}
-              {% include 'LleAdminListBundle:Default:_form_actions.html.twig' with {'adminlistconfigurator': adminlistconfigurator } %}
-              <div style="height:10px"></div>
-        {% endif %}
-        {% if  referer_sublist is defined and referer_sublist %}
-            <input name="referer_sublist" type="hidden" value="{{ referer_sublist }}"/>
-        {% endif %}
-        <div class="box box-primary">
-
-            <div class="box-body">
-                {% block form_content %}
-                    {% include adminlistconfigurator.getFormTemplate('edit') with {'groups':groups, 'form': form } %}
-                {% endblock %}
-
-                {% block main_actions %}
-                     {% include 'IdkLegoBundle:Default:_form_actions.html.twig' with {'adminlistconfigurator': adminlistconfigurator } %}
-                {% endblock %}
-            </div>
-        </div>
-    {{ form_end(form) }}
-    {% include adminlistconfigurator.getScriptTemplate() with {'template':'edit'} %}
+    {%  include 'IdkLegoBundle:Default:_flash.html.twig' %}
+    {% for component in configurator.editComponents %}
+        {% include component.template with component.templateParameters %}
+    {%  endfor %}
 {% endblock %}

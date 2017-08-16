@@ -4,23 +4,21 @@
         <input type="checkbox" name="ids[]" value="{{ item.id }}" class="js-bulk-checkbox">
     </td>
 {% endif %}
-{% for column in component.columns%}
-    {% if column.autoDisplay %}
-        {% set columnName = column.name %}
-        {% set template = column.template %}
-        {% set custom = column.custom %}
-        {% set url = null %}
-        {% if column.linkTo %}
-            {% set url = adminlist.getShowUrl(item,column) %}
-        {% endif %}
-        <td> {% if url %} <a href="{{ path(url["path"],url["params"]) }}"> {% endif %}
-        {% if template is not null %}
-            {% include template with {'row': item, 'columnName': columnName, 'value': adminlist.getValue(item, columnName), 'adminlist': adminlist} %}
-        {% else %}
-            {{ render_field_value(component, column, item) }}
-        {% endif %}
-        {% if url %} </a> {% endif %}</td>
+{% for field in component.fields%}
+    {% set columnName = field.name %}
+    {% set template = field.template %}
+    {% set custom = field.custom %}
+    {% set url = null %}
+    {% if field.linkTo %}
+        {% set url = adminlist.getShowUrl(item,field) %}
     {% endif %}
+    <td> {% if url %} <a href="{{ path(url["path"],url["params"]) }}"> {% endif %}
+    {% if template is not null %}
+        {% include template with {'entity': item, 'field': field, 'value': adminlist.getValue(item, columnName), 'configurator': configurator} %}
+    {% else %}
+        {{ render_field_value(component, field, item) }}
+    {% endif %}
+    {% if url %} </a> {% endif %}</td>
 {% endfor %}
 {% include component.partial('item_actions') with {'component':component, 'item':item} %}
 </tr>

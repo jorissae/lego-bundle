@@ -1,5 +1,4 @@
 {% if filter.filters|length > 0 %}
-    <div class="adminlist-filter">
         <form method="POST" action="{{ path(configurator.getPathRoute()) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
 
             <div class="box box-info">
@@ -36,5 +35,4 @@
             </div>
 
         </form>
-    </div>
 {% endif %}

@@ -4,6 +4,7 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\AdminList\FilterBuilder;
 use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
+use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
 use Idk\LegoBundle\FilterType\ORM\AbstractORMFilterType;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +33,12 @@ class Form extends Component{
     }
 
     public function bindRequest(Request $request){
-        $entity = $this->getConfigurator()->newInstance();
+        if($request->get('id')){
+            $entity = $this->getConfigurator()->getRepository()->find($request->get('id'));
+        }else{
+            $entity = $this->getConfigurator()->newInstance();
+        }
+
         $this->form = $this->get('form.factory')->create($this->getOption('form'), $entity);
         $this->form->handleRequest($request);
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
@@ -41,8 +47,14 @@ class Form extends Component{
                 $em->persist($entity);
                 $this->uploader(null,null);
                 $em->flush();
-                $this->resetForm();
-                return new SuccessComponentResponse('lego.form.success');
+                if($request->get('id')){
+                    $response = new SuccessComponentResponse('lego.form.success.edit');
+                } else {
+                    $response = new SuccessComponentResponse('lego.form.success.add');
+                    $this->resetForm();
+                }
+                $response->setRedirect($this->getConfigurator()->getPathRoute('index'));
+                return $response;
             } else {
                 return new ErrorComponentResponse('lego.form.error');
             }

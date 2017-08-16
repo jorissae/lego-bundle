@@ -11,28 +11,26 @@
                     <input type="checkbox" id="js-all-bulk-checkbox">
                 </th>
             {% endif %}
-            {% for column in component.columns() %}
-                {% if column.autoDisplay %}
-                    {% set nbCol = nbCol + 1 %}
-                    {% set columnName = column.name %}
-                    {% set columnkey = column.header %}
-                    {% set orderDirection = "DESC" %}
-                    {% set extraHeaderClass = "" %}
-                    {% if ( columnName == configurator.orderBy )%}
-                        {% if configurator.orderDirection == "DESC" %}
-                            {% set orderDirection = "ASC" %}
-                            {% set extraHeaderClass = "sorting_desc" %}
-                        {% else %}
-                            {% set extraHeaderClass = "sorting_asc" %}
-                        {% endif %}
+            {% for field in component.fields %}
+                {% set nbCol = nbCol + 1 %}
+                {% set columnName = field.name %}
+                {% set columnkey = field.header %}
+                {% set orderDirection = "DESC" %}
+                {% set extraHeaderClass = "" %}
+                {% if ( columnName == configurator.orderBy )%}
+                    {% if configurator.orderDirection == "DESC" %}
+                        {% set orderDirection = "ASC" %}
+                        {% set extraHeaderClass = "sorting_desc" %}
                     {% else %}
-                        {% set extraHeaderClass = "sorting" %}
+                        {% set extraHeaderClass = "sorting_asc" %}
                     {% endif %}
-                    <th {% if column.style %} style="{{ column.style }}"  {% endif %} class="{{extraHeaderClass}}" onclick="window.location = '{{ path(configurator.getPathRoute('index'), { 'orderBy': columnName, "orderDirection": orderDirection })}}'">
-                        <span class="pull-right sort-icon"></span>
-                        {{ columnkey | trans }}
-                    </th>
+                {% else %}
+                    {% set extraHeaderClass = "sorting" %}
                 {% endif %}
+                <th {% if field.style %} style="{{ field.style }}"  {% endif %} class="{{extraHeaderClass}}" onclick="window.location = '{{ path(configurator.getPathRoute('index'), { 'orderBy': columnName, "orderDirection": orderDirection })}}'">
+                    <span class="pull-right sort-icon"></span>
+                    {{ columnkey | trans }}
+                </th>
             {% endfor %}
             {% if not configurator.hideItemAction() %}
                 <th class="actions-header">{{ 'Actions'|trans }}</th>

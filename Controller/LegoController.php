@@ -54,19 +54,69 @@ abstract class LegoController extends Controller
         return null;
     }
 
+    protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
+        $redirect = null;
+        $componentResponses = $configurator->bindRequest($request, $entityId);
+        foreach($componentResponses as $componentResponse){
+            if($componentResponse instanceof MessageComponentResponse) {
+                if($componentResponse->hasRedirect()){
+                    if($redirect != null){
+                        throw new \Exception('Component Conflit: You have several redirection from your components');
+                    }else{
+                        $redirect = $componentResponse->getRedirect();
+                    }
+                }
+                $this->addFlash($componentResponse->getType(),$componentResponse->getMessage());
+            }
+        }
+        if($redirect){
+            return $this->redirectToRoute($redirect['path'], $redirect['params']);
+        }else{
+            return null;
+        }
+    }
+
 
 
     protected function doIndexAction(AbstractConfigurator $configurator, Request $request)
     {
-
-        $componentResponses = $configurator->bindRequest($request);
-        foreach($componentResponses as $componentResponse){
-            if($componentResponse instanceof MessageComponentResponse) {
-                $this->addFlash($componentResponse->getType(),$componentResponse->getMessage());
-            }
+        $response = $this->comunicateComponents($configurator, $request);
+        if($response){
+            return $response;
         }
         return new Response($this->renderView($configurator->getIndexTemplate(), [ 'configurator' => $configurator]));
     }
+
+    protected function doShowAction(AbstractConfigurator $configurator, $entityId, Request $request)
+    {
+        $response = $this->comunicateComponents($configurator, $request, $entityId);
+        if($response){
+            return $response;
+        }
+        return new Response($this->renderView($configurator->getShowTemplate(), [ 'configurator' => $configurator]));
+    }
+
+
+    protected function doAddAction(AbstractConfigurator $configurator, Request $request)
+    {
+        $response = $this->comunicateComponents($configurator, $request);
+        if($response){
+            return $response;
+        }
+        return new Response($this->renderView($configurator->getAddTemplate(), [ 'configurator' => $configurator]));
+    }
+
+
+    protected function doEditAction(AbstractConfigurator $configurator, $entityId, Request $request)
+    {
+        $response = $this->comunicateComponents($configurator, $request, $entityId);
+        if($response){
+            return $response;
+        }
+        return new Response($this->renderView($configurator->getEditTemplate(), [ 'configurator' => $configurator]));
+    }
+
+
 
     /**
      * Export a list of Entities
@@ -97,142 +147,9 @@ abstract class LegoController extends Controller
         return $this->get("lle_adminlist.service.export")->getDownloadableResponse($adminlist, $_format);
     }
 
-    /**
-     * Creates and processes the form to add a new Entity
-     *
-     * @param AbstractAdminListConfigurator $configurator The adminlist configurator
-     * @param string                        $type         The type to add
-     *
-     * @return array
-     */
-    protected function doAddAction(AbstractConfigurator $configurator, $type = null, Request $request = null)
-    {
-        /* @var EntityManager $em */
-        $em = $this->getEntityManager();
-        if (is_null($request)) {
-            $request = $this->getRequest();
-        }
-        $entityName = null;
-        if (isset($type)) {
-            $entityName = $type;
-        } else {
-            $entityName = $configurator->getRepositoryName();
-        }
 
-        $classMetaData = $em->getClassMetadata($entityName);
-        // Creates a new instance of the mapped class, without invoking the constructor.
-        $classname = $classMetaData->getName();
-        $obj       = new $classname();
-        $helper    = $configurator->decorateNewEntity($obj,$request);
-        $helper    = $configurator->initEntity($helper,$request);
-        $form      = $this->createForm($configurator->getNewAdminType($helper), $helper);
 
-        if ('POST' == $request->getMethod()) {
 
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $helper    = $configurator->addValideEntity($helper,$request);
-                $em->persist($helper);
-                $this->uploader($configurator,$helper);
-                $em->flush();
-                $indexUrl = $configurator->getUrlAfterNew($helper,$request);
-                 if ($request->request->get('referer_sublist')) {
-                    return new RedirectResponse(
-                        $request->request->get('referer_sublist')
-                    );
-                } else {
-                    return new RedirectResponse(
-                        $this->generateUrl($indexUrl['path'], isset($indexUrl['params']) ? $indexUrl['params'] : array())
-                    );
-                }
-            } else {
-                $adminlist = $this->get("lle_adminlist.factory")->createList($configurator, $em);
-                $adminlist->bindRequest($request);
-                return new Response(
-                    $this->renderView(
-                        $configurator->getAddTemplate(),
-                        array('entity'=>$helper,'form' => $form->createView(), 'adminlistconfigurator' => $configurator,'theme'=>$adminlist->getNewFormTheme(),'groups'=>$adminlist->getNewFormGroups(),'referer_sublist'=>$request->request->get('referer_sublist'))
-                    )
-                );
-            }
-        }
-        $refererSublist = $request->request->get('referer_sublist');
-        if($request->query->get('sublist')) $refererSublist = $this->getRequest()->headers->get('referer');
-
-        $adminlist = $this->get("lle_adminlist.factory")->createList($configurator, $em);
-        $adminlist->bindRequest($request);
-        return new Response(
-            $this->renderView(
-                $configurator->getAddTemplate(),
-                array('entity'=>$helper,'form' => $form->createView(), 'adminlistconfigurator' => $configurator,'theme'=>$adminlist->getNewFormTheme(),'groups'=>$adminlist->getNewFormGroups(),'referer_sublist'=>$refererSublist)
-            )
-        );
-    }
-
-    /**
-     * Creates and processes the edit form for an Entity using its ID
-     *
-     * @param AbstractAdminListConfigurator $configurator The adminlist configurator
-     * @param string                        $entityId     The id of the entity that will be edited
-     *
-     * @throws NotFoundHttpException
-     * @return Response
-     */
-    protected function doEditAction(AbstractConfigurator $configurator, $entityId, Request $request = null)
-    {
-        /* @var EntityManager $em */
-        $em = $this->getEntityManager();
-        if (is_null($request)) {
-            $request = $this->getRequest();
-        }
-        $helper = $em->getRepository($configurator->getRepositoryName())->findOneById($entityId);
-        $helper = $configurator->initEntity($helper,$request);
-        $helper = $configurator->decorateEditEntity($helper,$request);
-        if ($helper === null) {
-            throw new NotFoundHttpException("Entity not found.");
-        }
-
-        if (!$configurator->canEdit($helper)) {
-            throw new AccessDeniedHttpException('You do not have sufficient rights to access this page.');
-        }
-
-        $form = $this->createForm($configurator->getEditAdminType($helper), $helper);
-
-        if ('POST' == $request->getMethod()) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $helper    = $configurator->editValideEntity($helper,$request);
-                $em->persist($helper);
-                $this->uploader($configurator,$helper);
-                $em->flush();
-                if ($configurator->getTemplateAfterEdit() == 'show') {
-                    $indexUrl = $configurator->getShowUrl($helper);
-                } elseif ($configurator->getTemplateAfterEdit() == 'list') {
-                    $indexUrl = $configurator->getUrlAfterEdit($helper,$request);
-                }
-
-                if ($request->request->get('referer_sublist')) {
-                    return new RedirectResponse(
-                        $request->request->get('referer_sublist')
-                    );
-                } else {
-                    return new RedirectResponse(
-                        $this->generateUrl($indexUrl['path'], isset($indexUrl['params']) ? $indexUrl['params'] : array())
-                    );
-                }
-            }
-        }
-        $refererSublist = $request->request->get('referer_sublist');
-        if($request->query->get('sublist') and !$refererSublist) $refererSublist = $this->getRequest()->headers->get('referer');
-        $adminlist = $this->get("lle_adminlist.factory")->createList($configurator, $em);
-        $adminlist->bindRequest($request);
-        return new Response(
-            $this->renderView(
-                $configurator->getEditTemplate(),
-                array('form' => $form->createView(), 'entity' => $helper, 'adminlistconfigurator' => $configurator,'theme'=>$adminlist->getEditFormTheme(),'groups'=>$adminlist->getEditFormGroups(),'referer_sublist'=>$refererSublist)
-            )
-        );
-    }
 
     /**
      * Delete the Entity using its ID
@@ -276,36 +193,7 @@ abstract class LegoController extends Controller
         }
     }
 
-     /**
-     * Delete the Entity using its ID
-     *
-     * @param AbstractAdminListConfigurator $configurator The adminlist configurator
-     * @param integer                       $entityId     The id to delete
-     *
-     * @throws NotFoundHttpException
-     * @return Response
-     */
-    protected function doShowAction(AbstractConfigurator $configurator, $entityId, Request $request = null)
-    {
-        /* @var $em EntityManager */
-        $em = $this->getEntityManager();
-        if (is_null($request)) {
-            $request = $this->getRequest();
-        }
-        $entity = $em->getRepository($configurator->getRepositoryName())->findOneById($entityId);
-        if ($entity === null) {
-            throw new NotFoundHttpException("Entity not found.");
-        }
-        $adminlist = $this->get("lle_adminlist.factory")->createList($configurator, $em);
-        $subAdminlists = $configurator->generateShowSubLists($this,$entity,$request);
-        $adminlist->bindRequest($request);
-        return new Response(
-            $this->renderView(
-                $configurator->getShowTemplate(),
-                array('item' => $entity, 'subadminlists'=>$subAdminlists,'adminlist' => $adminlist, 'adminlistconfigurator' => $configurator, 'addparams' => array())
-            )
-        );
-    }
+
 
 
     protected function doEditInPlaceAction(AbstracConfigurator $configurator, Request $request = null){
