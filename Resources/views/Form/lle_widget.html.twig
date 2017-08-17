@@ -318,7 +318,7 @@ $(function(){
     </script>
 {% endblock %}
 
-{% block lle_auto_completion_widget %}
+{% block auto_completion_widget %}
 	<input {{ block('widget_attributes') }}  id="{{id}}" type="hidden" value="{{ value }}"/>
 	<input id="{{champ_value_label}}" class="form-control" type="text" value="{{ value_label }}" {% if required %}required="required"{% endif %} />
 	<script>

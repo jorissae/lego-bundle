@@ -5,10 +5,11 @@ namespace Idk\LegoBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Lle\AdminListBundle\Form\Transformer\ObjectToIdTransformer;
+use Idk\LegoBundle\Form\Transformer\ObjectToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
  
 class AutoCompletionType extends AbstractType
 {
@@ -20,7 +21,7 @@ class AutoCompletionType extends AbstractType
     }
 
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'route'=>null,
@@ -57,7 +58,7 @@ class AutoCompletionType extends AbstractType
 
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
     public function getName()

@@ -150,12 +150,13 @@ class Field
     }
 
 
-    public function isEditInPlace($adminlist,$item){
+    public function isEditInPlace($item){
         if(isset($this->edit_in_place['if'])){
             $m = $this->edit_in_place['if']['method'];
             $v = $this->edit_in_place['if']['value'];
             return ($item->$m() == $v);
         }
+        die(print_r($this->edit_in_place));
         return ($this->edit_in_place);
     }
 

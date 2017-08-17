@@ -140,20 +140,31 @@ trait Controller
      */
     public function editInPlaceAction(Request $request)
     {
-        return parent::doEditInPlaceAction($this->getAdminListConfigurator(), $request);
+        return parent::doEditInPlaceAction($this->getConfigurator(), $request);
     }
 
     /**
-     * The edit in place action
+     * The auto completion action
      *
-     * @Route("/autocomplete")
+     * @Route("/ac")
      * @Method({"GET", "POST"})
      * @return array
      */
-    public function autoCompleteAction(Request $request)
+    public function autoCompletionAction(Request $request)
     {
-        return parent::doAutoCompleteAction($this->getAdminListConfigurator(), $request);
+        return parent::doAutoCompleteAction($this->getConfigurator(), $request);
     }
 
+    /**
+     * The auto completion action
+     *
+     * @Route("/component/{cid}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function componentAction(Request $request)
+    {
+        return parent::doComponentAction($this->getConfigurator(), $request);
+    }
 
 }

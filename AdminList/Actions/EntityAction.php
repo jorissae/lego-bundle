@@ -6,7 +6,7 @@ namespace Idk\LegoBundle\AdminList\Actions;
  * The simple item action is a default implementation of the item action interface, this can be used
  * in very simple use cases.
  */
-class ItemAction
+class EntityAction
 {
 
     /**
@@ -54,6 +54,10 @@ class ItemAction
 
     private $params;
 
+    private $modal;
+
+    private $cssClass;
+
     /**
      * @param callable $routerGenerator The generator used to generate the url of an item, when generating the item will
      *                                  be provided.
@@ -75,6 +79,8 @@ class ItemAction
         $this->target = (isset($options['target']))? $options['target']:null;
         $this->params = (isset($options['params']))? $options['params']:null;
         $this->popup = (isset($options['popup']))? $options['popup']:null;
+        $this->modal = (isset($options['modal']))? $options['modal']:null;
+        $this->cssClass = (isset($options['css_class']))? $options['css_class']:null;
 
         $this->id = md5($label);
         $this->raise();
@@ -87,7 +93,19 @@ class ItemAction
         return $this->popup;
     }
 
-    public function isShow($adminlist, $item){
+    public function isModal(){
+        return $this->modal;
+    }
+
+    public function getModal(){
+        return $this->modal;
+    }
+
+    public function getCssClass(){
+        return $this->cssClass;
+    }
+
+    public function isShow($item){
         if(is_array($this->if)){
             $m = $this->if['method'];
             $v = $this->if['value'];
@@ -116,13 +134,11 @@ class ItemAction
      *
      * @return string
      */
-    public function getUrlFor($adminlist, $item)
+    public function getUrlFor($item)
     {
         $routeGenerator = $this->routerGenerator;
         if ($routeGenerator && is_callable($routeGenerator)) {
            return $routeGenerator($item);
-        } elseif($this->type){
-           return $adminlist->getItemActionUrl($item,$this->type,$this->id);
         } elseif($this->params){
             return array('path'=>$this->route,'params'=>$this->getParams());
         } elseif($this->route){

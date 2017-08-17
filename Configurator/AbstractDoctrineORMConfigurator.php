@@ -292,6 +292,11 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         return $em->getClassMetadata($this->getRepositoryName());
     }
 
+    //use by Lego
+    public function getClass(){
+        return $this->getRepositoryName();
+    }
+
     public function newInstance(){
         return $this->getClassMetaData()->newInstance();
     }

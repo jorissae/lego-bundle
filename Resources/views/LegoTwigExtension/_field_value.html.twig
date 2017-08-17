@@ -1,28 +1,26 @@
 {% set columnName = field.name %}
 {% set real_value = configurator.getValue(item, columnName) %}
-{% if field.isEditInPlace(configurator,item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
+
+{% if field.isEditInPlace(item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
     {% set type = configurator.editInplaceInputType(item,columnName,field.editInPlaceClass) %}
-    {% if type == 'bool'  %}
+    {% if type == 'boolean'  %}
         {% if configurator.getValue(item, columnName) %}
-            <i class="fa fa-check-square-o edit-in-place-bool"
-               data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
-               data-item-id="{{ item.id }}"
-               data-column-name="{{ columnName }}"
-               data-line="line-{{ item.id }}"
-               data-reload="{{ field.editInPlaceReload }}"
-               data-value="1"></i>
+            {% set icon =  'check-square-o' %}
+            {% set value = 1 %}
         {% else %}
-            <i class="fa fa-square-o edit-in-place-bool"
-               data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
-               data-item-id="{{ item.id }}"
-               data-column-name="{{ columnName }}"
-               data-line="line-{{ item.id }}"
-               data-reload="{{ field.editInPlaceReload }}"
-               data-value="0"></i>
+            {% set icon =  'square-o' %}
+            {% set value = 0 %}
         {% endif %}
+        <i class="fa fa-{{ icon }} lego-edit-in-place-bool"
+           data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
+           data-item-id="{{ item.id }}"
+           data-column-name="{{ columnName }}"
+           data-line="line-{{ item.id }}"
+           data-reload="{{ field.editInPlaceReload }}"
+           data-value="{{ value }}"></i>
     {% else %}
-        <span class="edit-in-place " id="span-{{ columnName }}-{{ item.id }}" data-column-name="{{ columnName }}" data-item-id="{{ item.id }}">
-            {% if string_value != '' and string_value is not null %}
+        <span class="lego-edit-in-place" id="span-{{ columnName }}-{{ item.id }}" data-column-name="{{ columnName }}" data-item-id="{{ item.id }}">
+            {% if real_value != '' and string_value is not null %}
                 {% if real_value and type == 'date' %}
                     {{ real_value| date('d/m/Y') }}
                 {% elseif real_value and type == 'datetime' %}
@@ -89,14 +87,14 @@
                     data-class="{{ field.editInPlaceClass }}"
                     data-line="line-{{ item.id }}"
                     data-reload="{{ field.editInPlaceReload }}"
-                    class="edit-in-place-ok">
+                    class="lego-edit-in-place-ok">
                     <i class="fa fa-check-circle" title="Enregistrer"></i>
             </span>
-            <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="edit-in-place-close">
+            <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="lego-edit-in-place-close">
                 <i class="fa fa-close" title="Annuler"></i>
             </span>
             {% if type == 'object' %}
-                <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="edit-in-place-eraser">
+                <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="lego-edit-in-place-eraser">
                 <i class="fa fa-eraser" title="Supprimer"></i>
             </span>
             {% endif %}

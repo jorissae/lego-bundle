@@ -148,13 +148,13 @@ class Field
     }
 
 
-    public function isEditInPlace(AbstractConfigurator $configurator, $item){
+    public function isEditInPlace($item){
         if(isset($this->edit_in_place['if'])){
             $m = $this->edit_in_place['if']['method'];
             $v = $this->edit_in_place['if']['value'];
             return ($item->$m() == $v);
         }
-        return ($this->edit_in_place);
+        return $this->edit_in_place;
     }
 
     public function getEditInPlace(){

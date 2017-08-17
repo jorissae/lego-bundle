@@ -1,14 +1,13 @@
- <div id="sure-modal-{{ item.id }}" class="modal fade">
-        <{% if configurator.isXhrDelete %}div{% else %}form{% endif %} style="
+ <div id="modal-delete-{{ item.id }}" class="modal fade">
+        <div style="
             width: 600px;
             height: 154px;
             background-color: #fff;
             margin: auto;
-            margin-top: 50px;"
-            action="{{ path(configurator.getPathRoute('delete'),configurator.getPathParams(item) ) }}" method="POST">
+            margin-top: 50px;">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>
-                <h3>Voulez vous vraiment supprimer cet objet ?</h3>
+                <h3>{{  'lego.ask.confirmation.delete'|trans }}</h3>
             </div>
             <div class="modal-footer">
                 <div class="btn_group">
@@ -19,11 +18,11 @@
                         data-url="{{ path(configurator.getPathRoute('delete'),configurator.getPathParams(item) ) }}"
                         data-line="line-{{ item.id }}">Oui</a>
                     {% else %}
-                        <button type="submit" class="btn btn-danger" value="delete" name="delete" >Oui</button>
+                        <button type="submit" class="btn btn-danger" value="delete" name="delete" >{{ 'lego.word.yes'|trans }}</button>
                     {% endif %}
-                    <button class="btn" data-dismiss="modal">Non</button>
+                    <button class="btn" data-dismiss="modal">{{ 'lego.word.no'|trans }}</button>
                 </div>
             </div>
-        </{% if configurator.isXhrDelete %}div{% else %}form{% endif %}>
+        </div>
 
     </div>

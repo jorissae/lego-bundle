@@ -34,8 +34,8 @@ abstract class AbstractConfigurator
     const SUFFIX_LISTACTION = 'alist';
     const SUFFIX_BULKACTION = 'bulk';
     const SUFFIX_SHOW = 'show';
-    const SUFFIX_EDIT_IN_PLACE = 'edit_in_place';
-    const SUFFIX_EDIT_IN_PLACE_ATTR = 'edit_in_place_attribut';
+    const SUFFIX_EDIT_IN_PLACE = 'editinplace';
+    const SUFFIX_EDIT_IN_PLACE_ATTR = 'editinplace_attribut';
     const SUFFIX_LOGS = 'logs';
     const SUFFIX_LOG = 'log';
     const SUFFIX_WORKFLOW = 'wf';
@@ -234,6 +234,7 @@ abstract class AbstractConfigurator
             $this->buildHtml();
         }
     }
+
 
     public function setSubListUniqueName($subListUniqueName){
         $this->subListUniqueName = $subListUniqueName;
@@ -553,14 +554,6 @@ abstract class AbstractConfigurator
 
         return array(
             'path' => $this->getPathByConvention($this::SUFFIX_EDIT_IN_PLACE),
-        );
-    }
-
-    public function getEditInPlaceAttrUrl()
-    {
-
-        return array(
-            'path' => $this->getPathByConvention($this::SUFFIX_EDIT_IN_PLACE_ATTR),
         );
     }
 
@@ -1010,65 +1003,11 @@ abstract class AbstractConfigurator
         }
     }
 
-    /**
-     * @param ItemActionInterface $itemAction
-     *
-     * @return AbstractAdminListConfigurator
-     */
-    public function addItemAction($label,$options)
-    {
-        $this->itemActions[] = new ItemAction($label,$options);
 
-        return $this;
-    }
 
-    public function addSimpleItemAction($label,$route_callback,$icon = null){
-        $this->addItemAction($label,array('route_callback'=>$route_callback,'icon'=>$icon));
-    }
 
-    /**
-     * @return bool
-     */
-    public function hasItemActions()
-    {
-        return !empty($this->itemActions);
-    }
 
-    /**
-     * @return ItemActionInterface[]
-     */
-    public function getItemActions()
-    {
-        return $this->itemActions;
-    }
 
-    /**
-     * @param ListActionInterface $listAction
-     *
-     * @return AdminListConfiguratorInterface
-     */
-    public function addListAction($label,$options)
-    {
-        $this->listActions[] = new ListAction($label,$options);
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasListActions()
-    {
-        return !empty($this->listActions);
-    }
-
-    /**
-     * @return ListActionInterface[]
-     */
-    public function getListActions()
-    {
-        return $this->listActions;
-    }
 
     /**
      * @param BulkActionInterface $bulkAction
@@ -1252,7 +1191,7 @@ abstract class AbstractConfigurator
         $type = $this->getType($item,$columnName);
         $retour = $item->$methodName();
         if ($type == 'boolean') {
-            return 'bool';
+            return $type;
         }else if($type == 'datetime'){
             return $type;
         }else if($type == 'date') {
@@ -1547,6 +1486,7 @@ abstract class AbstractConfigurator
      */
     public function getPathByConvention($suffix = null)
     {
+        return $this->getControllerPath().'_'.$suffix;
         $entityName = strtolower($this->getEntityName());
         $entityName = str_replace('\\', '_', $entityName);
         if (empty($suffix)) {
@@ -1757,6 +1697,15 @@ abstract class AbstractConfigurator
         return $this->components[self::ROUTE_SUFFIX_EDIT];
     }
 
+    public function getComponent($id){
+        foreach($this->components as $route => $components){
+            foreach($components as $component){
+                if($component->getId() == $id) return $component;
+            }
+        }
+        return null;
+    }
+
     public function getShowComponents(){
         return $this->components[self::ROUTE_SUFFIX_SHOW];
     }
@@ -1803,12 +1752,12 @@ abstract class AbstractConfigurator
         if(!isset($this->components[$routeSuffix])){
             $this->components[$routeSuffix] = [];
         }
-        $component = $this->generateComponent($className, $options, $configurator);
+        $component = $this->generateComponent($className, $options, $routeSuffix, $configurator);
         $this->components[$routeSuffix][] = $component;
         return $component;
     }
 
-    private function generateComponent($className, array $options, AbstractConfigurator $configurator = null)
+    private function generateComponent($className, array $options, $routeSuffix, AbstractConfigurator $configurator = null)
     {
         $reflectionClass =  new \ReflectionClass($className);
         if($configurator){
@@ -1816,7 +1765,7 @@ abstract class AbstractConfigurator
         }else{
             $configurator = $this;
         }
-        return $reflectionClass->newInstance($options, $configurator);
+        return $reflectionClass->newInstance($options, $configurator, $routeSuffix);
     }
 
 

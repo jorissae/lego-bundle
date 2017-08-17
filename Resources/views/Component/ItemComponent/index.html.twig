@@ -1,16 +1,32 @@
 <div class="box">
     <div class="box-body">
         <div class="row">
-            {% for field in component.fields %}
-                    {% if field.template is not null %}
-                        {% include field.template with {'entity': entity, 'field': field, 'value': configurator.getValue(item, columnName), 'configurator': configurator} %}
-                    {% else %}
-                        <dl class="dl-horizontal">
-                            <dt>{{ field.header }}</dt>
-                            <dd>{{ render_field_value(component,field,entity) }}</dd>
-                        </dl>
-                    {% endif %}
-            {% endfor %}
+            {%  if entity  %}
+                {% for field in component.fields %}
+                        {% if field.template is not null %}
+                            {% include field.template with {'entity': entity, 'field': field, 'value': configurator.getValue(item, columnName), 'configurator': configurator} %}
+                        {% else %}
+                            <dl class="dl-horizontal">
+                                <dt>{{ field.header }}</dt>
+                                <dd>{{ render_field_value(component,field,entity) }}</dd>
+                            </dl>
+                        {% endif %}
+                {% endfor %}
+            {%  else %}
+                <div class="col-md-12">
+                    {% form_theme form theme %}
+                    <form id="{{ component.gid('form') }}" method="post" action="{{ path(configurator.getPathRoute('component'),{'cid': component.id}) }}">
+                        {{ form_row(form[component.gid('entity_id')]) }}
+                    </form>
+                    <button data-callback="{{ component.gid('reloader') }}" data-form="{{ component.gid('form') }}" class="btn-primary col-md-12 lle-send-form-ajax">{{ 'lego.action.show' | trans }}</button>
+                    <div id="{{ component.gid('content') }}"></div>
+                </div>
+                <script>
+                    function {{ component.gid('reloader') }}(data){
+                        $('#{{ component.gid('content') }}').html(data.html);
+                    }
+                </script>
+            {%  endif %}
         </div>
     </div>
 </div>

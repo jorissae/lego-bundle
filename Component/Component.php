@@ -13,11 +13,14 @@ abstract class Component{
 
     private $configurator;
 
+    private $id;
+
     protected $request;
 
-    public function __construct(array $options, AbstractConfigurator $configurator){
+    public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
+        $this->id = md5($suffixRoute.'-'.get_class($this));
         $this->init();
     }
 
@@ -30,6 +33,11 @@ abstract class Component{
         $this->request = $request;
     }
 
+
+    public function xhrBindRequest(Request $request){
+        $this->bindRequest($request);
+    }
+
     public function catchQuerybuilder(QueryBuilder $queryBuilder){
         return $queryBuilder;
     }
@@ -37,6 +45,8 @@ abstract class Component{
     public function getRequest(){
         return $this->request;
     }
+
+
 
     public function getOption($key, $default = null){
         return (isset($this->options[$key]))? $this->options[$key]:$default;
@@ -52,6 +62,18 @@ abstract class Component{
 
     public function getConfigurator(){
         return $this->configurator;
+    }
+
+    public function getTemplateAllParameters(){
+        return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function gid($id){
+        return md5($this->id.$id);
     }
 
 }

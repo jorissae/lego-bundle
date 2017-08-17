@@ -31,9 +31,9 @@ class {{ entity_class }}AdminType extends AbstractType
      * Returns the name of this type.
      *
      * @return string The name of this type
-     */
+     */['actions'=>
     public function getName()
     {
         return '{{ entity_class|lower }}_form';
-    }
+    }['actions'=>
 }

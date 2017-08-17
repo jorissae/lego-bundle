@@ -56,20 +56,20 @@ $(function(){
       $('html,body').animate({scrollTop: $($(this).attr('href')).offset().top}, 'slow');
     });
 
-    $('body').on('keydown', '.edit-in-place-input', function(e) {
+    $('body').on('keydown', '.lego-edit-in-place-input', function(e) {
         if(e.keyCode == 13) {
-            $(this).siblings('.edit-in-place-ok').click();
+            $(this).siblings('.lego-edit-in-place-ok').click();
         }
     });
 
-    $('body').on('click','.edit-in-place',function(){
+    $('body').on('click','.lego-edit-in-place',function(){
         $(this).hide();
         $('#span-in-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).show();
         $('#input-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).focus();
 
         $("select.select2").select2();
     });
-    $('body').on('click','.edit-in-place-close',function(){
+    $('body').on('click','.lego-edit-in-place-close',function(){
         var columnName = $(this).attr('data-column-name');
         var id = $(this).attr('data-item-id');
         var span = $('#span-'+ columnName + '-' + id);
@@ -77,12 +77,12 @@ $(function(){
         span.show();
         span_in.hide();
     });
-    $('body').on('click','.edit-in-place-eraser',function(){
+    $('body').on('click','.lego-edit-in-place-eraser',function(){
         $('#input-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).val(null);
-        $(this).siblings('.edit-in-place-ok').click();
+        $(this).siblings('.lego-edit-in-place-ok').click();
     });    
 
-    $('body').on('click','.edit-in-place-bool',function(){
+    $('body').on('click','.lego-edit-in-place-bool',function(){
         var elm = $(this);
         var id = elm.attr('data-item-id');
         var columnName = elm.attr('data-column-name');
@@ -119,7 +119,7 @@ $(function(){
         });
     });
 
-    $('body').on('click','.edit-in-place-ok',function(){
+    $('body').on('click','.lego-edit-in-place-ok',function(){
         var elm = $(this);
         elm.html('<i class="fa fa-spinner"></i>');
         var id = $(this).attr('data-item-id');

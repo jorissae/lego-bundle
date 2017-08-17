@@ -1,0 +1,15 @@
+{% if entity %}
+{% for field in component.fields %}
+    {% if field.template is not null %}
+        {% include field.template with {'entity': entity, 'field': field, 'value': configurator.getValue(item, columnName), 'configurator': configurator} %}
+    {% else %}
+        <dl class="dl-horizontal">
+            <dt>{{ field.header }}</dt>
+            <dd>{{ render_field_value(component,field,entity) }}</dd>
+        </dl>
+    {% endif %}
+{% endfor %}
+{%  else %}
+    {{ 'lego.error.entity_not_found' | trans }}
+{% endif %}
+

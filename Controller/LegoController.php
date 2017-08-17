@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Idk\LegoBundle\AdminList\AdminList;
 use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -116,6 +117,94 @@ abstract class LegoController extends Controller
         return new Response($this->renderView($configurator->getEditTemplate(), [ 'configurator' => $configurator]));
     }
 
+    protected function doEditInPlaceAction(AbstractConfigurator $configurator, Request $request){
+        $this->createFormBuilder();
+        $em = $this->getEntityManager();
+        $reload = $request->request->get('reload');
+        $entity = $em->getRepository($configurator->getRepositoryName())->findOneById($request->request->get('id'));
+        $columnName = $request->request->get('columnName');
+        $class = $request->request->get('cls');
+        $type = $configurator->editInplaceInputType($entity,$columnName);
+        $method = 'set'.$configurator->to_camel_case($columnName);
+        if ($type == 'object'){
+            $value = $em->getRepository($class)->find($request->request->get('value'));
+        }elseif($type == 'datetime'){
+            $value = $request->request->get('value');
+            if($value != ''){
+                $value = \DateTime::createFromFormat('d/m/Y H:i',$request->request->get('value'));
+            } else {
+                $value = null;
+            }
+        }elseif($type == 'date'){
+            $value = $request->request->get('value');
+            if($value != ''){
+                $value = \DateTime::createFromFormat('d/m/Y',$value);
+            } else {
+                $value = null;
+            }
+        }elseif($type == 'time'){
+            $value = $request->request->get('value');
+            if($value != ''){
+                $value = \DateTime::createFromFormat('H:i',$request->request->get('value'));
+            } else {
+                $value = null;
+            }
+        }elseif($type == 'bool'){
+            $value = ($request->request->get('value') == '1');
+        } else{
+            $value = $request->request->get('value');
+        }
+        $entity->$method($value);
+        $em->persist($entity);
+        $em->flush();
+        if($type == 'text'){
+            $stringValue = $configurator->getValue($entity,$columnName);
+        } else {
+            $stringValue = $configurator->getStringValue($entity,$columnName);
+        }
+        if($reload == 'tr'){
+            $return = array('code'=>'OK','val'=> (string)html_entity_decode($this->getLineResponse($configurator,$entity)));
+        }else{
+            $return = array('code'=>'OK','val'=>(string)$stringValue,'setter'=>$value);
+        }
+        return new Response(json_encode($return));
+    }
+
+    protected function doAutoCompleteAction(AbstractConfigurator $configurator, Request $request){
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository($configurator->getRepositoryName());
+        $term = $request->query->get('term');
+        $params = array();
+        foreach($request->query->all() as $k => $parameter){
+            if($k != 'term'){
+                $params[$k] = $parameter;
+            }
+        }
+        $return = array();
+        if (method_exists($repo, "autoCompleteQuery")){
+            $entities = $repo->autoCompleteQuery($term,$params)->getResult();
+            foreach($entities as $entity){
+                $return[] = array('label'=>$entity->__toString(),'value'=>$entity->getId());
+            }
+        } else if(method_exists($repo, "autoComplete")){
+            $return = $repo->autoComplete($term, $params);
+        } else {
+            $fieldSearch = $configurator->getAutocompleteField();
+            $cl = $configurator->getClassMetaData();
+            $entities = $repo->createQueryBuilder('al')->where('al.'.$fieldSearch.' LIKE :term')->setParameter('term', '%'.$term.'%')->getQuery()->getResult();
+            foreach($entities as $entity){
+                $return[] = array('label'=>$cl->getFieldValue($entity,$fieldSearch),'value'=>$entity->getId());
+            }
+        }
+        return new Response(json_encode($return));
+    }
+
+    protected function doComponentAction(AbstractConfigurator $configurator, Request $request){
+        $component = $configurator->getComponent($request->get('cid'));
+        $component->xhrBindRequest($request);
+        return new JsonResponse(['html'=>$this->renderView($component->getTemplate(), $component->getTemplateAllParameters())]);
+    }
+
 
 
     /**
@@ -196,118 +285,9 @@ abstract class LegoController extends Controller
 
 
 
-    protected function doEditInPlaceAction(AbstracConfigurator $configurator, Request $request = null){
-        $em = $this->getEntityManager();
-        if (is_null($request)) {
-            $request = $this->getRequest();
-        }
-        $reload = $request->request->get('reload');
-        $entity = $em->getRepository($configurator->getRepositoryName())->findOneById($request->request->get('id'));
-        $columnName = $request->request->get('columnName');
-        $class = $request->request->get('cls');
-        $type = $configurator->editInplaceInputType($entity,$columnName);
-        $method = 'set'.$configurator->to_camel_case($columnName);
-        if ($type == 'object'){
-            $subMethod = 'get'.$configurator->to_camel_case($columnName);
-            $value = $em->getRepository($class)->find($request->request->get('value'));
-        }elseif($type == 'datetime'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('d/m/Y H:i',$request->request->get('value'));
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'date'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('d/m/Y',$value);
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'time'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('H:i',$request->request->get('value'));
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'bool'){
-            $value = ($request->request->get('value') == '1');
-        } else{
-            $value = $request->request->get('value');
-        }
-        $entity->$method($value);
-        $em->persist($entity);
-        $em->flush();
-        if($type == 'text'){
-            $stringValue = $configurator->getValue($entity,$columnName);
-        } else {
-            $stringValue = $configurator->getStringValue($entity,$columnName);
-        }
-        if($reload == 'tr'){
-            $return = array('code'=>'OK','val'=> (string)html_entity_decode($this->getLineResponse($configurator,$entity)));
-        }else{
-            $return = array('code'=>'OK','val'=>(string)$stringValue,'setter'=>$value);
-        }
-        return new Response(json_encode($return));
-    }
 
-    protected function doEditInPlaceAttributAction(AbstractAdminListConfigurator $configurator, Request $request = null){
-        $em = $this->getEntityManager();
-        $classRelation = $this->getAdminListConfigurator()->getRepositoryNameAttributRelation();
-        $item = $em->getRepository($this->getAdminListConfigurator()->getRepositoryName())->find($request->request->get('id'));
-        $attr = $em->getRepository($this->getAdminListConfigurator()->getRepositoryNameAttribut())->find($request->request->get('columnName'));
-        $relation = $em->getRepository($classRelation)->findOneBy(array('attribut'=>$attr,'item'=>$item));
-        $value = $request->request->get('value');
-        if ($attr->isValid($value)){
-            if (!$relation) $relation = $em->getClassMetadata($classRelation)->newInstance();
-            $relation->setAttribut($attr);
-            $relation->setItem($item);
-            $relation->setValue($request->request->get('value'));
-            $em->persist($relation);
-            $em->flush();
-            $val = $relation->getValue();
-            if($attr->isBool()){
-                if($val != '') {
-                    $val = ($val == true) ? 'Oui' : 'Non';
-                }
-            }
-            $return = array('code'=>'OK','val'=>$val);
-            return new Response(json_encode($return));
-        } else {
-            $return = array('code'=>'NOK','val'=>$value,'err'=>'Valeur non valide');
-            return new Response(json_encode($return));
-        }
-    }
 
-    protected function doAutoCompleteAction(AbstracConfigurator $configurator, Request $request = null){
-        $em = $this->getEntityManager();
-        $repo = $em->getRepository($configurator->getRepositoryName());
-        $term = $request->query->get('term');
-        $params = array();
-        foreach($request->query->all() as $k => $parameter){
-            if($k != 'term'){
-                $params[$k] = $parameter;
-            }
-        }
-        $return = array();
-        if (method_exists($repo, "autoCompleteQuery")){
-            $entities = $repo->autoCompleteQuery($term,$params)->getResult();
-            foreach($entities as $entity){
-                $return[] = array('label'=>$entity->__toString(),'value'=>$entity->getId());
-            }
-        } else if(method_exists($repo, "autoComplete")){
-            $return = $repo->autoComplete($term, $params);
-        } else {
-            $fieldSearch = $configurator->getAutocompleteField();
-            $cl = $configurator->getClass(); //API reflexivite
-            $entities = $repo->createQueryBuilder('al')->where('al.'.$fieldSearch.' LIKE :term')->setParameter('term', '%'.$term.'%')->getQuery()->getResult();
-            foreach($entities as $entity){
-                $return[] = array('label'=>$cl->getFieldValue($entity,$fieldSearch),'value'=>$entity->getId());
-            }
-        }
-        return new Response(json_encode($return));
-    }
+
 
     protected function doLogsAction(AbstractConfigurator $configurator, Request $request = null){
         $r =  $this->container->get('log_manager')->getLogs(array('objectClass'=>$configurator->getClass()->getName()),$request->query->get('page',1));
