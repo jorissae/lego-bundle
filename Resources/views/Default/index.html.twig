@@ -8,6 +8,6 @@
 {% block content %}
     {%  include 'IdkLegoBundle:Default:_flash.html.twig' %}
     {% for component in configurator.indexComponents %}
-        {% include component.template with component.templateParameters %}
+        <div id="{{ component.id }}">{% include component.template with component.templateParameters %}</div>
     {%  endfor %}
 {% endblock %}

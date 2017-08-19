@@ -213,7 +213,27 @@ $(function(){
 
 });
 
+var lego = {
+    post: function(url, params, callback, errorCallback){
 
+        $.ajax({
+            type        : 'POST',
+            url         : url,
+            data        : params,
+            dataType    : 'json',
+            success     : function(data) {
+                callback(data);
+            },
+            error : function(xhr, ajaxOptions, thrownError){
+                if (errorCallback) errorCallback(elm, xhr, ajaxOptions, thrownError);
+            }
+        });
+    },
+
+    success: function(message){
+        $('<div>'+message+'</div>').dialog({title:'Success'});
+    }
+};
 var lle = {
     dialog: function(title,msg){
         $('<div>'+msg+'</div>').dialog({title:title});

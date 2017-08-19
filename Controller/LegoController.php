@@ -149,7 +149,7 @@ abstract class LegoController extends Controller
             } else {
                 $value = null;
             }
-        }elseif($type == 'bool'){
+        }elseif($type == 'boolean'){
             $value = ($request->request->get('value') == '1');
         } else{
             $value = $request->request->get('value');
@@ -215,57 +215,63 @@ abstract class LegoController extends Controller
         return new JsonResponse(['html'=>$this->renderView($component->getTemplate(), $component->getTemplateAllParameters())]);
     }
 
+    protected function doBulkAction(AbstractConfigurator $configurator, Request $request){
+        $component = $configurator->getComponent($request->get('cid'));
+        $component->xhrBindRequest($request);
+        $bulkAction = $component->getBulkAction($request->get('ida'));
+        $type = $request->query->get('type');
+        $ids = $request->request->get('ids');
+        $em = $this->getEntityManager();
 
+        $set = 'set'.ucfirst($bulkAction->getField());
+        $classMetaData = $configurator->getClassMetadata();
+        $i=0;
+        $value = $bulkAction->getValue();
+        $entities= $configurator->getRepository()->createQueryBuilder('i')->where('i.id IN (:ids)')->setParameter('ids',$ids)->getQuery()->getResult();
+        if($type == 'change'){
+            if($request->request->get('value')){
+                if ($classMetaData->hasAssociation($bulkAction->getField())){
+                    $value = $em->getRepository($classMetaData->getAssociationTargetClass($bulkAction->getField()))->find($request->request->get('value'));
+                }else{
+                    $value = $request->request->get('value');
+                }
+            }
+            foreach($entities as $entity){
+                $entity->$set($value);
+                $em->persist($entity);
+                $i++;
+            }
+            $msg = $this->trans('lego_update_entities', ['%nb%' => $i]);
+        }elseif($type == 'delete'){
+            foreach($entities as $entity){
+                $em->remove($entity);
+                $i++;
+            }
+            $msg = $this->trans('lego_delete_entities', ['%nb%' => $i]);
+        }
+        $em->flush();
+        //$this->addNoticeFlash($msg);
+        //return $this->redirect($this->getRequest()->headers->get('referer'));
+        return new JsonResponse(['html'=>$this->renderView($component->getTemplate(), $component->getTemplateAllParameters()), 'message' => $msg]);
+    }
 
-
-
-
-
-
-
-
-
-
-    /**
-     * Delete the Entity using its ID
-     *
-     * @param AbstractAdminListConfigurator $configurator The adminlist configurator
-     * @param integer                       $entityId     The id to delete
-     *
-     * @throws NotFoundHttpException
-     * @return Response
-     */
-    protected function doDeleteAction(AbstractConfigurator $configurator, $entityId, Request $request = null)
+    protected function doDeleteAction(AbstractConfigurator $configurator, $entityId, Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getEntityManager();
-        if (is_null($request)) {
-            $request = $this->getRequest();
+        $entity = $configurator->getRepository()->findOneById($entityId);
+        if ($entity === null) {
+            throw new NotFoundHttpException($this->trans('lego.entity_not_found'));
         }
-        $helper = $em->getRepository($configurator->getRepositoryName())->findOneById($entityId);
-        if ($helper === null) {
-            throw new NotFoundHttpException("Entity not found.");
-        }
-
-        $indexUrl = $configurator->getUrlAfterDelete($helper,$request);
         if ('POST' == $request->getMethod()) {
                 try { 
-                    $em->remove($helper);
+                    $em->remove($entity);
                     $em->flush();
                 } catch (\Exception $e) {
-                    return new Response(json_encode(array('status'=>'ko', 'message'=>"Cet élément ne peut être supprimé : il dépend d'un autre objet")));
+                    return new Response(json_encode(array('status'=>'ko', 'message'=>$this->trans('lego.error.delete_entity'))));
                 }
         }
-        if($request->isXmlHttpRequest()){
-            return new Response(json_encode(array('status'=>'ok')));
-        }else{
-            if($request->query->get('sublist')){
-                return new RedirectResponse($this->getRequest()->headers->get('referer'));
-            }
-            return new RedirectResponse(
-                $this->generateUrl($indexUrl['path'], isset($indexUrl['params']) ? $indexUrl['params'] : array())
-            );
-        }
+        return new Response(json_encode(array('status'=>'ok')));
     }
 
 
@@ -299,28 +305,6 @@ abstract class LegoController extends Controller
         );
     }
 
-    protected function doWorkflowAction(AbstractConfigurator $configurator, $item){
-        $em = $this->getEntityManager();
-        $request = $this->getRequest();
-        $work = $request->query->get('work');
-        $work = $em->getRepository($configurator->getClassWorkflow())->findOneBy(array($configurator->getWfFieldWorkflow() => trim($work)));
-        $set = 'set'.ucfirst($configurator->getLocalFieldWorkflow());
-        $get = 'get'.ucfirst($configurator->getLocalFieldWorkflow());
-        $fromWork = $item->$get();
-        $item->$set($work);
-        $em->persist($item);
-        $this->get('event_dispatcher')->dispatch(AdminListEvents::onWorkflowChange, new WorkflowChangeEvent($item,$this->getUser(),$fromWork,$work));
-        $em->flush();
-        if($request->isXmlHttpRequest()) {
-            $donnes = $request->request->get('data');
-            $index = $donnes['index'];
-            return new Response($this->renderView('LleAdminListBundle:Default:_line.html.twig',array('adminlist'=>$this->getList($configurator),'item'=>$item,'index'=>$index)));
-        }else{
-            $this->addNoticeFlash('Nouvelle valeur pour "'.$configurator->getLocalFieldWorkflow().'": '. $work->__toString());
-            return $this->redirect($this->getRequest()->headers->get('referer'));
-        }
-    }
-
     protected function doItemAction(AbstractConfigurator $configurator, $item, $ida, $type){
         $em = $this->getEntityManager();
         $request = $this->getRequest();
@@ -343,43 +327,7 @@ abstract class LegoController extends Controller
         }
     }
 
-    protected function doBulkAction(AbstractConfigurator $configurator, $ida, $type){
-        $em = $this->getEntityManager();
-        $request = $this->getRequest();
-        $repo = $em->getRepository($configurator->getRepositoryName());
-        $ids = $request->request->get('ids');
-        $bulkAction = $configurator->getBulkAction($ida);
-        $get = 'get'.ucfirst($bulkAction->getField());
-        $set = 'set'.ucfirst($bulkAction->getField());
-        $classMetaData = $configurator->getClass();
-        $i=0;
-        $value = $bulkAction->getValue();
-        $items = $repo->createQueryBuilder('i')->where('i.id IN (:ids)')->setParameter('ids',$ids)->getQuery()->getResult();
-        if($type == 'change'){
-            if($request->request->get('value')){
-                if ($classMetaData->hasAssociation($bulkAction->getField())){
-                    $value = $em->getRepository($classMetaData->getAssociationTargetClass($bulkAction->getField()))->find($request->request->get('value'));
-                }else{
-                    $value = $request->request->get('value');
-                }
-            }
-            foreach($items as $item){
-                $item->$set($value);
-                $em->persist($item);
-                $i++;
-            }
-            $msg = 'Modification effectuée sur <strong>'.$i.'</strong> items';
-        }elseif($type == 'delete'){
-            foreach($items as $item){
-                $em->remove($item);
-                $i++;
-            }
-            $msg = '<strong>'.$i.'</strong> items supprimé';
-        }
-        $em->flush();
-        $this->addNoticeFlash($msg);
-        return $this->redirect($this->getRequest()->headers->get('referer'));
-    }
+
 
     protected function doAlistAction(AbstracConfigurator $configurator, $ida, $type){
         $em = $this->getEntityManager();
@@ -450,5 +398,10 @@ abstract class LegoController extends Controller
         }
         return $errors;
     }
+
+    protected function trans($str, $vars= []){
+        return $this->get('translator')->trans($str, $vars);
+    }
+
 
 }

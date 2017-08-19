@@ -1006,12 +1006,7 @@ abstract class AbstractConfigurator
      *
      * @return AdminListConfiguratorInterface
      */
-    public function addBulkAction($label,$options)
-    {
-        $this->bulkActions[] = new BulkAction($label,$options);
 
-        return $this;
-    }
 
 
 

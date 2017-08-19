@@ -1,6 +1,7 @@
 parameters:
     lego.service.export.class: Idk\LegoBundle\Service\ExportService
     lego.service.menu.class: Idk\LegoBundle\Service\Menu
+    lego.service.header.class: Idk\LegoBundle\Service\Header
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
 
 services:
@@ -11,7 +12,11 @@ services:
 
     lego.service.menu:
         class:  '%lego.service.menu.class%'
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
+
+    lego.service.header:
+        class:  '%lego.service.header.class%'
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
 
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'

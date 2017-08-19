@@ -6,14 +6,17 @@ namespace Idk\LegoBundle\Component;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\AdminList\Actions\EntityAction;
 use Symfony\Component\HttpFoundation\Request;
+use Idk\LegoBundle\AdminList\Actions\BulkAction;
 
 class ListItems extends Component{
 
     const ENTITY_ACTION_DELETE = 'entity_action_delete';
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
+    const BULK_ACTION_DELETE = 'bulk_action_delete';
 
     private $fields = [];
     private $entityActions = [];
+    private $bulkActions = [];
 
     protected function init(){
         return;
@@ -26,6 +29,14 @@ class ListItems extends Component{
                 $this->entityActions[] = $action;
             }else{
                 $this->addPredefinedEntityAction($action);
+            }
+        }
+        foreach($this->getOption('bulk_actions', []) as $action){
+            if($action instanceOf BulkAction){
+                $action->setCid($this->getId());
+                $this->bulkActions[] = $action;
+            }else{
+                $this->addPredefinedBulkAction($action);
             }
         }
     }
@@ -46,11 +57,25 @@ class ListItems extends Component{
         return $this;
     }
 
+    public function addBulkAction($label,$options)
+    {
+        $bulkAction = new BulkAction($label,$options);
+        $bulkAction->setCid($this->getId());
+        $this->bulkActions[] =  $bulkAction;
+        return $this;
+    }
+
     public function addPredefinedEntityAction($action){
         if($action == self::ENTITY_ACTION_DELETE){
             $this->entityActions[] = new EntityAction('lego.action.delete', ['icon'=>'remove', 'css_class' => 'btn-danger' ,'modal' => $this->getPartial('modal_delete')]);
         }else if($action == self::ENTITY_ACTION_EDIT){
             $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'route' => $this->getConfigurator()->getPathRoute('edit')]);
+        }
+    }
+
+    public function addPredefinedBulkAction($action){
+        if($action == self::BULK_ACTION_DELETE){
+            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>['type'=>'delete']]);
         }
     }
 
@@ -62,6 +87,19 @@ class ListItems extends Component{
         return $this->entityActions;
     }
 
+    public function getBulkActions(){
+        return $this->bulkActions;
+    }
+
+    public function getBulkAction($id){
+        foreach($this->bulkActions as $action){
+            if($action->getId() == $id){
+                return $action;
+            }
+        }
+        return false;
+    }
+
     public function getTemplate($name = 'index'){
         return 'IdkLegoBundle:Component\\ListItemsComponent:'.$name.'.html.twig';
     }
@@ -71,7 +109,11 @@ class ListItems extends Component{
     }
 
     public function hasBulkActions(){
-        return $this->getOption('bulk',false);
+        return (count($this->bulkActions));
+    }
+
+    public function hideEntityActions(){
+        return $this->getOption('hide_entity_actions', false);
     }
 
 }

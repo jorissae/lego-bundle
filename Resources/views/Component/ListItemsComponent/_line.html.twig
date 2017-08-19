@@ -1,7 +1,7 @@
 <tr id="line-{{ item.id }}" >
 {% if component.hasBulkActions %}
     <td>
-        <input type="checkbox" name="ids[]" value="{{ item.id }}" class="js-bulk-checkbox">
+        <input type="checkbox" name="ids[]" value="{{ item.id }}" class="lego-bulk-checkbox">
     </td>
 {% endif %}
 {% for field in component.fields%}

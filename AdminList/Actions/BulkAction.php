@@ -36,7 +36,13 @@ class BulkAction
 
     private $field;
 
+    private $role;
+
     private $id;
+
+    private $cid;
+
+    private $params;
 
     /**
      * @param array    $url      The url path and parameters
@@ -55,22 +61,24 @@ class BulkAction
         $this->value = (isset($options['value']))? $options['value']:null;
         $this->template = (isset($options['template']))? $options['template']:null;
         $this->choices = (isset($options['choices']))? $options['choices']:null;
+        $this->role = (isset($options['role']))? $options['role']:null;
+        $this->params = (isset($options['params']))? $options['params']:[];
     }
 
     public function getId(){
         return $this->id;
     }
 
+    public function setCid($cid){
+        $this->cid = $cid;
+    }
+
     /**
      * @return array
      */
-    public function getUrl($adminlist)
+    public function getUrl()
     {
-        if($this->type){
-            return $adminlist->getBulkActionUrl($this->type,$this->id);
-        }else{
-            return array('path'=>$this->route,'params'=>array());
-        }
+        return array('path'=>$this->route,'params'=> array_merge($this->params, ['ida'=>$this->id, 'cid' => $this->cid]));
     }
 
     /**
@@ -107,5 +115,9 @@ class BulkAction
 
     public function getChoices(){
         return $this->choices;
+    }
+
+    public function getRole(){
+        return $this->role;
     }
 }

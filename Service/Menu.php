@@ -9,9 +9,11 @@ class Menu
 {
 
     private $em;
+    private $security;
 
-    public function __construct($em) {
+    public function __construct($em, $security) {
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function search(){

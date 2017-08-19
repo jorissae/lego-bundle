@@ -1,0 +1,22 @@
+<li class="user-header">
+    <!-- <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
+
+    <p>
+        {{ user.username }}
+        {%  if user.email is defined %}<small>{{ user.email }}</small>{%  endif %}
+    </p>
+</li>
+
+<!-- Menu Footer-->
+<li class="user-footer">
+    <div class="pull-left">
+        {%  if route_profile %}
+        <a href="{{  path(route_profil) }}" class="btn btn-default btn-flat">{{ 'lego.action.see_profil' | trans }}</a>
+        {%  endif %}
+    </div>
+    <div class="pull-right">
+        {%  if route_logout %}
+        <a href="{{  path(route_logout) }}" class="btn btn-default btn-flat">{{ 'lego.action.signe_out' | trans }}</a>
+        {%  endif %}
+    </div>
+</li>

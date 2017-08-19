@@ -3,7 +3,6 @@
 namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
@@ -20,31 +19,12 @@ class ExportService
         $this->serviceCsv = $serviceCsv;
     }
 
-    public static function getSupportedExtensions()
-    {
-        $rfl = new \ReflectionClass(new self());
-        $data = $rfl->getConstants();
-
-        $extensions = array();
-        foreach ($data as $name => $ext) {
-            if (strpos($name, 'EXT_') !== false) {
-                $key = ucfirst(strtolower(str_replace('EXT_', '', $name)));
-                $extensions[$key] = $ext;
-            }
-        }
-
-        return $extensions;
-    }
-
-    public function getDownloadableResponse(AbstractConfigurator $configurator, $format, $template = null)
+    public function getDownloadableResponse(AbstractConfigurator $configurator, $format)
     {
         switch ($format) {
             case self::EXT_EXCEL:
                 $writer = $this->createExcelSheet($configurator);
                 $response = $this->createResponseForExcel($writer);
-                $date = new \DateTime();
-                $filename = sprintf('%s-%s.%s',$configurator->getEntityName(),$date->format('Ymd-His'), $format);
-                $response->headers->set('Content-Disposition', sprintf('attachment; filename=%s', $filename));
                 break;
             default:
                 $response = $this->createCsvResponse($configurator);
@@ -121,15 +101,6 @@ class ExportService
         return $objWriter;
     }
 
-    public function createResponse($content, $_format)
-    {
-        $response = new Response();
-        $response->headers->set('Content-Type', sprintf('text/%s', $_format));
-        $response->setContent($content);
-
-        return $response;
-    }
-
     public function createResponseForExcel($writer)
     {
         $response = new StreamedResponse(
@@ -139,7 +110,8 @@ class ExportService
         );
 
         $response->headers->set('Content-Type', 'application/download');
-
+        $filename = 'export.xlsx';
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename=%s', $filename));
         return $response;
     }
 }

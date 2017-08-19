@@ -1,0 +1,16 @@
+<li class="header">{{ libelle }}</li>
+<li>
+    <!-- inner menu: contains the actual data -->
+    <ul class="menu">
+        {%  for notification in notifications %}
+            <li>
+                <a href="#">
+                    <i class="fa fa-{{ notification.icon }} text-aqua"></i> {{ notification.subject }}
+                </a>
+            </li>
+        {%  endfor %}
+    </ul>
+</li>
+{%  if route %}
+    <li class="footer"><a href="{{  path(route) }}">{{ 'lego.action.view_all'|trans }}</a></li>
+{%  endif %}

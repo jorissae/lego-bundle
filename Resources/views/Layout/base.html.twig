@@ -46,7 +46,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
-        {% include 'IdkLegoBundle:Layout:_header.html.twig' %}
+        {{ render(controller('IdkLegoBundle:Layout:header')) }}
         {{ render(controller('IdkLegoBundle:Layout:menu')) }}
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->

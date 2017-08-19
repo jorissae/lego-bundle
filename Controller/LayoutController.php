@@ -21,4 +21,9 @@ class LayoutController extends Controller
         $menu = $this->get('lego.service.menu');
         return $this->render($menu->getTemplate(), ['menu' => $menu]);
     }
+
+    public function headerAction(){
+        $header = $this->get('lego.service.header');
+        return $this->render($header->getTemplate(), ['header' => $header]);
+    }
 }

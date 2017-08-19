@@ -1,6 +1,7 @@
 
 {%  set configurator = component.configurator  %}
 {%  set index = 1  %}
+{%  if not component.hideEntityActions %}
 <td class="actions">
         {% for itemAction in component.entityActions %}
             {% if itemAction.isShow(item) %}
@@ -41,3 +42,4 @@
             {% endif %}
         {% endfor %}
 </td>
+{%  endif %}

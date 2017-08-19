@@ -167,4 +167,16 @@ trait Controller
         return parent::doComponentAction($this->getConfigurator(), $request);
     }
 
+    /**
+     * The auto completion action
+     *
+     * @Route("/bulk/{cid}/{ida}")
+     * @Method({"POST"})
+     * @return array
+     */
+    public function bulkAction(Request $request)
+    {
+        return parent::doBulkAction($this->getConfigurator(), $request);
+    }
+
 }

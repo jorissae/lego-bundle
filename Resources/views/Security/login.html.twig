@@ -1,0 +1,49 @@
+{% extends 'IdkLegoBundle:Layout:base_login.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block page_content  %}
+<div class="login-box">
+    <div class="login-logo">
+        <a href="../../index2.html"><b>Admin</b>LEGO</a>
+    </div>
+
+    <div class="login-box-body">
+        <div style="text-align:center;"><img  width="50%" src="/bundles/idklego/images/logo.jpg"/></div>
+        <p class="login-box-msg">
+
+            {% if error is defined and error %}<div class="alert alert-error">{{ error.message }}</div>{% endif %}
+        </p>
+
+        <form id="login-form" class="form-horizontal" action="{{ path('fos_user_security_check') }}" method="post">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'lego.form.login_username'|trans }}"/>
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input class="form-control" type="password" id="password" name="_password" placeholder="{{ 'lego.form.login_password'|trans }}" />
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                        <label>
+
+                            <span> <input style="position:inherit; margin-left:0;" type="checkbox" id="remember_me" name="_remember_me" value="on"  type="checkbox">{{ 'lego.form.remember_me'|trans }}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                    {% endif %}
+                    <input  type="submit" id="_submit" name="_submit" class="btn btn-primary btn-block btn-flat" value="{{ 'lego.form.submit_login'|trans }}"/>
+                </div>
+            </div>
+        </form>
+
+        <a href="#">{{  'lego.action.forgot_password'|trans }}</a>
+
+    </div>
+</div>
+
+{% endblock page_content  %}
