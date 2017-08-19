@@ -13,7 +13,8 @@ class Action extends Component{
     const ADD = 'add';
     const BACK = 'back';
     const LOGS = 'logs';
-    const EXPORT = 'export';
+    const EXPORT_CSV = 'export_csv';
+    const EXPORT_XLSX = 'export_xlsx';
 
     protected function init(){
         return;
@@ -39,8 +40,10 @@ class Action extends Component{
                     $action = new ListAction('lego.action.back', ['url'=>$request->headers->get('referer')]);
                 }elseif($action == self::LOGS){
                     $action = new ListAction('lego.action.logs', ['route'=>$this->getConfigurator()->getPathRoute('logs')]);
-                }elseif($action == self::EXPORT) {
-                    $action = new ListAction('lego.action.export', ['route' => $this->getConfigurator()->getPathRoute('export')]);
+                }elseif($action == self::EXPORT_CSV) {
+                    $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>['format'=>'csv']]);
+                }elseif($action == self::EXPORT_XLSX) {
+                    $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>['format'=>'xlsx']]);
                 }
                 $this->actions[] = $action;
             }

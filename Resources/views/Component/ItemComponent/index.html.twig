@@ -18,7 +18,7 @@
                     <form id="{{ component.gid('form') }}" method="post" action="{{ path(configurator.getPathRoute('component'),{'cid': component.id}) }}">
                         {{ form_row(form[component.gid('entity_id')]) }}
                     </form>
-                    <button data-callback="{{ component.gid('reloader') }}" data-form="{{ component.gid('form') }}" class="btn-primary col-md-12 lle-send-form-ajax">{{ 'lego.action.show' | trans }}</button>
+                    <button data-callback="{{ component.gid('reloader') }}" data-form="{{ component.gid('form') }}" class="btn btn-primary col-md-12 lle-send-form-ajax">{{ 'lego.action.show' | trans }}</button>
                     <div id="{{ component.gid('content') }}"></div>
                 </div>
                 <script>

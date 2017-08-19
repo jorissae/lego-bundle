@@ -34,6 +34,11 @@ class MetaEntityManager
         return $return;
     }
 
+    public function generateExportFields($className, array $columns = null){
+        $fields = $this->generateFields($className, $columns);
+        return $fields;
+    }
+
     public function generateFilters($className, array $columns = null){
         $return = [];
         $r = new AnnotationReader();

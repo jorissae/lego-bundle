@@ -199,6 +199,16 @@ abstract class LegoController extends Controller
         return new Response(json_encode($return));
     }
 
+    protected function doExportAction(AbstractConfigurator $configurator, Request $request)
+    {
+
+        $response = $this->comunicateComponents($configurator, $request);
+        if($response){
+            return $response;
+        }
+        return $this->get("lego.service.export")->getDownloadableResponse($configurator, $request->get('format'));
+    }
+
     protected function doComponentAction(AbstractConfigurator $configurator, Request $request){
         $component = $configurator->getComponent($request->get('cid'));
         $component->xhrBindRequest($request);
@@ -207,34 +217,10 @@ abstract class LegoController extends Controller
 
 
 
-    /**
-     * Export a list of Entities
-     *
-     * @param AbstractAdminListConfigurator $configurator The adminlist configurator
-     * @param string                        $_format      The format to export to
-     *
-     * @return array
-     */
-    protected function doExportAction(AbstractConfigurator $configurator, $_format, Request $request = null,array $filter = null)
-    {
-        if (!$configurator->canExport()) {
-            throw new AccessDeniedHttpException('You do not have sufficient rights to access this page.');
-        }
 
-        $em = $this->getEntityManager();
 
-        /* @var AdminList $adminlist */
-        $adminlist = $this->get("lle_adminlist.factory")->createList($configurator, $em);
-        if($filter) {
-            $adminlist->setFilter($filter);
-        } else {
-                if (is_null($request)) {
-                    $request = $this->getRequest();
-                }
-                $adminlist->bindRequest($request);
-        }
-        return $this->get("lle_adminlist.service.export")->getDownloadableResponse($adminlist, $_format);
-    }
+
+
 
 
 

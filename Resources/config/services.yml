@@ -1,16 +1,13 @@
 parameters:
-    lle_adminlist.service.export.class: Idk\LegoBundle\Service\ExportService
+    lego.service.export.class: Idk\LegoBundle\Service\ExportService
     lego.service.menu.class: Idk\LegoBundle\Service\Menu
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
 
 services:
-    lle_adminlist.factory:
-        class: Idk\LegoBundle\AdminList\AdminListFactory
 
-    lle_adminlist.service.export:
-        class:  '%lle_adminlist.service.export.class%'
-        calls:
-            -  [ setRenderer, [ "@templating" ] ]
+    lego.service.export:
+        class:  '%lego.service.export.class%'
+        arguments: ["@templating", "@lego.service.csv"]
 
     lego.service.menu:
         class:  '%lego.service.menu.class%'
@@ -20,106 +17,102 @@ services:
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
 
-    lle_adminlist.twig.extension:
+    lego.twig.extension:
         class: Idk\LegoBundle\Twig\AdminListTwigExtension
         arguments: ["@service_container"]
         tags:
             -  { name: twig.extension }
 
 
-    lle_adminlist.twig.filter:
+    lego.twig.filter:
         class: Idk\LegoBundle\Twig\FilterTwigExtension
         tags:
             -  { name: twig.extension }
 
-    lle_csv_manager:
+    lego.service.csv:
         class:        Idk\LegoBundle\Service\CsvManager
         arguments:    ["@doctrine.orm.entity_manager",";",'"']
 
-    lle_file_manager:
+    lego.service.file:
         class:        Idk\LegoBundle\Service\FileManager
         arguments:    ["@service_container"]
 
-    lle_attachement_manager:
+    lego.service.attachement:
         class:        Idk\LegoBundle\Service\AttachementManager
         arguments:    ["@service_container"]
 
-    log_manager:
+    lego.service.log:
         class:        Idk\LegoBundle\Service\LogManager
         arguments:    ["@doctrine.orm.entity_manager"]
         tags:
             - { name: log_manager, alias: log_manager } 
 
 
-    lle_adminlist.form.number:
+    lego.form.number:
         class: Idk\LegoBundle\Form\Type\NumberType
         tags:
-            - { name: form.type, alias: lle_number }
+            - { name: form.type, alias: lego_number }
 
-    lle_adminlist.form.color:
+    lego.form.color:
         class: Idk\LegoBundle\Form\Type\ColorType
         tags:
-            - { name: form.type, alias: lle_color }
+            - { name: form.type, alias: lego_color }
 
-    lle_adminlist.form.role:
+    lego.form.role:
         class: Idk\LegoBundle\Form\Type\RoleType
         tags:
-            - { name: form.type, alias: lle_role }
+            - { name: form.type, alias: lego_role }
 
-    lle_adminlist.form.geojson:
+    lego.form.geojson:
         class: Idk\LegoBundle\Form\Type\GeoJsonType
         tags:
-            - { name: form.type, alias: lle_geojson }
+            - { name: form.type, alias: lego_geojson }
 
-    lle_adminlist.form.latlng:
+    lego.form.latlng:
         class: Idk\LegoBundle\Form\Type\LatlngType
         tags:
-            - { name: form.type, alias: lle_latlng }
+            - { name: form.type, alias: lego_latlng }
 
-    lle_adminlist.form.markdown:
+    lego.form.markdown:
         class: Idk\LegoBundle\Form\Type\MarkdownType
         tags:
-            - { name: form.type, alias: lle_markdown }
+            - { name: form.type, alias: lego_markdown }
 
-    lle_adminlist.form.date:
+    lego.form.date:
         class: Idk\LegoBundle\Form\Type\DateType
         tags:
-            - { name: form.type, alias: lle_date }
+            - { name: form.type, alias: lego_date }
 
-    lle_adminlist.form.time:
+    lego.form.time:
         class: Idk\LegoBundle\Form\Type\TimeType
         tags:
-            - { name: form.type, alias: lle_time }
+            - { name: form.type, alias: lego_time }
 
-    lle_adminlist.form.auto_completion:
+    lego.form.auto_completion:
         class: Idk\LegoBundle\Form\Type\AutoCompletionType
         arguments:    ["@doctrine.orm.entity_manager"]
         tags:
-            - { name: form.type, alias: lle_auto_completion }
+            - { name: form.type, alias: lego_auto_completion }
 
-    lle_adminlist.form.datetime:
+    lego.form.datetime:
         class: Idk\LegoBundle\Form\Type\DateTimeType
         tags:
-            - { name: form.type, alias: lle_datetime }
+            - { name: form.type, alias: lego_datetime }
 
-    lle_adminlist.form.dependent_select:
+    lego.form.dependent_select:
         class: Idk\LegoBundle\Form\Type\DependentSelectType
         arguments:    ["@doctrine.orm.entity_manager"]
         tags:
-            - { name: form.type, alias: lle_dependent_select }
+            - { name: form.type, alias: lego_dependent_select }
 
-    lle_adminlist.form.enity_hidden:
+    lego.form.enity_hidden:
         class: Idk\LegoBundle\Form\Type\EntityHiddenType
         arguments:    ["@doctrine.orm.entity_manager"]
         tags:
-            - { name: form.type, alias: lle_entity_hidden }
+            - { name: form.type, alias: lego_entity_hidden }
 
-    lle_adminlist.form.attribut_widget:
-        class: Idk\LegoBundle\Form\Type\AttributWidgetType
-        tags:
-            - { name: form.type, alias: lle_attribut_widget }
 
-    lle_adminlist.form.range:
+    lego.form.range:
         class: Idk\LegoBundle\Form\Type\RangeType
         tags:
-            - { name: form.type, alias: lle_range }
+            - { name: form.type, alias: lego_range }

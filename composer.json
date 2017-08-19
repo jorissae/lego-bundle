@@ -12,7 +12,8 @@
     ],
     "require": {
         "symfony/framework-bundle": "3.*",
-        "twig/twig": "1.*"
+        "twig/twig": "1.*",
+        "phpoffice/phpexcel": "1.8.*"
     },
     "autoload": {
         "psr-0": { "Idk\\LegoBundle": "" }

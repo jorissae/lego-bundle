@@ -197,6 +197,8 @@ abstract class AbstractConfigurator
 
     protected $sublistParentItem = null;
 
+    protected $request;
+
     public function getSublistParentItem(){
         return ($this->isSubList())? $this->sublistParentItem:null;
     }
@@ -991,17 +993,7 @@ abstract class AbstractConfigurator
         return $this->newFormGroups;
     }
 
-    /**
-     * @return Field[]
-     */
-    public function getExportFields()
-    {
-        if (empty($this->exportFields)) {
-            return $this->fields;
-        } else {
-            return $this->exportFields;
-        }
-    }
+
 
 
 
@@ -1435,9 +1427,11 @@ abstract class AbstractConfigurator
      */
     public function bindRequest(Request $request, $entityId = null)
     {
+        $this->request = $request;
         $lastUnserscore = strrchr( $request->get('_route'), '_');
 
         $index = substr($lastUnserscore, 1);
+        $index = ($index == 'export')? 'index':$index;
         $componentResponse = [];
         foreach($this->components[$index] as $components){
             $componentResponse[] = $components->bindRequest($request);
@@ -1772,6 +1766,14 @@ abstract class AbstractConfigurator
     public function getFields(array $columns = null)
     {
         return array_merge($this->fields, $this->get('lego.service.meta_entity_manager')->generateFields($this->getEntityName(), $columns));
+    }
+
+    /**
+     * @return Field[]
+     */
+    public function getExportFields(array $columns = null)
+    {
+        return array_merge($this->fields, $this->get('lego.service.meta_entity_manager')->generateExportFields($this->getEntityName(), $columns));
     }
 
 

@@ -15,7 +15,7 @@ class CsvManager{
         $this->em = $em;
         $this->separator = $separator;
         $this->enclosure = $enclosure;
-        $this->path = 'php://memory';
+        $this->path = null;
     }
 
     public function setPath($path){
@@ -31,7 +31,11 @@ class CsvManager{
     }
 
     public function arrayToCsv($data,$name = 'export.csv'){
-        $handle = fopen($this->path.'/'.$name, 'a+');
+        if($this->path) {
+            $handle = fopen($this->path . '/' . $name, 'a+');
+        }else {
+            $handle = tmpfile();
+        }
         foreach ($data as $line) {
             fputcsv($handle, $line,$this->separator,$this->enclosure);
         }
@@ -65,6 +69,11 @@ class CsvManager{
             fclose($handle);
         }
         return $donnes;
+    }
+
+    public function isUtf8($path){
+        //TODO
+        return false;
     }
 
 }

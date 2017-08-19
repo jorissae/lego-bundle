@@ -2,16 +2,23 @@
 
 namespace Idk\LegoBundle\Service;
 
-use Lle\AdminListBundle\AdminList\AdminList;
+use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
 {
     private $renderer;
+    private $serviceCsv;
 
     const EXT_CSV = 'csv';
     const EXT_EXCEL = 'xlsx';
+
+    public function __construct($renderer, $serviceCsv)
+    {
+        $this->renderer = $renderer;
+        $this->serviceCsv = $serviceCsv;
+    }
 
     public static function getSupportedExtensions()
     {
@@ -29,37 +36,36 @@ class ExportService
         return $extensions;
     }
 
-    public function getDownloadableResponse(AdminList $adminlist, $_format, $template = null)
+    public function getDownloadableResponse(AbstractConfigurator $configurator, $format, $template = null)
     {
-        switch ($_format) {
+        switch ($format) {
             case self::EXT_EXCEL:
-                $writer = $this->createExcelSheet($adminlist);
+                $writer = $this->createExcelSheet($configurator);
                 $response = $this->createResponseForExcel($writer);
+                $date = new \DateTime();
+                $filename = sprintf('%s-%s.%s',$configurator->getEntityName(),$date->format('Ymd-His'), $format);
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename=%s', $filename));
                 break;
             default:
-                $content = $this->createFromTemplate($adminlist, $_format, $template);
-                $response = $this->createResponse($content, $_format);
+                $response = $this->createCsvResponse($configurator);
                 break;
         }
-        $date = new \DateTime();
-
-        $filename = sprintf('%s-%s.%s',$adminlist->getEntityName(),$date->format('Ymd-His'), $_format);
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename=%s', $filename));
         return $response;
     }
 
-    public function createFromTemplate(AdminList $adminlist, $_format, $template = null){
-        if($template === null) {
-            $template = sprintf("LleAdminListBundle:Default:export.%s.twig", $_format);
+    public function createCsvResponse(AbstractConfigurator $configurator){
+        $allIterator = $configurator->getAllIterator();
+        foreach($configurator->getExportFields() as $field){
+            $csv[0][] = $field->getHeader();
         }
-
-        $allIterator = $adminlist->getAllIterator();
-        //die('-->'.count($allIterator));
-        return $this->renderer->render($template, array(
-            "iterator" => $allIterator,
-            "adminlist" => $adminlist,
-            "queryparams" => array()
-        ));
+        $i=1;
+        foreach($allIterator as $entity){
+            foreach($configurator->getExportFields() as $field) {
+                $csv[$i][] = $configurator->getStringValue($entity, $field->getName());
+            }
+                $i++;
+        }
+        return  $this->serviceCsv->arrayToCsvResponse($csv);
     }
 
     /**
@@ -68,7 +74,7 @@ class ExportService
      * @throws \Exception
      * @throws \PHPExcel_Exception
      */
-    public function createExcelSheet(AdminList $adminlist)
+    public function createExcelSheet(AbstractConfigurator $configurator)
     {
         $objPHPExcel = new \PHPExcel();
 
@@ -76,33 +82,27 @@ class ExportService
 
         $number = 1;
 
-        $row = array();
-        foreach ($adminlist->getExportColumns() as $column) {
-            $row[] = $column->getHeader();
+        $row = [];
+        foreach ($configurator->getExportFields() as $field) {
+            $row[] = $field->getHeader();
         }
         $objWorksheet->fromArray($row, null, 'A' . $number++);
 
-        $allIterator = $adminlist->getAllIterator();
-        foreach($allIterator as $item) {
-            if (array_key_exists(0, $item)) {
-                $itemObject = $item[0];
-            } else {
-                $itemObject = $item;
-            }
+        $allIterator = $configurator->getAllIterator();
+        foreach($allIterator as $entity) {
 
-            $row = array();
-            foreach ($adminlist->getExportColumns() as $column) {
+            $row = [];
+            foreach ($configurator->getExportFields() as $field) {
                 $coordinate = $objWorksheet->getCellByColumnAndRow(count($row), $number)->getCoordinate();
-                $data = $adminlist->getStringValue($itemObject, $column->getName());
+                $data = $configurator->getStringValue($entity, $field->getName());
                 if (is_object($data)) {
-                    if (!$this->renderer->exists($column->getTemplate())) {
-                        //throw new \Exception('No export template defined for ' . get_class($data));
+                    if (!$this->renderer->exists($field->getTemplate())) {
                         $data = $data->__toString();
                     }else{
-                        $data = $this->renderer->render($column->getTemplate(), array("object" => $data));
+                        $data = $this->renderer->render($field->getTemplate(), array("entity" => $entity, 'configurator' => $configurator, 'field' => $field));
                     }
                 }
-                if($column->is('string')){
+                if($field->is('string')){
                     $objWorksheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
@@ -141,10 +141,5 @@ class ExportService
         $response->headers->set('Content-Type', 'application/download');
 
         return $response;
-    }
-
-    public function setRenderer($renderer)
-    {
-        $this->renderer = $renderer;
     }
 }

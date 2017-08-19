@@ -94,13 +94,13 @@ trait Controller
      *
      * @param string $_format
      *
-     * @Route("/export.{_format}", requirements={"_format" = "csv|xlsx"})
+     * @Route("/export.{format}", requirements={"format" = "csv|xlsx"})
      * @Method({"GET", "POST"})
      * @return array
      */
-    public function exportAction(Request $request, $_format)
+    public function exportAction(Request $request)
     {
-        return parent::doExportAction($this->getAdminListConfigurator(), $_format, $request);
+        return parent::doExportAction($this->getAdminListConfigurator(), $request);
     }
 
 
