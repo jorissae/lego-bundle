@@ -10,11 +10,11 @@
     {% set custom = field.custom %}
     {% set url = null %}
     {% if field.linkTo %}
-        {% set url = adminlist.getShowUrl(item,field) %}
+        {% set url = component.configurator.getShowUrl(item,field) %}
     {% endif %}
     <td> {% if url %} <a href="{{ path(url["path"],url["params"]) }}"> {% endif %}
     {% if template is not null %}
-        {% include template with {'entity': item, 'field': field, 'value': adminlist.getValue(item, columnName), 'configurator': configurator} %}
+        {% include template with {'entity': item, 'field': field, 'value': component.configurator.getValue(item, columnName), 'configurator': configurator} %}
     {% else %}
         {{ render_field_value(component, field, item) }}
     {% endif %}

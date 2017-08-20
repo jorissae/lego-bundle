@@ -1,5 +1,5 @@
 {% extends '::layout.html.twig' %}
-{% block page_title %}{{adminlist.getTitle()}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
 {% block page_subtitle %}Historique{% endblock %}
 
 
@@ -8,7 +8,7 @@
   <div class="box-header">
         <div class="extra_actions_header">
             <div class="btn-group pull-right">
-                <a href="{{ path( adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()['params'] ) }}" class="btn btn-default">
+                <a href="{{ path( configurator.getIndexUrl()["path"], configurator.getIndexUrl()['params'] ) }}" class="btn btn-default">
                     Retour
                 </a>
             </div>
@@ -26,7 +26,7 @@
         		<th>Action</th>
         		<th>Utilisateur</th>
         		<th>Version</th>
-        		<th>{{ adminlistconfigurator.entityName }}</th>
+        		<th>{{ configurator.entityName }}</th>
         		<th>Date</th>
         		<th>Données</th>
         		<th>Appliquer</th>
@@ -41,7 +41,7 @@
 	        		<td>{{ log.log.objectId }}: {{ log.entity }}</td>
 	        		<td>{{ log.log.loggedAt|date('d/m/Y H:i:s') }}</td>
 	        		<td>{% for k,n in log.data %}<strong>{{ k }}:</strong> {{ n }}<br/>{% endfor %}</td>
-	        		<td><a href="{{ path('lleadminlistbundle_log_revert',{'id':log.log.objectId,'class':adminlistconfigurator.class.name,'version':log.log.version}) }}" class="btn btn-warning">Retour à la version {{ log.log.version }}</a></td>
+	        		<td><a href="{{ path('idklegobundle_log_revert',{'id':log.log.objectId,'class':configurator.class.name,'version':log.log.version}) }}" class="btn btn-warning">Retour à la version {{ log.log.version }}</a></td>
         		</tr>
         	{% endfor %}
         </tbody>
@@ -49,6 +49,5 @@
 </div>
 </div>
 {% if pf.haveToPaginate() %}
-    {{ pagerfanta(pf, 'twitter_bootstrap3_translated') }}
 {% endif %}
 {% endblock %}

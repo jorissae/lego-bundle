@@ -1,0 +1,5 @@
+{% if component.isTemplate %}
+    {% include component.src with {'component':component, 'entity': entity} %}
+{% else %}
+    {{ render(controller(component.src ,{'component':component, 'entity': entity})) }}
+{% endif %}

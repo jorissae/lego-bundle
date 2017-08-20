@@ -6,7 +6,7 @@ use Idk\LegoBundle\FilterType\AbstractFilterType;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
-use Idk\LegoBundle\AdminList\Lib\QueryHelper;
+use Idk\LegoBundle\Lib\QueryHelper;
 
 /**
  * The abstract filter used for ORM query builder

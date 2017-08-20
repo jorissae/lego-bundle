@@ -13,7 +13,7 @@
 {% set columnName = field.name %}
 {% set template = field.template %}
 {% if template is not null and template != 1 and template != "" %}
-{{- quote|raw -}}{% include template with {'entity': entity, 'field': field, 'object': adminlist.getValue(item, columnName)} %}{{- quote|raw -}}
+{{- quote|raw -}}{% include template with {'entity': entity, 'field': field, 'object': configurator.getValue(item, columnName)} %}{{- quote|raw -}}
 {% else %}
 {{- quote|raw -}}{{- configurator.getStringValue(entity, columnName) -}}{{- quote|raw -}}
 {% endif %}

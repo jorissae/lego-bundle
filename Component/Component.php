@@ -20,7 +20,7 @@ abstract class Component{
     public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
-        $this->id = md5($suffixRoute.'-'.get_class($this));
+        $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
         $this->init();
     }
 

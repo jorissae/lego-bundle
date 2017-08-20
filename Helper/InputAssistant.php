@@ -1,6 +1,6 @@
 <?php
 
-namespace Lle\AdminListBundle\Helper;
+namespace Idk\LegoBundle\Helper;
 
 use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;

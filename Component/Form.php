@@ -2,14 +2,9 @@
 
 namespace Idk\LegoBundle\Component;
 
-use Idk\LegoBundle\AdminList\FilterBuilder;
 use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
-use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
-use Idk\LegoBundle\FilterType\ORM\AbstractORMFilterType;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\QueryBuilder;
-use Idk\LegoBundle\AdminList\Filter as Fi;
 
 
 class Form extends Component{
@@ -29,7 +24,7 @@ class Form extends Component{
     }
 
     public function getTemplateParameters(){
-        return ['form' => $this->form->createView(), 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lle_base_fields.html.twig')];
+        return ['form' => $this->form->createView(), 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
     }
 
     public function bindRequest(Request $request){

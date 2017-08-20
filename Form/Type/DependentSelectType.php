@@ -4,13 +4,12 @@ namespace Idk\LegoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Lle\AdminListBundle\Entity\AbstractAttribut;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Lle\AdminListBundle\Form\Transformer\ObjectToIdTransformer;
+use Idk\LegoBundle\Form\Transformer\ObjectToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
 
 class DependentSelectType extends AbstractType
 {
@@ -23,7 +22,7 @@ class DependentSelectType extends AbstractType
     }
 
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'dependent' => null,
@@ -35,7 +34,7 @@ class DependentSelectType extends AbstractType
 
     public function getParent()
     {
-        return 'text';
+        return ParentType::class;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -62,7 +61,7 @@ class DependentSelectType extends AbstractType
 
     public function getName()
     {
-        return 'lle_dependent_select';
+        return 'lego_dependent_select';
     }
 }
 

@@ -49,7 +49,7 @@ class ExportService
     }
 
     /**
-     * @param $adminlist
+     * @param $configurator
      * @return \PHPExcel_Writer_Excel2007
      * @throws \Exception
      * @throws \PHPExcel_Exception

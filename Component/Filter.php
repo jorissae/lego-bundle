@@ -2,11 +2,11 @@
 
 namespace Idk\LegoBundle\Component;
 
-use Idk\LegoBundle\AdminList\FilterBuilder;
+use Idk\LegoBundle\Lib\Filter\FilterBuilder;
 use Idk\LegoBundle\FilterType\ORM\AbstractORMFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\QueryBuilder;
-use Idk\LegoBundle\AdminList\Filter as Fi;
+use Idk\LegoBundle\Lib\Filter\Filter as Fi;
 
 
 class Filter extends Component{
@@ -71,7 +71,7 @@ class Filter extends Component{
         $this->request = $request;
         $query      = $request->query;
         $session    = $request->getSession();
-        $adminListName = 'listconfig_' . $request->get('_route');
+        $configuratorName = 'listconfig_' . $request->get('_route');
 
 
 
@@ -83,15 +83,15 @@ class Filter extends Component{
         }
 
         // there is a session and the filter param is not set
-        if ($session and $session->has($adminListName)) {
-            $adminListSessionData = $request->getSession()->get($adminListName);
+        if ($session and $session->has($configuratorName)) {
+            $configuratorSessionData = $request->getSession()->get($configuratorName);
             if(!$query->has('filter')){
-                if (!$query->has('orderBy') and $adminListSessionData['orderBy']) {
-                    $this->orderBy = $adminListSessionData['orderBy'];
+                if (!$query->has('orderBy') and $configuratorSessionData['orderBy']) {
+                    $this->orderBy = $configuratorSessionData['orderBy'];
                 }
 
-                if (!$query->has('orderDirection') and $adminListSessionData['orderDirection']) {
-                    $this->orderDirection = $adminListSessionData['orderDirection'];
+                if (!$query->has('orderDirection') and $configuratorSessionData['orderDirection']) {
+                    $this->orderDirection = $configuratorSessionData['orderDirection'];
                 }
             }
         }
@@ -99,7 +99,7 @@ class Filter extends Component{
 
         // save current parameters
         if($session){
-            $session->set($adminListName, array(
+            $session->set($configuratorName, array(
                 'page'              => $this->page,
                 'orderBy'           => $this->orderBy,
                 'orderDirection'    => $this->orderDirection,

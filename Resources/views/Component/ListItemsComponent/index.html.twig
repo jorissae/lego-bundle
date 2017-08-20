@@ -33,14 +33,13 @@
                 </th>
             {% endfor %}
             {% if not component.hideEntityActions() %}
-                <th class="actions-header">{{ 'Actions'|trans }}</th>
+                <th class="actions-header">{{ 'lego.header.action'|trans }}</th>
             {% endif %}
         </tr>
         </thead>
         <tbody>
 
-        {% for item in configurator.items() %}
-            {# {% include 'IdkLegoBundle:Default:_rupture.html.twig' with {'adminlist':adminlist,'item':item,'first':loop.first} %} #}
+        {% for item in component.configurator.items() %}
             {% include component.partial('line') with {'component':component ,'item':item} %}
         {% endfor %}
 
@@ -71,9 +70,9 @@
                                 {% else %}
                                     <a href="{{ path(url["path"], url[("params")] ) }}" data-ida="{{ action.id }}" class="btn btn-default disabled lego-bulk-button pull-right">
                                         {% if action.getIcon() is not null %}
-                                            <i class="icon-{{ action.icon }} }}"></i> {{ action.label }}
+                                            <i class="icon-{{ action.icon }} }}"></i> {{ action.label|trans }}
                                         {% else %}
-                                            {{ action.label }}
+                                            {{ action.label|trans }}
                                         {% endif %}
                                     </a>
                                 {% endif %}

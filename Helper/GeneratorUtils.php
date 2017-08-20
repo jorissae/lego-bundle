@@ -131,7 +131,7 @@ class GeneratorUtils
             $pathInSkeleton = rtrim($pathInSkeleton, '/');
         }
 
-        return __DIR__ . '/../Resources/SensioGeneratorBundle/skeleton' . $pathInSkeleton;
+        return __DIR__ . '/../Resources/skeleton' . $pathInSkeleton;
     }
 
     public static function ensureOptionsProvided(InputInterface $input, array $options)

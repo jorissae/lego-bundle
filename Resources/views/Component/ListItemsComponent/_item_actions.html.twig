@@ -17,7 +17,7 @@
                                 data-type="html"
                                 data-callback="reloadLine"
                                 data-url="{{ path(url["path"],url[("params")] ) }}"
-                                class="lle-ajax btn btn-primary btn-xs">
+                                class="jsa-ajax btn btn-primary btn-xs">
                                 {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
                                 {{ itemAction.getLabelFor(item) }}
                             </span>
@@ -27,14 +27,14 @@
                         {% elseif itemAction.isPopup %}
                             <span
                                 data-url="{{ path(url["path"],url[("params")] ) }}"
-                                class="lle-popup btn btn-primary btn-xs">
+                                class="jsa-popup btn btn-primary btn-xs">
                                 {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
                                 {{ itemAction.getLabelFor(item) }}
                             </span>
                         {% elseif url %}
                              <a {% if itemAction.target %} target="{{ itemAction.target }}" {% endif %}
                            id="action-{{index}}-{{itemAction.getLabelFor(item) }}" href="{{ path(url["path"], url[("params")]) }}" class="btn btn-primary btn-xs">
-                            {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item) }}
+                            {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item)|trans }}
                          </a>
 
                         {% endif %}

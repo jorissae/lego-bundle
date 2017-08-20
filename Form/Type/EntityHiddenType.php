@@ -3,13 +3,10 @@
 namespace Idk\LegoBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Lle\AdminListBundle\Entity\AbstractAttribut;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Lle\AdminListBundle\Form\Transformer\ObjectToIdTransformer;
+use Idk\LegoBundle\Form\Transformer\ObjectToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType as ParentType;
  
 class EntityHiddenType extends AbstractType
 {
@@ -19,7 +16,7 @@ class EntityHiddenType extends AbstractType
         $this->em = $em;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'class'     => null,
@@ -39,11 +36,11 @@ class EntityHiddenType extends AbstractType
 
     public function getParent()
     {
-        return 'hidden';
+        return ParentType::class;
     }
 
     public function getName()
     {
-        return 'lle_entity_hidden';
+        return 'lego_entity_hidden';
     }
 }

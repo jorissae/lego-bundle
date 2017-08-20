@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class IdkLegoExtension extends Extension implements PrependExtensionInterface
+class IdkLegoExtension extends Extension// implements PrependExtensionInterface
 {
     /**
      * {@inheritDoc}
@@ -23,7 +23,7 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasParameter('twig.form.resources')) {
             $container->setParameter('twig.form.resources', array_merge(
-            array('IdkLegoBundle:Form:lle_widget.html.twig'),
+            array('IdkLegoBundle:Form:lego_widget.html.twig'),
             $container->getParameter('twig.form.resources')
             ));
         }
@@ -32,9 +32,10 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         $this->processConfiguration($configuration, $configs);
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('form.yml');
     }
 
-    public function prepend(ContainerBuilder $container)
+    /*public function prepend(ContainerBuilder $container)
     {
 
         $parameterName = 'datePicker_startDate';
@@ -59,6 +60,6 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         )))));
         $container->prependExtensionConfig('liip_imagine',$liip);
 
-    }
+    }*/
 }
 

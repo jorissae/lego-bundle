@@ -1,5 +1,5 @@
-{% extends 'LleAdminListBundle:Default:logs.html.twig' %}
-{% block page_title %}{{adminlist.getTitle()}}{% endblock %}
+{% extends 'IdkLegoBundle:Default:logs.html.twig' %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
 {% block page_subtitle %}Historique de {{ item }}{% endblock %}
 
 
@@ -8,7 +8,7 @@
   <div class="box-header">
         <div class="extra_actions_header">
             <div class="btn-group pull-right">
-                <a href="{{ path( adminlist.getShowUrl(item)["path"], adminlist.getShowUrl(item)['params'] ) }}" class="btn btn-default">
+                <a href="{{ path( configurator.getShowUrl(item)["path"], configurator.getShowUrl(item)['params'] ) }}" class="btn btn-default">
                     Retour
                 </a>
             </div>

@@ -3,7 +3,7 @@
 namespace Idk\LegoBundle\Component;
 
 
-use Idk\LegoBundle\AdminList\Actions\ListAction;
+use Idk\LegoBundle\Lib\Actions\ListAction;
 use Symfony\Component\HttpFoundation\Request;
 
 class Action extends Component{
@@ -37,7 +37,11 @@ class Action extends Component{
                 if($action == self::ADD){
                     $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add')]);
                 }elseif($action == self::BACK){
-                    $action = new ListAction('lego.action.back', ['url'=>$request->headers->get('referer')]);
+                    if($request->headers->get('referer')){
+                        $action = new ListAction('lego.action.back', ['url'=>$request->headers->get('referer')]);
+                    }else{
+                        $action = new ListAction('lego.action.back', ['route'=>$this->getConfigurator()->getPathRoute('index')]);
+                    }
                 }elseif($action == self::LOGS){
                     $action = new ListAction('lego.action.logs', ['route'=>$this->getConfigurator()->getPathRoute('logs')]);
                 }elseif($action == self::EXPORT_CSV) {

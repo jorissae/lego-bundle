@@ -1,0 +1,52 @@
+lego.action.save: Sauvegarder
+lego.action.show: Afficher
+lego.action.delete: Supprimer
+lego.action.edit: Editer
+lego.action.export_xlsx: Export Excel
+lego.action.export_csv: Export CSV
+lego.action.add: Ajouter
+lego.action.back: Retour
+lego.action.erease: Effacer
+lego.action.filter: Filtrer
+lego.action.bulk_delete: Supprimer les éléments
+lego.error.entity_not_found: Elément introuvable
+lego.header.action: Actions
+lego.ask.confirmation.delete: Voulez vous vraiment supprimer cette élément ?
+lego.word.yes: Oui
+lego.word.no: Non
+lego.flash.error: Erreur
+lego.flash.warning: Attention
+lego.flash.info: Information
+lego.flash.success: Succès
+lego.action.view_all: Voir tous
+lego.action.see_profil: Voir votre profil
+lego.action.signe_out: Logout
+lego.form.login_username: Nom d'utilisateur
+lego.form.login_password: Mot de passe
+lego.form.remember_me: Se souvenire de moi
+lego.form.submit_login: Login
+lego.form.choice_entity: Choisire un item
+lego.form.success.add: Elément ajouté
+lego.form.success.edit: Elément mis à jour
+lego.action.forgot_password: Mot de passe oublié
+lego.filter.yes: Oui
+lego.filter.no: Non
+lego.filter.all: Tous
+lego.filter.this: Le
+lego.filter.before: Avant le
+lego.filter.after: Apres le
+lego.filter.empty: Est vide
+lego.filter.equal: Egale
+lego.filter.null: Non renseigné
+lego.filter.not_null: Renseigné
+lego.filter.is_gte: Plus grand que
+lego.filter.is_lte: Plus petit que
+lego.filter.is_eq: Est égal à
+lego.filter.is_neq: N'est pas égal à
+lego.filter.from_number: De
+lego.filter.to_number: à
+lego.filter.from_date: Du
+lego.filter.to_date: au
+lego.filter.start: Commence par
+lego.filter.end: Termine par
+lego.filter.content: Contient

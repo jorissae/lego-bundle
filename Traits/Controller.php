@@ -16,11 +16,6 @@ trait Controller
     }
 
 
-    public function getAdminListConfigurator()
-    {
-        return $this->getConfigurator();
-    }
-
     /**
      * The index action
      *
@@ -43,8 +38,7 @@ trait Controller
      */
     public function showAction(Request $request, $id)
     {
-
-        return parent::doShowAction($this->getAdminListConfigurator(), $id, $request);
+        return parent::doShowAction($this->getConfigurator(), $id, $request);
     }
 
     /**
@@ -56,7 +50,7 @@ trait Controller
      */
     public function addAction(Request $request)
     {
-        return parent::doAddAction($this->getAdminListConfigurator(), $request);
+        return parent::doAddAction($this->getConfigurator(), $request);
     }
 
     /**
@@ -71,7 +65,7 @@ trait Controller
      */
     public function editAction(Request $request, $id)
     {
-        return parent::doEditAction($this->getAdminListConfigurator(), $id, $request);
+        return parent::doEditAction($this->getConfigurator(), $id, $request);
     }
 
     /**
@@ -100,7 +94,7 @@ trait Controller
      */
     public function exportAction(Request $request)
     {
-        return parent::doExportAction($this->getAdminListConfigurator(), $request);
+        return parent::doExportAction($this->getConfigurator(), $request);
     }
 
 
@@ -115,7 +109,7 @@ trait Controller
      */
     public function logsAction(Request $request)
     {
-        return parent::doLogsAction($this->getAdminListConfigurator(), $request);
+        return parent::doLogsAction($this->getConfigurator(), $request);
     }
 
     /**
@@ -127,7 +121,7 @@ trait Controller
      */
     public function logAction(Request $request, $id)
     {
-        return parent::doLogAction($this->getAdminListConfigurator(), $id, $request);
+        return parent::doLogAction($this->getConfigurator(), $id, $request);
     }
 
 

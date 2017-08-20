@@ -5,11 +5,12 @@ namespace Idk\LegoBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
  
 class LatlngType extends AbstractType
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'width'=>'90%',
@@ -37,12 +38,12 @@ class LatlngType extends AbstractType
 
     public function getParent()
     {
-        return 'text';
+        return ParentType::class;
     }
 
     public function getName()
     {
-        return 'lle_latlng';
+        return 'lego_latlng';
     }
 
 }

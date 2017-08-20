@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormView;
 use Idk\LegoBundle\Form\Transformer\ObjectToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
  
 class AutoCompletionType extends AbstractType
@@ -58,12 +58,12 @@ class AutoCompletionType extends AbstractType
 
     public function getParent()
     {
-        return TextType::class;
+        return ParentType::class;
     }
 
     public function getName()
     {
-        return 'lle_auto_completion';
+        return 'lego_auto_completion';
     }
 
 }

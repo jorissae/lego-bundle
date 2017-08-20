@@ -9,8 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 
-use Idk\LegoBundle\AdminList\FilterType\ORM\AbstractORMFilterType;
-use Idk\LegoBundle\AdminList\Lib\QueryHelper;
+use Idk\LegoBundle\Lib\QueryHelper;
 
 
 use Idk\LegoBundle\Annotation\Entity\Field;
@@ -26,59 +25,15 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     private $query = null;
 
-    /**
-     * @var PermissionDefinition
-     */
-    private $permissionDef = null;
 
     /**
      * @param EntityManager $em        The entity manager
      * @param AclHelper     $aclHelper The acl helper
      */
-    public function __construct($container)
+    public function __construct($container, AbstractConfigurator $parent = null)
     {
-        $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->setContainer($container);
+        parent::__construct($container, $parent);
     }
-
-    /**
-     * Return the url to edit the given $item
-     *
-     * @param object $item
-     *
-     * @return array
-     */
-    public function getEditUrlFor($item)
-    {
-        $params = array('id' => $item->getId());
-        $params = array_merge($params, $this->getExtraParameters());
-
-        return array(
-            'path'	 => $this->getPathByConvention($this::SUFFIX_EDIT),
-            'params' => $params
-        );
-    }
-
-    /**
-     * Get the delete url for the given $item
-     *
-     * @param object $item
-     *
-     * @return array
-     */
-    public function getDeleteUrlFor($item)
-    {
-        $params = array('id' => $item->getId());
-        if($this->isSubList()){
-            $params['sublist'] = true;
-        }
-        $params = array_merge($params, $this->getExtraParameters());
-        return array(
-            'path' => $this->getPathByConvention($this::SUFFIX_DELETE),
-            'params' => $params
-        );
-    }
-
 
 
     /**
@@ -89,13 +44,6 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         $queryBuilder->where('1=1');
     }
 
-    public function subQuery(QueryBuilder $queryBuilder){
-        $parentConfig = $this->getParentConfig();
-        if($parentConfig){
-            $entity = $parentConfig['item'];
-            if($parentConfig['key']) $queryBuilder->andWhere('b.'.$parentConfig['key'].' = :parent_item')->setParameter('parent_item',$entity);
-        }
-    }
 
     /**
      * @return int
@@ -105,19 +53,11 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         return count($this->getQuery()->getResult());
     }
 
-    /**
-     * @return array|Traversable
-     */
     public function getItems()
     {
         return $this->getQuery()->getResult();
     }
 
-    /**
-     * Return an iterator for all items that matches the current filtering
-     *
-     * @return \Iterator
-     */
     public function getAllIterator()
     {
         return $this->getQuery()->getResult();
@@ -132,34 +72,15 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         if (is_null($this->query)) {
             $queryBuilder = $this->getQueryBuilder();
             $this->adaptQueryBuilder($queryBuilder);
-            $this->subQuery($queryBuilder);
             $queryHelper = new QueryHelper();
 
-            foreach($this->getIndexComponents() as $component){
+            foreach($this->getCurrentComponents() as $component){
                 /* @var Component $component */
                 $component->catchQueryBuilder($queryBuilder);
             }
 
-
-            foreach($this->getRupteurs() as $k => $rupteur){
-                if(count($this->currentRupteurs)){
-                    if(in_array($rupteur->getKey(),$this->currentRupteurs)){
-                        $rupteur->setActive(true);
-                        $path = $queryHelper->getPath($queryBuilder,'b',$rupteur->getName());
-                        $queryBuilder->addOrderBy($path['alias'].$path['column'], $rupteur->getOrder());
-                        foreach($rupteur->getContentOrderBy() as $orderBy){
-                            $path = $queryHelper->getPath($queryBuilder,'b',$orderBy[0]);
-                            $queryBuilder->addOrderBy($path['alias'].$path['column'],$orderBy[1]);
-                        }
-                    } else {
-                        $rupteur->setActive(false);
-                    }
-                }
-
-            }
-
             // Apply sorting
-            $dataClass = $this->em->getClassMetadata($this->getRepositoryName());
+            $dataClass = $this->getClassMetaData();
             if (!empty($this->orderBy)) {
                 $columnName = $this->orderBy;
                 $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
@@ -179,45 +100,11 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     protected function getQueryBuilder()
     {
-        $queryBuilder = $this->getRepository()->createQueryBuilder('b');
-        return $queryBuilder;
+        return $this->getRepository()->createQueryBuilder('b');
     }
 
     public function getRepository(){
-        return  $this->em->getRepository($this->getRepositoryName());
-    }
-
-    /**
-     * Get current permission definition.
-     *
-     * @return PermissionDefinition|null
-     */
-    public function getPermissionDefinition()
-    {
-        return $this->permissionDef;
-    }
-
-    /**
-     * Set permission definition.
-     *
-     * @param PermissionDefinition $permissionDef
-     *
-     * @return AbstractAdminListConfigurator|AbstractDoctrineORMAdminListConfigurator
-     */
-    public function setPermissionDefinition(PermissionDefinition $permissionDef)
-    {
-        $this->permissionDef = $permissionDef;
-
-        return $this;
-    }
-
-    /**
-     * @param EntityManager $em
-     */
-    public function setEntityManager($em)
-    {
-        $this->em = $em;
-        return $this;
+        return  $this->getEntityManager()->getRepository($this->getRepositoryName());
     }
 
     /**
@@ -225,7 +112,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     public function getEntityManager()
     {
-        return $this->em;
+        return $this->get('doctrine.orm.entity_manager');
     }
 
     public function listOptionsForCombobox($object,Field $line){
@@ -243,26 +130,6 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
             foreach($list as $entity){
                 $return[$entity->getId()] = $entity->__toString();
             }
-        }
-        return $return;
-    }
-
-    //request null for retrocompatibilite
-    public function generateShowSubLists($controller,$item, $request = null){
-        $sublists = $this->getShowSubLists();
-        $return = array();
-        foreach($sublists as $k => $sublist){
-            $class = $sublist->getConfigurator();
-            $subConfigurator = new $class($this->getEntityManager());
-            $subConfigurator->setSubListUniqueName($sublist->getUniqueName());
-            $subConfigurator->setContainer($this->container, $item);
-            if($request){
-                $subRequest = $request->duplicate($request->query->get($sublist->getId()),$request->request->get($sublist->getId()));
-                $subConfigurator->bindRequest($subRequest);
-            }
-            $subConfigurator->setParentConfig(array('key'=>$sublist->getKey(),'item'=>$item));
-            $sublist->setView($controller->get("lle_adminlist.factory")->createList($subConfigurator, $this->getEntityManager()));
-            $return[$sublist->getName()] = $sublist;
         }
         return $return;
     }
@@ -286,13 +153,12 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     }
 
 
-    // return ClassMetadata
+
     public function getClassMetaData(){
         $em = $this->getEntityManager();
         return $em->getClassMetadata($this->getRepositoryName());
     }
 
-    //use by Lego
     public function getClass(){
         return $this->getRepositoryName();
     }
@@ -302,11 +168,9 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     }
 
 
-    // return schema column array string
     public function getClassFields(){
         return $this->getClassMetaData()->getColumnNames();
     }
-    //$em->getClassMetadata(get_class($attribut))->getName())
 
     public function find($id){
         return $this->getEntityManager()->getRepository($this->getRepositoryName())->find($id);
@@ -322,40 +186,13 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
     }
 
-    public function getRootAttachementFolders($item,$codeZone = null){
-        return $this->getEntityManager()->getRepository('LleAdminListBundle:AttachableFolder')->findRacineByClassAndItemId($this->getRepositoryName(),$item->getId(),$codeZone);
+    public function getType($item,$columnName){
 
-    }
-
-    public function getRootAttachementFiles($item,$codeZone = null){
-        return $this->getEntityManager()->getRepository('LleAdminListBundle:AttachableFile')->findRacineByClassAndItemId($this->getRepositoryName(),$item->getId(),$codeZone);
-
-    }
-
-    public function getSummaryAttachementFiles($item,$codeZone = null){
-        return $this->getEntityManager()->getRepository('LleAdminListBundle:AttachableFile')->getSummaryByClassAndItemId($this->getRepositoryName(),$item->getId(),$codeZone);
-    }
-
-    public function getClassWorkflow(){
-        if($this->getFieldWorkflow()){
-            return $this->getClass()->getAssociationMapping($this->getLocalFieldWorkflow())['targetEntity'];
-        }else{
-            return null;
+        if(is_object($item)){
+            $return = $this->getClassMetadata()->getTypeOfColumn($columnName);
+            return $return;
         }
     }
-
-    public function decorateNewEntity($item, $request = null){
-        $workClass = $this->getClassWorkflow();
-        $em = $this->getEntityManager();
-        if($workClass){
-            $work = $em->getClassMetadata($workClass)->newInstance()->getDefault();
-            $set = 'set'.ucfirst($this->getLocalFieldWorkflow());
-            $defaultWork = $em->getRepository($workClass)->findOneBy(array($this->getWfFieldWorkflow() => trim($work)));
-            $item->$set($defaultWork);
-        }
-        return $item;
-    }
-
 
 
 }

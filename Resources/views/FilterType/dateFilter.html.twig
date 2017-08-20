@@ -1,33 +1,26 @@
-   <div class="input-group">
-      <div class="input-group-btn">
-
-
- <button type="button" class="btn btn-default dropdown-toggle {{nameprefix}}button{{namesuffix}}" data-toggle="dropdown" aria-expanded="false">
-          
-          <i title="Avant le" class="fa fa-angle-left before"></i>
-          <i title="Après le" class="fa fa-angle-right after"></i>
-          <i title="Le" class="fa fa-calendar-o equal"></i>
-        </button>
+<div class="input-group">
+    <div class="input-group-btn">
+         <button type="button" class="btn btn-default dropdown-toggle {{nameprefix}}button{{namesuffix}}" data-toggle="dropdown" aria-expanded="false">
+              <i title="Avant le" class="fa fa-angle-left before"></i>
+              <i title="Après le" class="fa fa-angle-right after"></i>
+              <i title="Le" class="fa fa-calendar-o equal"></i>
+         </button>
         <ul class="dropdown-menu" role="menu">
-           <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','equal');">
-            <i class="fa fa-calendar-o"></i>Le</a>
+           <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','equal');">
+            <i class="fa fa-calendar-o"></i>{{ "lego.filter.this"|trans }}</a>
           </li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','before');">
-            <i class="fa fa-angle-left"></i>Avant le</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','before');">
+            <i class="fa fa-angle-left"></i>{{ "lego.filter.before"|trans }}</a>
           </li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','after');">
-            <i class="fa fa fa-angle-right"></i>Aprés le</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','after');">
+            <i class="fa fa fa-angle-right"></i>{{ "lego.filter.after"|trans }}</a>
           </li>
-
         </ul>
+     </div>
 
-
-      </div><!-- /btn-group -->
-
-<input type="hidden" class="form-control" id="{{nameprefix}}comparator{{namesuffix}}" name="{{nameprefix}}comparator{{namesuffix}}" {% if data.comparator is defined %}value="{{data.comparator}}"{% endif %}>
-
-<input type="text" name="{{nameprefix}}value{{namesuffix}}" class="form-control datepicker form_datepicker{{ nameprefix }}{{ namesuffix }}" id="_{{nameprefix}}value{{namesuffix}}"  {% if data.value is defined %}value="{{data.value}}"{% endif %} />
-</div><!-- /input-group -->
+    <input type="hidden" class="form-control" id="{{nameprefix}}comparator{{namesuffix}}" name="{{nameprefix}}comparator{{namesuffix}}" {% if data.comparator is defined %}value="{{data.comparator}}"{% endif %}>
+    <input type="text" name="{{nameprefix}}value{{namesuffix}}" class="form-control datepicker form_datepicker{{ nameprefix }}{{ namesuffix }}" id="_{{nameprefix}}value{{namesuffix}}"  {% if data.value is defined %}value="{{data.value}}"{% endif %} />
+</div>
 
 <script>
     $('#_{{nameprefix}}value{{namesuffix}}').datepicker({
@@ -36,6 +29,6 @@
         {%  endfor %}
     });
     $(document).ready(function() {
-      lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','{% if data.comparator is defined %}{{data.comparator}}{% else %}equal{% endif %}');
+      lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','{% if data.comparator is defined %}{{data.comparator}}{% else %}equal{% endif %}');
     });
 </script>

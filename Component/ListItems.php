@@ -4,9 +4,10 @@ namespace Idk\LegoBundle\Component;
 
 
 use Idk\LegoBundle\Annotation\Entity\Field;
-use Idk\LegoBundle\AdminList\Actions\EntityAction;
+use Idk\LegoBundle\Lib\Actions\EntityAction;
 use Symfony\Component\HttpFoundation\Request;
-use Idk\LegoBundle\AdminList\Actions\BulkAction;
+use Idk\LegoBundle\Lib\Actions\BulkAction;
+use Doctrine\ORM\QueryBuilder;
 
 class ListItems extends Component{
 
@@ -24,6 +25,7 @@ class ListItems extends Component{
 
     public function bindRequest(Request $request)
     {
+        parent::bindRequest($request);
         foreach($this->getOption('entity_actions', []) as $action){
             if($action instanceOf EntityAction){
                 $this->entityActions[] = $action;
@@ -114,6 +116,31 @@ class ListItems extends Component{
 
     public function hideEntityActions(){
         return $this->getOption('hide_entity_actions', false);
+    }
+
+    public function catchQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        if($this->request->get('id') and $this->getConfigurator()->getParent()) {
+            $fieldAssociation = $this->getFieldAssociationOfParent();
+            if($fieldAssociation) {
+                $queryBuilder->andWhere('b.' . $fieldAssociation . ' = :' . $fieldAssociation . '_')->setParameter($fieldAssociation . '_', $this->request->get('id'));
+            }
+        }
+    }
+
+    private function getFieldAssociationOfParent(){
+        $fieldAssociation = null;
+        if($this->getOption('field_association', null)){
+            return $this->getOption('field_association', null);
+        }else {
+            $c = $this->getConfigurator()->getClassMetaData();
+            foreach ($c->getAssociationNames() as $assocName) {
+                if ($c->getAssociationTargetClass($assocName) == $this->getConfigurator()->getParent()->getClass()) {
+                    $fieldAssociation = $assocName;
+                }
+            }
+            return $fieldAssociation;
+        }
     }
 
 }

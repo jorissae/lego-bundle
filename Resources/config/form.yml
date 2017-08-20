@@ -1,0 +1,70 @@
+parameters:
+services:
+  lego.form.number:
+      class: Idk\LegoBundle\Form\Type\NumberType
+      tags:
+          - { name: form.type, alias: lego_number }
+
+  lego.form.color:
+      class: Idk\LegoBundle\Form\Type\ColorType
+      tags:
+          - { name: form.type, alias: lego_color }
+
+  lego.form.role:
+      class: Idk\LegoBundle\Form\Type\RoleType
+      tags:
+          - { name: form.type, alias: lego_role }
+
+  lego.form.geojson:
+      class: Idk\LegoBundle\Form\Type\GeoJsonType
+      tags:
+          - { name: form.type, alias: lego_geojson }
+
+  lego.form.latlng:
+      class: Idk\LegoBundle\Form\Type\LatlngType
+      tags:
+          - { name: form.type, alias: lego_latlng }
+
+  lego.form.markdown:
+      class: Idk\LegoBundle\Form\Type\MarkdownType
+      tags:
+          - { name: form.type, alias: lego_markdown }
+
+  lego.form.date:
+      class: Idk\LegoBundle\Form\Type\DateType
+      tags:
+          - { name: form.type, alias: lego_date }
+
+  lego.form.time:
+      class: Idk\LegoBundle\Form\Type\TimeType
+      tags:
+          - { name: form.type, alias: lego_time }
+
+  lego.form.auto_completion:
+      class: Idk\LegoBundle\Form\Type\AutoCompletionType
+      arguments:    ["@doctrine.orm.entity_manager"]
+      tags:
+          - { name: form.type, alias: lego_auto_completion }
+
+  lego.form.datetime:
+      class: Idk\LegoBundle\Form\Type\DateTimeType
+      tags:
+          - { name: form.type, alias: lego_datetime }
+
+  lego.form.dependent_select:
+      class: Idk\LegoBundle\Form\Type\DependentSelectType
+      arguments:    ["@doctrine.orm.entity_manager"]
+      tags:
+          - { name: form.type, alias: lego_dependent_select }
+
+  lego.form.enity_hidden:
+      class: Idk\LegoBundle\Form\Type\EntityHiddenType
+      arguments:    ["@doctrine.orm.entity_manager"]
+      tags:
+          - { name: form.type, alias: lego_entity_hidden }
+
+
+  lego.form.range:
+      class: Idk\LegoBundle\Form\Type\RangeType
+      tags:
+          - { name: form.type, alias: lego_range }

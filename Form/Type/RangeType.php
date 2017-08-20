@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RangeType extends AbstractType {
 
@@ -21,7 +21,7 @@ class RangeType extends AbstractType {
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function configureOptions(OptionsResolver $resolver){
         $resolver->setDefaults(array(
             'range' => true,
             'slide' => true,
@@ -51,7 +51,7 @@ class RangeType extends AbstractType {
     }
 
     public function getName() {
-        return 'lle_range';
+        return 'lego_range';
     }
 
 }

@@ -22,7 +22,7 @@ class LogController extends Controller
      *
      * @param string $_format
      *
-     * @Route("/", name="lleadminlistbundle_log")
+     * @Route("/", name="idklegobundle_log")
      * @Method({"GET", "POST"})
      * @Template()
      */
@@ -37,7 +37,7 @@ class LogController extends Controller
      *
      * @param string $_format
      *
-     * @Route("/revert/{class}/{id}/{version}", name="lleadminlistbundle_log_revert")
+     * @Route("/revert/{class}/{id}/{version}", name="idklegobundle_log_revert")
      * @Method({"GET", "POST"})
      * @return array
      */

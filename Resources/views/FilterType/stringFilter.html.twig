@@ -8,30 +8,19 @@
           <i title="Est vide" class="fa fa-square-o isnull"></i>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','contains');">
-            <i class="fa fa-text-width"></i>Contient</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','contains');">
+            <i class="fa fa-text-width"></i>{{ 'lego.filter.content'|trans }}</a>
           </li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','startswith');">
-            <i class="fa fa-caret-square-o-right"></i>Commence par</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','startswith');">
+            <i class="fa fa-caret-square-o-right"></i>{{ 'lego.filter.start'|trans }}</a>
           </li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','endswith');">
-            <i class="fa fa-caret-square-o-left"></i>Termine par</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','endswith');">
+            <i class="fa fa-caret-square-o-left"></i>{{ 'lego.filter.end'|trans }}</a>
           </li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','isnull');">
-            <i class="fa fa-square-o "></i>Est vide</a>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"  onclick="return lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','isnull');">
+            <i class="fa fa-square-o "></i>{{ 'lego.filter.empty'|trans }}</a>
           </li>
         </ul>
-
-<!--
-<select class="form-control" name="{{nameprefix}}comparator{{namesuffix}}">
-    <option value="contains" {% if data.comparator is defined and data.comparator == "contains" or filtertype.defaultComparator =="contains" %} selected="selected" {% endif %} >contient</option>
-    <option value="doesnotcontain" {% if data.comparator is defined and data.comparator == "doesnotcontain" or filtertype.defaultComparator =="doesnotcontain"%} selected="selected" {% endif %} >ne contient pas</option>
-    <option value="equals" {% if data.comparator is defined and data.comparator == "equals" or filtertype.defaultComparator =="equals" %} selected="selected" {% endif %} >egal</option>
-    <option value="notequals" {% if data.comparator is defined and data.comparator == "notequals"or filtertype.defaultComparator =="notequals" %} selected="selected" {% endif %} >non egal</option>
-    <option value="startswith" {% if data.comparator is defined and data.comparator == "startswith" or filtertype.defaultComparator =="startswith"%} selected="selected" {% endif %} >commence par</option>
-    <option value="endswith" {% if data.comparator is defined and data.comparator == "endswith" or filtertype.defaultComparator =="endswith"%} selected="selected" {% endif %} >termine par</option>
-</select>
--->
       </div><!-- /btn-group -->
 
 <input type="hidden" class="form-control" id="{{nameprefix}}comparator{{namesuffix}}" name="{{nameprefix}}comparator{{namesuffix}}" {% if data.comparator is defined %}value="{{data.comparator}}"{% endif %}>
@@ -47,6 +36,6 @@
 
 <script>
 $(document).ready(function() {
-  lle.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','{% if data.comparator is defined %}{{data.comparator}}{% elseif filtertype.defaultComparator is defined %}{{filtertype.defaultComparator}}{% else %}startswith{% endif %}');
+  lego.filter_set_button('#{{nameprefix}}comparator{{namesuffix}}','.{{nameprefix}}button{{namesuffix}}','{% if data.comparator is defined %}{{data.comparator}}{% elseif filtertype.defaultComparator is defined %}{{filtertype.defaultComparator}}{% else %}startswith{% endif %}');
 });
 </script>

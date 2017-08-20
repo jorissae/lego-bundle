@@ -4,14 +4,11 @@ namespace Idk\LegoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Lle\AdminListBundle\Entity\AbstractAttribut;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Lle\AdminListBundle\Form\Transformer\ObjectToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
 
 
 class RoleType extends AbstractType
@@ -62,15 +59,14 @@ class RoleType extends AbstractType
         return ucwords(strtolower($roleDisplay));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            ));
+        $resolver->setDefaults(array( ));
     }
 
     public function getParent()
     {
-        return 'text';
+        return ParentType::class;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -95,7 +91,7 @@ class RoleType extends AbstractType
 
     public function getName()
     {
-        return 'lle_role';
+        return 'lego_role';
     }
 }
 

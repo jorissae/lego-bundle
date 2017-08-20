@@ -89,20 +89,13 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
 
 
         try {
-            $this->generateController($bundle, $entityName, $metadata);
+            $this->generateController($bundle, $entityName);
             $output->writeln('Generating the Controller code: <info>OK</info>');
         } catch (\Exception $error) {
             $output->writeln($this->dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
             $output->writeln('Generating the Controller code: <error>ERROR</error>');
         }
 
-        try {
-            $this->generateBehatTests($bundle, $entityName, $metadata, $label);
-            $output->writeln('Generating the Test code: <info>OK</info>');
-        } catch (\Exception $error) {
-            $output->writeln($this->dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
-            $output->writeln('Generating the Test code: <error>ERROR</error>');
-        }        
     }
 
     /**
@@ -116,15 +109,15 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
      */
     public function generateConfiguration(Bundle $bundle, $entityName, ClassMetadata $metadata, $generateAdminType, $label)
     {
-        $className = sprintf("%sAdminListConfigurator", $entityName);
-        $dirPath = sprintf("%s/AdminList", $bundle->getPath());
+        $className = sprintf("%sConfigurator", $entityName);
+        $dirPath = sprintf("%s/Configurator", $bundle->getPath());
         $classPath = sprintf("%s/%s.php", $dirPath, str_replace('\\', '/', $className));
 
         if (file_exists($classPath)) {
             throw new \RuntimeException(sprintf('Unable to generate the %s class as it already exists under the %s file', $className, $classPath));
         }
         $this->setSkeletonDirs(array($this->skeletonDir));
-        $this->renderFile('/AdminList/AdminListConfigurator.php', $classPath, array(
+        $this->renderFile('/Configurator/LegoConfigurator.php', $classPath, array(
             'namespace'           => $bundle->getNamespace(),
             'bundle'              => $bundle,
             'entity_class'        => $entityName,
@@ -142,24 +135,19 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
      */
     public function generateController(Bundle $bundle, $entityName)
     {
-        $className = sprintf("%sAdminListController", $entityName);
+        $className = sprintf("%sLegoController", $entityName);
         $dirPath = sprintf("%s/Controller", $bundle->getPath());
         $classPath = sprintf("%s/%s.php", $dirPath, str_replace('\\', '/', $className));
-        $extensions = 'csv';
-        if (class_exists("\\Lle\\AdminListBundle\\Service\\ExportService")) {
-            $extensions = implode('|', \Lle\AdminListBundle\Service\ExportService::getSupportedExtensions());
-        }
 
         if (file_exists($classPath)) {
             throw new \RuntimeException(sprintf('Unable to generate the %s class as it already exists under the %s file', $className, $classPath));
         }
 
         $this->setSkeletonDirs(array($this->skeletonDir));
-        $this->renderFile('/Controller/EntityAdminListController.php', $classPath, array(
+        $this->renderFile('/Controller/EntityLegoController.php', $classPath, array(
             'namespace'         => $bundle->getNamespace(),
             'bundle'            => $bundle,
-            'entity_class'      => $entityName,
-            'export_extensions' => $extensions
+            'entity_class'      => $entityName
         ));
 
     }
@@ -173,7 +161,7 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
      */
     public function generateAdminType(Bundle $bundle, $entityName, ClassMetadata $metadata)
     {
-        $className = sprintf("%sAdminType", $entityName);
+        $className = sprintf("%sLegoType", $entityName);
         $dirPath = sprintf("%s/Form", $bundle->getPath());
         $classPath = sprintf("%s/%s.php", $dirPath, str_replace('\\', '/', $className));
 
@@ -182,7 +170,7 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
         }
 
         $this->setSkeletonDirs(array($this->skeletonDir));
-        $this->renderFile('/Form/EntityAdminType.php', $classPath, array(
+        $this->renderFile('/Form/EntityLegoType.php', $classPath, array(
             'namespace'         => $bundle->getNamespace(),
             'bundle'            => $bundle,
             'entity_class'      => $entityName,
@@ -191,30 +179,7 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
     }
 
 
-    /**
-     * @param Bundle          $bundle
-     * @param OutputInterface $output
-     * @param array           $parameters
-     */
-    public function generateBehatTests(Bundle $bundle, $entityName, ClassMetadata $metadata, $label)
-    {
 
-        $className = strtolower($entityName);
-        $dirPath = sprintf("%s/Features", $bundle->getPath());
-        $featurePath = sprintf("%s/%s.feature", $dirPath, str_replace('\\', '/', $className));
-
-        if (file_exists($featurePath)) {
-            throw new \RuntimeException(sprintf('Unable to generate the %s class as it already exists under the %s file', $className, $classPath));
-        }
-        $this->setSkeletonDirs(array($this->skeletonDir));
-        $this->renderFile('/Features/adminlist.feature', $featurePath, array(
-            'namespace'           => $bundle->getNamespace(),
-            'bundle'              => $bundle,
-            'entity_class'        => $entityName,
-            'fields'              => $this->getFieldsWithFilterTypeFromMetadata($metadata),
-            'label'               => $label
-        ));
-    }
 
     /**
      * @param ClassMetadata $metadata
@@ -283,7 +248,7 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
                 $fieldTitle = $this->auto_correction[$fieldTitle];
             }
             $formType = null;
-            if($type == 'date' or $type == 'datetime') $formType = 'lle_date';
+            if($type == 'date' or $type == 'datetime') $formType = 'lego_date';
             $fields[$fieldName] = array('fieldTitle' => $fieldTitle,'fieldType'=>$type,'formType'=>$formType);
         }
         return $fields;

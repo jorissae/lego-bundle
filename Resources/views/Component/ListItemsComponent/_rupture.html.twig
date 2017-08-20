@@ -1,4 +1,4 @@
-{% set rupteurs = adminlist.rupteurs(item) %}
+{% set rupteurs = component.rupteurs(item) %}
 {% for rupteur in rupteurs|reverse %}
     {% if rupteur.isFooter and not first %}
         <tr class="{{ rupteur.classCssFooter }} {{ rupteur.classCss }}"><td colspan="{{ nbCol }}">{{ rupteur.getFooter()|raw }}</td></tr>

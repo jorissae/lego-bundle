@@ -3,7 +3,6 @@
 namespace Idk\LegoBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Idk\LegoBundle\AdminList\AdminList;
 use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,13 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\Form;
 
 /**
- * AdminListController
+ * LegoController
  */
 abstract class LegoController extends Controller
 {
@@ -49,10 +46,6 @@ abstract class LegoController extends Controller
 
     protected function addFlash($type,$msg){
         $this->get('session')->getFlashBag()->add($type, $msg);
-    }
-
-    protected function getAdminListConfigurator(){
-        return null;
     }
 
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
@@ -281,29 +274,9 @@ abstract class LegoController extends Controller
 
 
 
-    protected function doLogsAction(AbstractConfigurator $configurator, Request $request = null){
-        $r =  $this->container->get('log_manager')->getLogs(array('objectClass'=>$configurator->getClass()->getName()),$request->query->get('page',1));
-        $adminlist = $this->getList($configurator);
-        return new Response(
-            $this->renderView(
-                $configurator->getLogsTemplate(),
-                array('logs'=>$r['logs'], 'adminlistconfigurator' => $configurator,'adminlist'=>$adminlist,'pf'=>$r['pf'])
-            )
-        );
 
-    }
 
-    protected function doLogAction(AbstractConfigurator $configurator, $id, Request $request = null){
-        $r = $this->container->get('log_manager')->getLogs(array('objectClass'=>$configurator->getClass()->getName(),'objectId'=>$id),$request->query->get('page',1));
-        $item = $configurator->find($id);
-        $adminlist = $this->getList($configurator);
-        return new Response(
-            $this->renderView(
-                $configurator->getLogTemplate(),
-                array('logs'=>$r['logs'], 'adminlistconfigurator' => $configurator,'adminlist'=>$adminlist,'pf'=>$r['pf'],'item'=>$item)
-            )
-        );
-    }
+
 
     protected function doItemAction(AbstractConfigurator $configurator, $item, $ida, $type){
         $em = $this->getEntityManager();
@@ -320,7 +293,7 @@ abstract class LegoController extends Controller
         if($request->isXmlHttpRequest()) {
             $donnes = $request->request->get('data');
             $index = $donnes['index'];
-            return new Response($this->renderView('LleAdminListBundle:Default:_line.html.twig',array('adminlist'=>$this->getList($configurator),'item'=>$item,'index'=>$index)));
+            return new Response($this->renderView('IdkLegoBundle:Default:_line.html.twig',array('configurator'=>$this->getList($configurator),'item'=>$item,'index'=>$index)));
         }else{
             $this->addNoticeFlash('Modification effectuée');
             return $this->redirect($this->getRequest()->headers->get('referer'));
@@ -353,22 +326,19 @@ abstract class LegoController extends Controller
     }
 
     protected function getList($configurator = null){
-        if($configurator == null) $configurator = $this->getAdminListConfigurator();
-        $adminlist = $this->get("lle_adminlist.factory")->createList($configurator);
-        $adminlist->bindRequest($this->getRequest());
-        return $adminlist;
+        return null;
     }
 
     protected function getAllIterator(){
-        return $this->getList($this->getAdminListConfigurator())->getAllIterator();
+        return $this->getConfigurator()->getAllIterator();
     }
 
     protected function getLineResponse($configurator,$item,$index = 0){
-        return new Response($this->renderView('LleAdminListBundle:Default:_line.html.twig',array('adminlist'=>$this->getList($configurator),'item'=>$item,'index'=>$index)));
+        return new Response($this->renderView('IdkLegoBundle:Default:_line.html.twig',array('configurator'=>$this->getList($configurator),'item'=>$item,'index'=>$index)));
     }
 
     protected function getLine($configurator,$item,$index = 0){
-        return $this->renderView('LleAdminListBundle:Default:_line.html.twig',array('adminlist'=>$this->getList($configurator),'item'=>$item,'index'=>$index));
+        return $this->renderView('IdkLegoBundle:Default:_line.html.twig',array('configurator'=>$this->getList($configurator),'item'=>$item,'index'=>$index));
     }
 
     protected function getRefererResponse($typeFlash = null, $msgFlash = null){

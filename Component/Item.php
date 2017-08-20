@@ -6,7 +6,6 @@ namespace Idk\LegoBundle\Component;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Form\Type\AutoCompletionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class Item extends Component{
@@ -61,7 +60,7 @@ class Item extends Component{
             $formView = $form->createView();
             $entity = null;
         }
-        return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lle_base_fields.html.twig')];
+        return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
     }
 
 

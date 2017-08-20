@@ -26,4 +26,9 @@ class LayoutController extends Controller
         $header = $this->get('lego.service.header');
         return $this->render($header->getTemplate(), ['header' => $header]);
     }
+
+    public function footerAction(){
+        $footer = $this->get('lego.service.footer');
+        return $this->render($footer->getTemplate(), ['footer' => $footer]);
+    }
 }
