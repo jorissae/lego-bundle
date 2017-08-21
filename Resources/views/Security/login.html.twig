@@ -7,7 +7,7 @@
     </div>
 
     <div class="login-box-body">
-        <div style="text-align:center;"><img  width="50%" src="/bundles/idklego/images/logo.jpg"/></div>
+        <div style="text-align:center;">{%  block logo %}<img  width="50%" src="/bundles/idklego/images/logo.jpg"/>{%  endblock %}</div>
         <p class="login-box-msg">
 
             {% if error is defined and error %}<div class="alert alert-error">{{ error.message }}</div>{% endif %}
