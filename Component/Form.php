@@ -5,6 +5,7 @@ namespace Idk\LegoBundle\Component;
 use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 
 class Form extends Component{
@@ -34,7 +35,15 @@ class Form extends Component{
             $entity = $this->getConfigurator()->newInstance();
         }
 
-        $this->form = $this->get('form.factory')->create($this->getOption('form'), $entity);
+        if(!$this->getOption('form',null)){
+            $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
+            foreach($this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName()) as $field){
+                $formBuilder->add($field->getName(), null, ['label'=>$field->getHeader()]);
+            }
+            $this->form = $formBuilder->getForm();
+        }else {
+            $this->form = $this->get('form.factory')->create($this->getOption('form'), $entity);
+        }
         $this->form->handleRequest($request);
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
             if ($this->form->isValid()) {
