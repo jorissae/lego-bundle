@@ -68,14 +68,14 @@ class JeuConfigurator extends AbstractDoctrineORMConfigurator
 
         //Index
         $this->addIndexComponent(CPNT\Action::class,['actions'=>[CPNT\Action::ADD, CPNT\Action::EXPORT_CSV, CPNT\Action::EXPORT_XLSX]]);
-        $this->addIndexComponent(CPNT\Custom::class, ['src'=>'AppBundle:JeuLego:loulou']);
+        $this->addIndexComponent(CPNT\Custom::class, ['src'=>'AppBundle:JeuLego:showid']);
         $this->addIndexComponent(CPNT\Filter::class,[]);
         $showItem = $this->addIndexComponent(CPNT\Item::class,['fields'=> ['editeur' ,'name', 'nbPlayer', 'age']]);
         $showItem->add('editeur.id', ['label'=>'Id editeur']);
         $list = $this->addIndexComponent(CPNT\ListItems::class,  [
             'fields'=> ['id', 'editeur', 'name', 'nbPlayer', 'age'],
             'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE, CPNT\ListItems::ENTITY_ACTION_SHOW],
-            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE, new BulkAction('loulou', ['choices'=> ['A'=>'B', 'C'=>'D'], 'route'=>'app_jeulego_bulk'])]
+            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE, new BulkAction('Mon action', ['choices'=> ['A'=>'Action A', 'B'=>'Action B'], 'route'=>'app_jeulego_bulk'])]
         ]);
         $list->add('editeur.id', ['label'=>'Id editeur']);
         $this->addIndexComponent(CPNT\ListItems::class,[
