@@ -18,23 +18,23 @@
                                 data-callback="reloadLine"
                                 data-url="{{ path(url["path"],url[("params")] ) }}"
                                 class="jsa-ajax btn btn-primary btn-xs">
-                                {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
+                                {% if itemAction.getIconFor(item) is not null %}<i class="fa fa-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
                                 {{ itemAction.getLabelFor(item) }}
                             </span>
                         {% elseif itemAction.isModal %}
                             {% include itemAction.modal %}
-                            <a href="#" data-toggle="modal" data-target="#modal-delete-{{ item.id }}" class="btn btn-xs {{ itemAction.cssClass }}"><i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{{ itemAction.getLabelFor(item) | trans }}</a>
+                            <a href="#" data-toggle="modal" data-target="#modal-delete-{{ item.id }}" class="btn btn-xs {{ itemAction.cssClass }}"><i class="fa fa-{{ itemAction.getIconFor(item) }}"></i>{{ itemAction.getLabelFor(item) | trans }}</a>
                         {% elseif itemAction.isPopup %}
                             <span
                                 data-url="{{ path(url["path"],url[("params")] ) }}"
                                 class="jsa-popup btn btn-primary btn-xs">
-                                {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
+                                {% if itemAction.getIconFor(item) is not null %}<i class="fa fa-{{ itemAction.getIconFor(item) }}"></i>{% endif %}
                                 {{ itemAction.getLabelFor(item) }}
                             </span>
                         {% elseif url %}
                              <a {% if itemAction.target %} target="{{ itemAction.target }}" {% endif %}
-                           id="action-{{index}}-{{itemAction.getLabelFor(item) }}" href="{{ path(url["path"], url[("params")]) }}" class="btn btn-primary btn-xs">
-                            {% if itemAction.getIconFor(item) is not null %}<i class="glyphicon glyphicon-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item)|trans }}
+                           id="action-{{index}}-{{itemAction.getLabelFor(item) }}" href="{{ path(url["path"], url[("params")]) }}" class="btn {{ itemAction.cssClass }} btn-xs">
+                            {% if itemAction.getIconFor(item) is not null %}<i class="fa fa-{{ itemAction.getIconFor(item) }}"></i>{% endif %}{{ itemAction.getLabelFor(item)|trans }}
                          </a>
 
                         {% endif %}

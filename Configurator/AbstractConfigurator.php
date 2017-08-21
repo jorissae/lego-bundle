@@ -4,30 +4,23 @@ namespace Idk\LegoBundle\Configurator;
 
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Idk\LegoBundle\Annotation\Entity\Field;
 use Symfony\Component\HttpFoundation\Request;
 
 
 
 abstract class AbstractConfigurator
 {
-    const SUFFIX_ADD = 'add';
-    const SUFFIX_EDIT = 'edit';
-    const SUFFIX_EXPORT = 'export';
-    const SUFFIX_DELETE = 'delete';
-    const SUFFIX_ITEMACTION = 'item';
-    const SUFFIX_LISTACTION = 'alist';
-    const SUFFIX_BULKACTION = 'bulk';
-    const SUFFIX_SHOW = 'show';
-    const SUFFIX_EDIT_IN_PLACE = 'editinplace';
-    const SUFFIX_EDIT_IN_PLACE_ATTR = 'editinplace_attribut';
-    const SUFFIX_LOGS = 'logs';
-    const SUFFIX_LOG = 'log';
-    const SUFFIX_WORKFLOW = 'wf';
 
+    const ROUTE_SUFFIX_EDIT_IN_PLACE = 'editinplace';
     const ROUTE_SUFFIX_INDEX = 'index';
     const ROUTE_SUFFIX_ADD = 'add';
     const ROUTE_SUFFIX_EDIT = 'edit';
     const ROUTE_SUFFIX_SHOW = 'show';
+
+    const ENTITY_CLASS_NAME = 'entity_class_name_empty';
+
+    const TITLE = 'lego.default.title';
 
     protected $em;
 
@@ -70,20 +63,45 @@ abstract class AbstractConfigurator
         $this->build();
     }
 
-    public function getSublistParentItem(){
-        return ($this->isSubList())? $this->sublistParentItem:null;
+    abstract function getItems();
+    abstract public function getType($item,$columnName);
+
+    public function getEntityName(){
+        if($this::ENTITY_CLASS_NAME == self::ENTITY_CLASS_NAME) {
+            throw new \Exception('Entity class name empty. Put const ENTITY_CLASS_NAME in your configurator');
+        }
+        return $this::ENTITY_CLASS_NAME;
     }
 
 
-    abstract public function getBundleName();
-    abstract function buildIndex();
-    abstract function getItems();
-    abstract public function getType($item,$columnName);
+    public function buildIndex(){
+        return;
+    }
+
+    public function buildShow(){
+        return;
+    }
+
+    public function buildEdit(){
+        return;
+    }
+
+    public function buildAdd(){
+        return;
+    }
+
+    public function buildAll(){
+        return;
+    }
 
     public function build(){
         if($this->isBuild == false and !$this->getParent()){
             $this->isBuild = true;
+            $this->buildAll();
             $this->buildIndex();
+            $this->buildEdit();
+            $this->buildAdd();
+            $this->buildShow();
         }
     }
 
@@ -93,7 +111,7 @@ abstract class AbstractConfigurator
     }
 
     public function getTitle() {
-        return $this->getEntityName();
+        return $this::TITLE;
     }
 
     public function getSubTitle() {
@@ -111,57 +129,32 @@ abstract class AbstractConfigurator
     }
 
 
-    public function getShowUrl($item,$column = null)
+    public function getPathByField($item,Field $field)
     {
-        $params = $this->getExtraParameters();
-        $path = null;
-        //if(method_exists($item, 'getSlug'))  $params['slug'] = $elm->getSlug();
-        if($column and is_array($column->getLinkTo())){
-            $link = $column->getLinkTo();
-            $elm = $this->getValue($item,$column->getName());
-            if(is_object($elm)){
-                $paramsConf = array();
-                foreach($link['params'] as $param){
-                    $paramsConf[$param] = $this->getValue($elm,$param);
+        $path = $field->getPath();
+        if(!$path) return null;
+        $params = [];
+        if($path and isset($path['route'])) {
+            $route = $path['route'];
+            if (isset($path['params']) and $path['params']) {
+                foreach ($path['params'] as $key => $fieldName) {
+                    $params[$key] = $this->getValue($item, $fieldName);
                 }
-                $params = array_merge($paramsConf, $params);
-                $path = $link['route'];
-            }else{
-                $paramsConf = array();
-                foreach($link['params'] as $k => $param){
-                    if(substr($k,0,1) == '*'){
-                        $paramsConf[str_replace('*','',$k)] = $param;
-                    }else {
-                        $paramsConf[$k] = $this->getValue($item, $param);
-                    }
-                    //si un champ requi est null on retourne false
-                    if(isset($link['required']) and in_array($k,$link['required']) and $paramsConf[$k] === null) return false;
-                }
-                $params = array_merge($paramsConf, $params);
-                $path = $link['route'];
             }
-        }else if($column and $column->getLinkTo() != 'self'){
-            $path = $column->getLinkTo();
-            $elm = $this->getValue($item,$column->getName());
-            $params = array_merge(array('id' => $item->getId()), $params);
         }else{
-            $path = $this->getPathByConvention($this::SUFFIX_SHOW);
-            $params = array_merge(array('id' => $item->getId()), $params);
+            if ($path == self::ROUTE_SUFFIX_SHOW) {
+                $route = $this->getPathRoute(self::ROUTE_SUFFIX_SHOW);
+                $params['id'] = $item->getId();
+            }
         }
-        if(!$path) return false;
-
-        //if(isset($params['slug'])) unset($params['id']);
-        return array(
-            'path' => $path,
-            'params' => $params,
-        );
+        return ['route' => $route, 'params' => $params];
     }
 
     public function getEditInPlaceUrl()
     {
 
         return array(
-            'path' => $this->getPathByConvention($this::SUFFIX_EDIT_IN_PLACE),
+            'path' => $this->getPathByConvention(self::ROUTE_SUFFIX_EDIT_IN_PLACE),
         );
     }
 
@@ -290,6 +283,12 @@ abstract class AbstractConfigurator
         } else {
             return 'object';
         }
+    }
+
+
+    public function getExportFields(array $columns = null)
+    {
+        return $this->get('lego.service.meta_entity_manager')->generateExportFields($this->getEntityName(), $columns);
     }
 
 

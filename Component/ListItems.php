@@ -13,6 +13,7 @@ class ListItems extends Component{
 
     const ENTITY_ACTION_DELETE = 'entity_action_delete';
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
+    const ENTITY_ACTION_SHOW = 'entity_action.show';
     const BULK_ACTION_DELETE = 'bulk_action_delete';
 
     private $fields = [];
@@ -71,7 +72,9 @@ class ListItems extends Component{
         if($action == self::ENTITY_ACTION_DELETE){
             $this->entityActions[] = new EntityAction('lego.action.delete', ['icon'=>'remove', 'css_class' => 'btn-danger' ,'modal' => $this->getPartial('modal_delete')]);
         }else if($action == self::ENTITY_ACTION_EDIT){
-            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'route' => $this->getConfigurator()->getPathRoute('edit')]);
+            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit')]);
+        }else if($action == self::ENTITY_ACTION_SHOW){
+            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show')]);
         }
     }
 
@@ -82,7 +85,7 @@ class ListItems extends Component{
     }
 
     public function getFields(){
-        return array_merge($this->fields, $this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
+        return array_merge($this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
     }
 
     public function getEntityActions(){
@@ -123,20 +126,32 @@ class ListItems extends Component{
         if($this->request->get('id') and $this->getConfigurator()->getParent()) {
             $fieldAssociation = $this->getFieldAssociationOfParent();
             if($fieldAssociation) {
-                $queryBuilder->andWhere('b.' . $fieldAssociation . ' = :' . $fieldAssociation . '_')->setParameter($fieldAssociation . '_', $this->request->get('id'));
+
+                if(isset($fieldAssociation['join'])){
+                    $alias = $fieldAssociation['join'] . '_';
+                    $queryBuilder->leftJoin('b.'.$fieldAssociation['join'], $fieldAssociation['alias'])->andWhere($fieldAssociation['name'] . ' = :' . $alias);
+                }else {
+                    $alias = $fieldAssociation['name'] . '_';
+                    $queryBuilder->andWhere('b.' . $fieldAssociation['name'] . ' = :' . $alias);
+                }
+                $queryBuilder->setParameter($alias, $this->request->get('id'));
             }
         }
     }
 
     private function getFieldAssociationOfParent(){
         $fieldAssociation = null;
+        $className = $this->getConfigurator()->getParent()->getClass();
         if($this->getOption('field_association', null)){
             return $this->getOption('field_association', null);
         }else {
             $c = $this->getConfigurator()->getClassMetaData();
-            foreach ($c->getAssociationNames() as $assocName) {
-                if ($c->getAssociationTargetClass($assocName) == $this->getConfigurator()->getParent()->getClass()) {
-                    $fieldAssociation = $assocName;
+            foreach($c->getAssociationMappings( ) as $association){
+                if(isset($association['joinColumns']) and $association['targetEntity'] == $className) {
+                    $fieldAssociation = ['name'=>$association['fieldName']];
+                }elseif($association['targetEntity'] == $className){
+                    $a = '_'.$association['fieldName'];
+                    $fieldAssociation = ['name'=>$a.'.id', 'join' => $association['fieldName'], 'alias' => $a];
                 }
             }
             return $fieldAssociation;

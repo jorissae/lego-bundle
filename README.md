@@ -20,7 +20,7 @@ CURRENT
 
 - Log [ ]
 - Pagination [ ]
-- Field-route [ ]
+- Field-route [X]
 - Onglets [ ]
 - LayoutBase [ ]
 - Custom Bulk Action [ ]
@@ -41,3 +41,135 @@ CURRENT
 - Dashboard []
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
+
+
+Exemple configurator
+
+```php
+<?php
+
+namespace AppBundle\Configurator;
+
+use AppBundle\Entity\Jeu;
+use AppBundle\Form\JeuType;
+
+use Idk\LegoBundle\Lib\Actions\BulkAction;
+use Idk\LegoBundle\Configurator\AbstractDoctrineORMConfigurator;
+use Idk\LegoBundle\Component as CPNT;
+
+
+class JeuConfigurator extends AbstractDoctrineORMConfigurator
+{
+
+    const ENTITY_CLASS_NAME = Jeu::class;
+    const TITLE = 'Gestion des jeux';
+
+    public function buildAll(){
+
+        //Index
+        $this->addIndexComponent(CPNT\Action::class,['actions'=>[CPNT\Action::ADD, CPNT\Action::EXPORT_CSV, CPNT\Action::EXPORT_XLSX]]);
+        $this->addIndexComponent(CPNT\Custom::class, ['src'=>'AppBundle:JeuLego:loulou']);
+        $this->addIndexComponent(CPNT\Filter::class,[]);
+        $showItem = $this->addIndexComponent(CPNT\Item::class,['fields'=> ['editeur' ,'name', 'nbPlayer', 'age']]);
+        $showItem->add('editeur.id', ['label'=>'Id editeur']);
+        $list = $this->addIndexComponent(CPNT\ListItems::class,  [
+            'fields'=> ['id', 'editeur', 'name', 'nbPlayer', 'age'],
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE, CPNT\ListItems::ENTITY_ACTION_SHOW],
+            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE, new BulkAction('loulou', ['choices'=> ['A'=>'B', 'C'=>'D'], 'route'=>'app_jeulego_bulk'])]
+        ]);
+        $list->add('editeur.id', ['label'=>'Id editeur']);
+        $this->addIndexComponent(CPNT\ListItems::class,[
+            'fields'=>['name'],
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
+        ], EditeurConfigurator::class);
+
+        //Add
+        $this->addAddComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
+        $this->addAddComponent(CPNT\Form::class, ['form' => JeuType::class]);
+
+        //Edit
+        $this->addEditComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
+        $this->addEditComponent(CPNT\Form::class, ['form' => JeuType::class]);
+
+        //Show
+        $this->addShowComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
+        $this->addShowComponent(CPNT\Item::class,['fields'=> ['name', 'nbPlayer', 'age']]);
+        $this->addShowComponent(CPNT\ListItems::class,[
+            'fields'=>['name'],
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
+        ], EditeurConfigurator::class);
+    }
+}
+
+```
+
+The Entity for exemple
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Idk\LegoBundle\Annotation\Entity as Lego;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Jeu
+ *
+ * @ORM\Table(name="jeu")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\JeuRepository")
+ */
+class Jeu
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @Lego\Field(path="show", twig="jeu_{{ value }}")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Lego\Field(label="Nom", edit_in_place=true, path={"route":"app_jeulego_show", "params"={"id":"id"}})
+     * @Lego\Filter\StringFilter()
+     */
+    private $name;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="nbPlayer", type="integer")
+     * @Assert\NotBlank()
+     * @Lego\Field(label="Nombre de joueur")
+     * @Lego\Filter\NumberRangeFilter(label="Nombre de joueur")
+     */
+    private $nbPlayer;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="age", type="integer")
+     * @Assert\NotBlank()
+     * @Lego\Field(label="Age")
+     * @Lego\Filter\NumberRangeFilter()
+     */
+    private $age;
+
+    /**
+     * @var Editeur
+     *
+     * @ORM\ManyToOne(targetEntity="Editeur")
+     * @Lego\Field(label="Editeur",  path={"route":"app_editeurlego_show", "params"={"id":"editeur.id"}})
+     * @ORM\JoinColumn(name="editeur_id", referencedColumnName="id")
+     */
+    private $editeur;
+    
+    /* ... */
+ ?>
+ ```

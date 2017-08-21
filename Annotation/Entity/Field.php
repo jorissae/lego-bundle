@@ -2,6 +2,8 @@
 namespace Idk\LegoBundle\Annotation\Entity;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Idk\LegoBundle\Twig\FilterTwigExtension;
+
 /**
  * @Annotation
  */
@@ -31,22 +33,13 @@ class Field
     /**
      * @var null|string
      */
-    private $link_to;
-
-    /**
-     * @var bool
-     */
-    private $attribut_options;
-
-    /**
-     * @var bool
-     */
-    private $auto_display;
-
+    private $path;
 
     private $style;
 
     private $type;
+
+    private $twig;
 
     /**
      * @param string $name     The name
@@ -59,13 +52,10 @@ class Field
         $this->header = (isset($options['label']))? $options['label']:null;
         $this->sort = (isset($options['sort']))? $options['sort']:false;
         $this->template = (isset($options['tmp']))? $options['tmp']:null;
-        $this->link_to = (isset($options['link_to']))? $options['link_to']:null;
+        $this->path = (isset($options['path']))? $options['path']:null;
         $this->edit_in_place = (isset($options['edit_in_place']))? $options['edit_in_place']:false;
         $this->template = (isset($options['template']))? $options['template']:null;
-        $this->custom = (isset($options['custom']))? $options['custom']:null;
-        $this->link_to = (is_array($this->link_to))? $this->link_to:strtolower($this->link_to);
-        $this->attribut_options = (isset($options['attribut_options']))? $options['attribut_options']:false;
-        $this->auto_display = (isset($options['auto_display']))? $options['auto_display']:true;
+        $this->twig = (isset($options['twig']))? $options['twig']:null;
         $this->style = (isset($options['style']))? $options['style']:null;
         $this->type = (isset($options['type']))? $options['type']:null;
     }
@@ -119,17 +109,16 @@ class Field
     /**
      * @return string twig
      */
-    public function getCustom()
+    public function getTwig()
     {
-        return $this->custom;
+        return $this->twig;
     }
 
     /**
      * @return string
      */
-    public function getLinkTo()
-    {
-        return $this->link_to;
+    public function getPath(){
+        return $this->path;
     }
 
     public function getEditInPlaceRole(){
@@ -177,19 +166,12 @@ class Field
         return ($this->hasEditInPlaceReload())? $this->edit_in_place['reload']:'td';
     }
 
-    public function isAttributoptions(){
-        return $this->attribut_options;
-    }
 
-    public function getAutoDisplay(){
-        return $this->auto_display;
-    }
-
-    public function getStringValue(AbstractConfigurator $configurator,$item){
-        if($this->getCustom()){
-            return $configurator->custom($this,$item);
+    public function getStringValue(AbstractConfigurator $configurator,$entity){
+        if($this->getTwig()){
+            return $this->generateTwigValue($configurator, $entity);
         }else{
-            return $configurator->getStringValue($item, $this->getName());
+            return $configurator->getStringValue($entity, $this->getName());
         }
     }
 
@@ -199,6 +181,16 @@ class Field
 
     public function is($type){
         return (strtolower($this->type) == strtolower($type));
+    }
+
+    public function generateTwigValue(AbstractConfigurator $configurator, $entity){
+            $value = $configurator->getValue($entity, $this->getName());
+            $loader = new \Twig_Loader_Array();
+            $twig = new \Twig_Environment($loader);
+            $twig->addExtension(new FilterTwigExtension());
+            $template = $twig->createTemplate($this->getTwig());
+            $render = $template->render(['entity' => $entity,'label' => $this->getHeader(), 'value' => $value]);
+            return $render;
     }
 
 

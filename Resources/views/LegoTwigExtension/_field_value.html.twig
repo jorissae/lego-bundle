@@ -1,5 +1,6 @@
 {% set columnName = field.name %}
 {% set real_value = configurator.getValue(item, columnName) %}
+{% set path = configurator.getPathByField(item,field) %}
 
 {% if field.isEditInPlace(item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
     {% set type = configurator.editInplaceInputType(item,columnName,field.editInPlaceClass) %}
@@ -99,10 +100,14 @@
             </span>
             {% endif %}
         </span>
+
+        {% if path  %} <a href="{{ path(path.route,path.params) }}"><i class="fa fa-link"></i></a>{% endif %}
     {% endif %}
 
 {% else %}
+
     {% set type = configurator.getType(item,columnName) %}
+    {% if path  %} <a href="{{ path(path.route,path.params) }}"> {% endif %}
     {% if type == 'boolean' %}
         {% if string_value is  same as("oui") %}
             <i style="color:green" class="fa fa-check-square-o"></i>
@@ -114,4 +119,5 @@
     {% else %}
         {{ string_value|raw }}
     {% endif %}
+    {% if path  %} </a> {% endif %}
 {% endif %}
