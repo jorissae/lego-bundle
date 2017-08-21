@@ -14,7 +14,7 @@ use Idk\LegoBundle\Generator\LegoGenerator;
 use Idk\LegoBundle\Helper\GeneratorUtils;
 
 
-class GenerateLegotCommand extends GenerateDoctrineCommand
+class GenerateLegoCommand extends GenerateDoctrineCommand
 {
 
 
