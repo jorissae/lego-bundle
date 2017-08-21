@@ -30,7 +30,7 @@ CURRENT
 - EntityAction and ListAction auto [ ]
 - Rupteur [ ]
 - Group [ ]
-- Form auto [ ]
+- Form auto [X]
 - Call template [ ]
 - Url object [ ]
 - Header and Menu object [ ]
