@@ -37,3 +37,7 @@ CURRENT
 - Multi component (CustomComponent) [ ]
 - Skeleton [ ]
 - Reload line [ ]
+- Move component [ ]
+- Dashboard []
+- Widget Systeme [ ]
+- Check double bindRequest in subComponent [ ]
