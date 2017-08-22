@@ -23,7 +23,7 @@ lego.action.see_profil: Voir votre profil
 lego.action.signe_out: Logout
 lego.form.login_username: Nom d'utilisateur
 lego.form.login_password: Mot de passe
-lego.form.remember_me: Se souvenire de moi
+lego.form.remember_me: Se souvenir de moi
 lego.form.submit_login: Login
 lego.form.choice_entity: Choisire un item
 lego.form.success.add: Elément ajouté
