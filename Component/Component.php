@@ -33,6 +33,10 @@ abstract class Component{
         $this->request = $request;
     }
 
+    public function getClass(){
+        return $this->getOption('class', 'lego-component');
+    }
+
 
     public function xhrBindRequest(Request $request){
         $this->bindRequest($request);

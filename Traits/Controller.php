@@ -20,6 +20,7 @@ trait Controller
      * The index action
      *
      * @Route("/")
+     * @Method({"GET", "POST"})
      */
     public function indexAction(Request $request)
     {

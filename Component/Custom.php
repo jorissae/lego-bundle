@@ -38,7 +38,7 @@ class Custom extends Component{
         }else{
             $entity = null;
         }
-        return ['entity'=>$entity];
+        return ['entity' => $entity, 'component' => $this];
     }
 
 
