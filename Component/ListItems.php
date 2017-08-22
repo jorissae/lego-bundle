@@ -19,6 +19,8 @@ class ListItems extends Component{
     private $fields = [];
     private $entityActions = [];
     private $bulkActions = [];
+    private $page = 1;
+    private $nbEntityPerPage = null;
 
     protected function init(){
         return;
@@ -27,6 +29,11 @@ class ListItems extends Component{
     public function bindRequest(Request $request)
     {
         parent::bindRequest($request);
+        if($request->query->has('nbepp')){
+            $this->get('session')->set($this->gid('nbepp'), $request->query->get('nbepp'));
+        }
+        $this->nbEntityPerPage = ($this->get('session')->has($this->gid('nbepp')))? $this->get('session')->get($this->gid('nbepp')):$this->getOption('entity_per_page');
+        $this->page = $request->query->has('page')? $request->query->get('page'):1;
         foreach($this->getOption('entity_actions', []) as $action){
             if($action instanceOf EntityAction){
                 $this->entityActions[] = $action;
@@ -42,6 +49,10 @@ class ListItems extends Component{
                 $this->addPredefinedBulkAction($action);
             }
         }
+    }
+
+    public function getPager(){
+        return $this->getConfigurator()->getPager($this->page,$this->nbEntityPerPage, $this->getOption('page_unlimited', false));
     }
 
     protected function requiredOptions(){
@@ -156,6 +167,10 @@ class ListItems extends Component{
             }
             return $fieldAssociation;
         }
+    }
+
+    public function canModifyNbEntityPerPage(){
+        return $this->getOption('can_modify_nb_entity_per_page', false);
     }
 
 }

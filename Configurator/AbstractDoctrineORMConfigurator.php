@@ -54,9 +54,9 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         return count($this->getQuery()->getResult());
     }
 
-    public function getPager()
+    public function getPager($page = 1,$nbPerPage = null, $unlimited = false)
     {
-        $pager = new Pager($this->getQueryBuilder());
+        $pager = new Pager($this->getQueryBuilder(), $page, $nbPerPage, $unlimited);
         return $pager;
     }
 

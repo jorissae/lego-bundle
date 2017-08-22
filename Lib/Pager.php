@@ -12,21 +12,26 @@ class Pager{
     private $page;
     private $nbPage;
     private $nbElements;
+    private $nbPerPage;
 
     public function __construct($queryBuilder ,$page = 1,$nbPerPage = null, $unlimited = false){
-        $nbPerPage = ($nbPerPage)? $nbPerPage:self::NBPERPAGE;
+        $this->nbPerPage = ($nbPerPage)? $nbPerPage:self::NBPERPAGE;
         $this->queryBuilder = clone $queryBuilder;
         $this->page = $page;
-        $this->queryBuilder->setFirstResult(($this->page-1) * $nbPerPage);
-        $this->queryBuilder->setMaxResults($nbPerPage);
+        $this->queryBuilder->setFirstResult(($this->page-1) * $this->nbPerPage);
+        $this->queryBuilder->setMaxResults($this->nbPerPage);
         $this->unlimited = $unlimited;
         if($unlimited){
             $this->nbElements = null;
             $this->nbPage = null;
         }else {
             $this->nbElements = count($queryBuilder->getQuery()->getResult());
-            $this->nbPage = ceil($this->nbElements / $nbPerPage);
+            $this->nbPage = ceil($this->nbElements / $this->nbPerPage);
         }
+    }
+
+    public function getNbPerPage(){
+        return $this->nbPerPage;
     }
 
     public function getQueryBuilder(){

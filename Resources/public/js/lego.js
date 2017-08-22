@@ -4,17 +4,20 @@ $(function(){
     $("input.datepicker" ).datepicker({'dateFormat':'dd/mm/yy' ,'changeMonth': true,'changeYear': true });
 
     $("select.select2").select2({'width':'100%'});
+    $( document ).ajaxStop(function() {
+        $("select.select2").select2({'width':'100%'});
+    });
 
     $("select.select2[multiple]").select2({
-      templateResult: function formatState (state) {
-        if (!state.id) { return state.text; }
-        if(state.selected){
-          var $state = $('<span><input type="checkbox" checked/>' + state.text + '</span>');
-        }else{
-          var $state = $('<span><input type="checkbox"/>' + state.text + '</span>');
+        templateResult: function formatState (state) {
+            if (!state.id) { return state.text; }
+            if(state.selected){
+                var $state = $('<span><input type="checkbox" checked/>' + state.text + '</span>');
+            }else{
+                var $state = $('<span><input type="checkbox"/>' + state.text + '</span>');
+            }
+            return $state;
         }
-        return $state;
-      }
     });
 
     $('body').on('click','.lego-edit-in-place',function(){
@@ -37,7 +40,7 @@ $(function(){
     $('body').on('click','.lego-edit-in-place-eraser',function(){
         $('#input-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).val(null);
         $(this).siblings('.lego-edit-in-place-ok').click();
-    });    
+    });
 
     $('body').on('click','.lego-edit-in-place-bool',function(){
         var elm = $(this);
@@ -47,28 +50,28 @@ $(function(){
         var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
         $.ajax({
-          method: "POST",
-          url: $(this).attr('data-target'),
-          data: { id: id, columnName: columnName,value: val,cls: '',reload: reload },
-          dataType: "json",
+            method: "POST",
+            url: $(this).attr('data-target'),
+            data: { id: id, columnName: columnName,value: val,cls: '',reload: reload },
+            dataType: "json",
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
                 alert('Une erreur est survenue ('+retour.err+')');
             }else{
-              if(reload == 'tr' && line){
-                $('#'+line).replaceWith(retour.val);
-                $("select.select2").select2();
-              }else{
-                if(retour.val == 1 || retour.val == "1" || retour.val == "oui" || retour.val == 'true'){
-                  elm.removeClass('fa-square-o');
-                  elm.addClass('fa-check-square-o');
-                  elm.attr('data-value',1);
+                if(reload == 'tr' && line){
+                    $('#'+line).replaceWith(retour.val);
+                    $("select.select2").select2();
                 }else{
-                  elm.removeClass('fa-check-square-o');
-                  elm.addClass('fa-square-o');
-                  elm.attr('data-value',0);
+                    if(retour.val == 1 || retour.val == "1" || retour.val == "oui" || retour.val == 'true'){
+                        elm.removeClass('fa-square-o');
+                        elm.addClass('fa-check-square-o');
+                        elm.attr('data-value',1);
+                    }else{
+                        elm.removeClass('fa-check-square-o');
+                        elm.addClass('fa-square-o');
+                        elm.attr('data-value',0);
+                    }
                 }
-              }
 
             }
         }).fail(function( error ){
@@ -95,24 +98,24 @@ $(function(){
         var span = $('#span-'+ columnName + '-' + id);
         var span_in = $('#span-in-'+ columnName + '-' + id);
         $.ajax({
-          method: "POST",
-          url: $(this).attr('data-target'),
-          data: { id: id, columnName: columnName,value: val,cls: cls,reload: reload },
-          dataType: 'json',
+            method: "POST",
+            url: $(this).attr('data-target'),
+            data: { id: id, columnName: columnName,value: val,cls: cls,reload: reload },
+            dataType: 'json',
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
                 elm.html('<i style="color:red" class="fa fa-check-circle"></i> ('+retour.err+')');
                 input.val(retour.val);
             }else{
                 if(reload == 'tr' && line){
-                  $('#'+line).replaceWith(retour.val);
-                  $("select.select2").select2();
+                    $('#'+line).replaceWith(retour.val);
+                    $("select.select2").select2();
                 }else{
-                  elm.html('<i class="fa fa-check-circle"></i>');
-                  input.val(retour.val);
-                  span_in.hide();
-                  if(retour.val) span.html(retour.val); else span.html('<em>&nbsp;</em>');
-                  span.show();
+                    elm.html('<i class="fa fa-check-circle"></i>');
+                    input.val(retour.val);
+                    span_in.hide();
+                    if(retour.val) span.html(retour.val); else span.html('<em>&nbsp;</em>');
+                    span.show();
                 }
             }
             if(callback) window[callback](retour,elm);
@@ -132,16 +135,46 @@ $(function(){
         })
     });
 
+    $('body').on('change','.lego-choice-entity-per-page',function(evt){
+        var elm = $(this);
+        var min = 1;
+        if(elm.val() < min) elm.val(min);
+        $('.lego-choice-entity-per-page').each(function(evt){
+            $(this).val(elm.val());
+        })
+    });
+
     $('body').on('keyup','.lego-choice-page',function(evt){
         if(evt.keyCode == 13){
             $('.lego-choice-page-action').first().click();
         }
     });
 
+    $('body').on('keyup','.lego-choice-entity-per-page',function(evt){
+        if(evt.keyCode == 13){
+            $('.lego-choice-entity-per-page-action').first().click();
+        }
+    });
+
     $('body').on('click','.lego-choice-page-action',function(evt){
         var elm = $('.lego-choice-page').first();
-        $('.choice-page-action').addClass('fa-spin');
-        jsa.ajax($('<a data-callback="afterLoad" href="'+Routing.generate(elm.attr('data-route'),{'page':elm.val()})+'"></a>'));
+        $('.lego-choice-page-action').addClass('fa-spin');
+        var link = '<a data-target="' + elm.attr('data-target') + '" data-callback="jLoadInTarget" href="' + elm.attr('data-url') + '?page=' + elm.val() + '"></a>';
+        jsa.ajax($(link));
+        //jsa.ajax($('<a data-callback="afterLoad" href="'+Routing.generate(elm.attr('data-route'),{'page':elm.val()})+'"></a>'));
+    });
+
+    $('body').on('click', '.lego-choice-entity-per-page-action', function(evt){
+        var elm = $(this).parent().prev();
+        if(elm.is(':visible')){
+            $('.lego-choice-entity-per-page-action').addClass('fa-spin');
+            var inputElm = $('.lego-choice-entity-per-page').first();
+            var link = '<a data-target="' + inputElm.attr('data-target') + '" data-callback="jLoadInTarget" href="' + inputElm.attr('data-url') + '?nbepp=' + inputElm.val() + '"></a>';
+            jsa.ajax($(link));
+        }else{
+            elm.show();
+            $(this).css('margin-left','-25px');
+        }
     });
 
 

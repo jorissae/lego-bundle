@@ -9,6 +9,7 @@ lego.action.back: Retour
 lego.action.erease: Effacer
 lego.action.filter: Filtrer
 lego.action.bulk_delete: Supprimer les éléments
+lego.action.modify_nb_entity_per_page: Modifier le nombre de ligne par page
 lego.error.entity_not_found: Elément introuvable
 lego.header.action: Actions
 lego.ask.confirmation.delete: Voulez vous vraiment supprimer cette élément ?

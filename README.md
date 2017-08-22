@@ -19,7 +19,7 @@ TODO
 CURRENT
 
 - Log [ ]
-- Pagination [ ]
+- Pagination [X]
 - Field-route [X]
 - Onglets [ ]
 - LayoutBase [ ]
@@ -44,7 +44,7 @@ CURRENT
 
 Important :
 
-- Pagination, rupteur, LegoViewParams et LegoPath
+- Rupteur, LegoViewParams et LegoPath
 
 Exemple configurator
 

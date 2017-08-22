@@ -213,7 +213,7 @@ var jsa = {
     ajax: function(elm){
         var type = (elm.attr('data-type'))? elm.attr('data-type'):'json';
         var callback = (window[elm.attr('data-callback')])? window[elm.attr('data-callback')]:jsa.evt[elm.attr('data-callback')];
-        var preCallback = (elm.attr('data-pre-callback'))? window[elm.attr('data-pre-callback')]:null;
+        var preCallback = ( window[elm.attr('data-pre-callback')])? window[elm.attr('data-pre-callback')]:jsa.evt[elm.attr('data-pre-callback')];
         var errCallback = (elm.attr('data-err-callback'))? window[elm.attr('data-err-callback')]:null;
         if(preCallback){
             preCallback(elm);
@@ -301,7 +301,10 @@ var jsa = {
             }
         },
         jLoadInTarget: function(elm, data){
-            $('#'+elm/attr('data-target')).html(data.html);
+            $('#'+elm.attr('data-target')).html(data.html);
+        },
+        jPreLoadInSelf: function(elm){
+            elm.html('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         }
     }
 }
