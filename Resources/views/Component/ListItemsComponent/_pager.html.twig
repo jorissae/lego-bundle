@@ -1,0 +1,23 @@
+{%  set pager = component.configurator.pager %}
+{%  if pager.nbPage > 1 or pager.unlimited %}
+    <ul class="pagination pagination-sm inline">
+        {% if pager.isPPre %}<li><a data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.firstPage}) }}">««</a></li>{%  endif  %}
+        {% if pager.isPre %}<li><a data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.page-1}) }}">«</a></li>{%  endif  %}
+
+        {%  if pager.unlimited  %}
+            {% for i in pager.buttons %}
+                <li><a class="jsa-ajax" data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget" href="{{ component.url({'page':i}) }}">{%  if pager.isCur(i) %}<b>{{ i }}</b>{%  else %}{{ i }}{%  endif %}</a></li>
+            {%  endfor %}
+        {%  else %}
+            {% for i in 1..pager.nbPage %}
+                {% if pager.isShow(i) %}
+                    <li><a class="jsa-ajax" data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget href="{{ component.url({'page':i}) }}">{%  if pager.isCur(i) %}<b>{{ i }}</b>{%  else %}{{ i }}{%  endif %}</a></li>
+                {%  endif %}
+            {%  endfor %}
+        {%  endif %}
+        {% if pager.isNext %}<li><a data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.page+1}) }}">»</a></li>{%  endif %}
+        {% if pager.isNNext %}<li><a data-target="{{ component.id }}" data-pre-callback="pagePreLoad" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.lastPage}) }}">{{ pager.lastPage }}</a></li>{%  endif %}
+        <li><input class="lego-choice-page" data-last="{{ pager.lastPage }}" data-first="{{ pager.firstPage }}" data-route="" style="height: 30px; width: 65px; text-align: left;" maxlength="5" value="{{ pager.page }}"/></li>
+        <li><i style="margin-left:-25px; cursor:pointer;" class="fa fa-sign-in float-right lego-choice-page-action"></i></li>
+    </ul>
+{%  endif %}

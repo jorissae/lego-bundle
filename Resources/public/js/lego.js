@@ -121,6 +121,30 @@ $(function(){
         });
     });
 
+    $('body').on('change','.lego-choice-page',function(evt){
+        var elm = $(this);
+        var min = parseInt(elm.attr('data-first'));
+        var max = parseInt(elm.attr('data-last'));
+        if(elm.val() < min) elm.val(min);
+        if(elm.val() > max) elm.val(max);
+        $('.lego-choice-page').each(function(evt){
+            $(this).val(elm.val());
+        })
+    });
+
+    $('body').on('keyup','.lego-choice-page',function(evt){
+        if(evt.keyCode == 13){
+            $('.lego-choice-page-action').first().click();
+        }
+    });
+
+    $('body').on('click','.lego-choice-page-action',function(evt){
+        var elm = $('.lego-choice-page').first();
+        $('.choice-page-action').addClass('fa-spin');
+        jsa.ajax($('<a data-callback="afterLoad" href="'+Routing.generate(elm.attr('data-route'),{'page':elm.val()})+'"></a>'));
+    });
+
+
 });
 
 var lego = {

@@ -1,5 +1,7 @@
+{%  set pager = component.configurator.pager  %}
 <div class="box">
     <div class="box-body"  id="{{ component.gid('body') }}">
+        {% include component.partial('pager') with {'component':component} %}
         <div class="table_overflow_fix table-responsive">
             <table class="table table-striped table-hover table-bordered table-sortable responsive">
         <thead>
@@ -39,7 +41,7 @@
         </thead>
         <tbody>
 
-        {% for item in component.configurator.items() %}
+        {% for item in pager.entities %}
             {% include component.partial('line') with {'component':component ,'item':item} %}
         {% endfor %}
 

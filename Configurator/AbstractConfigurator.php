@@ -63,7 +63,7 @@ abstract class AbstractConfigurator
         $this->build();
     }
 
-    abstract function getItems();
+    abstract function getPager();
     abstract public function getType($item,$columnName);
 
     public function getEntityName(){

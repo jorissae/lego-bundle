@@ -3,6 +3,7 @@
 namespace Idk\LegoBundle\Configurator;
 
 use Idk\LegoBundle\Component\Component;
+use Idk\LegoBundle\Lib\Pager;
 use Traversable;
 
 use Doctrine\ORM\EntityManager;
@@ -53,9 +54,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         return count($this->getQuery()->getResult());
     }
 
-    public function getItems()
+    public function getPager()
     {
-        return $this->getQuery()->getResult();
+        $pager = new Pager($this->getQueryBuilder());
+        return $pager;
     }
 
     public function getAllIterator()
@@ -63,44 +65,38 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         return $this->getQuery()->getResult();
     }
 
+    public function getQuery(){
+        if($this->query == null) return $this->getQueryBuilder()->getQuery();
+        return $this->query;
+    }
+
 
     /**
      * @return Query|null
      */
-    public function getQuery()
+    public function getQueryBuilder()
     {
-        if (is_null($this->query)) {
-            $queryBuilder = $this->getQueryBuilder();
-            $this->adaptQueryBuilder($queryBuilder);
-            $queryHelper = new QueryHelper();
+        $queryBuilder = $this->getRepository()->createQueryBuilder('b');
+        $this->adaptQueryBuilder($queryBuilder);
+        $queryHelper = new QueryHelper();
 
-            foreach($this->getCurrentComponents() as $component){
-                /* @var Component $component */
-                $component->catchQueryBuilder($queryBuilder);
-            }
-
-            // Apply sorting
-            $dataClass = $this->getClassMetaData();
-            if (!empty($this->orderBy)) {
-                $columnName = $this->orderBy;
-                $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
-                if($pathInfo['association']) $columnName.= '.id';
-                $path = $queryHelper->getPath($queryBuilder,'b',$columnName);
-                $orderBy = $path['alias'] . $path['column'];
-                $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
-            }
-            $this->query = $queryBuilder->getQuery();
+        foreach($this->getCurrentComponents() as $component){
+            /* @var Component $component */
+            $component->catchQueryBuilder($queryBuilder);
         }
 
-        return $this->query;
-    }
+        // Apply sorting
+        $dataClass = $this->getClassMetaData();
+        if (!empty($this->orderBy)) {
+            $columnName = $this->orderBy;
+            $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
+            if($pathInfo['association']) $columnName.= '.id';
+            $path = $queryHelper->getPath($queryBuilder,'b',$columnName);
+            $orderBy = $path['alias'] . $path['column'];
+            $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
+        }
 
-    /**
-     * @return QueryBuilder
-     */
-    protected function getQueryBuilder()
-    {
-        return $this->getRepository()->createQueryBuilder('b');
+        return $queryBuilder;
     }
 
     public function getRepository(){

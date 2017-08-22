@@ -299,6 +299,9 @@ var jsa = {
             }else{
                 jsa.dialog('Erreur',data.error);
             }
+        },
+        jLoadInTarget: function(elm, data){
+            $('#'+elm/attr('data-target')).html(data.html);
         }
     }
 }

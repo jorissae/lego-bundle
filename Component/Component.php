@@ -5,6 +5,7 @@ namespace Idk\LegoBundle\Component;
 
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Idk\LegoBundle\Lib\Path;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class Component{
@@ -70,6 +71,15 @@ abstract class Component{
 
     public function getTemplateAllParameters(){
         return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
+    }
+
+    public function getPath(){
+        return new Path( $this->getConfigurator()->getPathRoute('component'), ['cid'=>$this->getId()]);
+    }
+
+    public function getUrl(array $params = []){
+        $path = $this->getPath();
+        return $this->get('router')->generate($path->getRoute(), $path->getParams($params));
     }
 
     public function getId(){
