@@ -42,6 +42,9 @@ CURRENT
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
 
+Important :
+
+- Pagination, rupteur, LegoViewParams et LegoPath
 
 Exemple configurator
 
