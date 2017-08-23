@@ -5,7 +5,7 @@ namespace Idk\LegoBundle\Lib;
 
 class Pager{
 
-    const NBPERPAGE = 2;
+    const NBPERPAGE = 20;
     const NBBTN = 5;
 
     private $queryBuilder;
