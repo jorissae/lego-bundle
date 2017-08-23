@@ -5,9 +5,11 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Lib\Actions\EntityAction;
+use Idk\LegoBundle\Lib\Breaker;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Actions\BulkAction;
 use Doctrine\ORM\QueryBuilder;
+use Idk\LegoBundle\Lib\QueryHelper;
 
 class ListItems extends Component{
 
@@ -21,6 +23,7 @@ class ListItems extends Component{
     private $bulkActions = [];
     private $page = 1;
     private $nbEntityPerPage = null;
+    private $breakers = [];
 
     protected function init(){
         return;
@@ -32,6 +35,10 @@ class ListItems extends Component{
         if($request->query->has('nbepp')){
             $this->get('session')->set($this->gid('nbepp'), $request->query->get('nbepp'));
         }
+        if($request->query->has('breaker')){
+            $this->get('session')->set($this->gid('breaker'), $request->query->get('breaker'));
+        }
+        $this->initBreakers();
         $this->nbEntityPerPage = ($this->get('session')->has($this->gid('nbepp')))? $this->get('session')->get($this->gid('nbepp')):$this->getOption('entity_per_page');
         $this->page = $request->query->has('page')? $request->query->get('page'):1;
         foreach($this->getOption('entity_actions', []) as $action){
@@ -134,6 +141,14 @@ class ListItems extends Component{
 
     public function catchQueryBuilder(QueryBuilder $queryBuilder)
     {
+        $queryHelper = new QueryHelper();
+        foreach($this->getAllBreakers() as $breaker){
+            if($breaker->isEnable()) {
+                $path = $queryHelper->getPath($queryBuilder, 'b', $breaker->getFieldName());
+                $queryBuilder->addOrderBy($path['alias'] . $path['column'], $breaker->getOrder());
+            }
+        }
+
         if($this->request->get('id') and $this->getConfigurator()->getParent()) {
             $fieldAssociation = $this->getFieldAssociationOfParent();
             if($fieldAssociation) {
@@ -171,6 +186,76 @@ class ListItems extends Component{
 
     public function canModifyNbEntityPerPage(){
         return $this->getOption('can_modify_nb_entity_per_page', false);
+    }
+
+    public function addBreaker($label, array $options = []){
+        $breaker = new Breaker($label, $options);
+        $this->breakers[$breaker->getId()] = $breaker;
+        return $breaker;
+    }
+
+    public function getBreakers(){
+        return $this->breakers;
+    }
+
+    public function hasBreakers(){
+        return count($this->breakers);
+    }
+
+    public function getCurrentBreaker(){
+        foreach($this->getBreakers() as $breaker){
+            if($breaker->isEnable()) return $breaker;
+        }
+    }
+
+    public function getCurrentBreakerCollection($entities){
+        return $this->getCurrentBreaker()->calculateBreakerCollection($this->getConfigurator(), $entities);
+    }
+
+    private function initBreakers(){
+        if($this->get('session')->has($this->gid('breaker'))){
+            $this->disableBreakers();
+            if($this->get('session')->get($this->gid('breaker')) !== $this->getId()){
+                $this->enableBreakers($this->getBreakers(), $this->get('session')->get($this->gid('breaker')));
+            }else{
+                $this->get('session')->remove($this->gid('breaker'));
+            }
+        }
+    }
+
+    private function disableBreakers(){
+        foreach($this->getAllBreakers() as $breaker){
+            $breaker->disable();
+        }
+    }
+
+    private function getBreakersChildren($breakers, &$array = []){
+        foreach($breakers as $breaker){
+            $array[] = $breaker;
+            $this->getBreakersChildren($breaker->getBreakers(), $array);
+        }
+        return $array;
+    }
+
+    private function getAllBreakers(){
+        return $this->getBreakersChildren($this->getBreakers());
+    }
+
+    private function enableBreakers($breakers, $id){
+        $return = null;
+        foreach($breakers as $breaker){
+            if($breaker->getId() == $id){
+                $breaker->enable();
+                return $breaker;
+            }else{
+                $return = $this->enableBreakers($breaker->getBreakers(), $id);
+                if($return){
+                    $breaker->enable();
+                    return $return;
+                }
+            }
+        }
+        return $return;
     }
 
 }

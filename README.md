@@ -28,7 +28,7 @@ CURRENT
 - Sub-Filter [ ]
 - Upload File [ ]
 - EntityAction and ListAction auto [ ]
-- Rupteur [ ]
+- Rupteur [/]
 - Group [ ]
 - Form auto [X]
 - Call template [ ]
@@ -44,7 +44,7 @@ CURRENT
 
 Important :
 
-- Rupteur, LegoViewParams et LegoPath
+- LegoViewParams et LegoPath
 
 Exemple configurator
 

@@ -1,0 +1,18 @@
+<tr><td colspan="{{ nbCol }}">
+        <strong>{{ collection.breaker.header }}:</strong> {{  collection.name }}
+        {%  if collection.breaker.hasBreakers and collection.breaker.breakers|length > 1 %}
+            <div  class="pull-right" style="margin-right:20px;">
+                {% include component.partial('choice_breaker') with {'breaker':collection.breaker} %}
+            </div>
+        {%  endif %}
+</td></tr>
+{%  if collection.hasCollections %}
+    {% for collection in collection.collections %}
+        {% include component.partial('breaker') with {'component':component ,'collection':collection} %}
+    {%  endfor %}
+{%  else %}
+    {%  for entity in collection.entities %}
+        {% include component.partial('line') with {'component':component ,'item':entity} %}
+    {%  endfor %}
+{%  endif %}
+<tr><td colspan="{{ nbCol }}">{{ collection.breaker.footer }} {{ 'lego.label.number_of_entities'|trans }}: {{  collection.entities|length }}</td></tr>

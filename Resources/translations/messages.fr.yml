@@ -51,3 +51,6 @@ lego.filter.to_date: au
 lego.filter.start: Commence par
 lego.filter.end: Termine par
 lego.filter.content: Contient
+lego.header_choice.breaker: Choix du rupteur
+lego.choice.neither: Aucun
+lego.label.number_of_entities: Nombre d'éléments
