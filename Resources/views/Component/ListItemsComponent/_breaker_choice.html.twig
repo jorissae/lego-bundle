@@ -9,7 +9,7 @@
             {%  if breaker.isEnable %}
                 {%  set noBreakerEnable = false %}
             {%  endif %}
-            <li {%  if breaker.isEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ breaker.header }}</a></li>
+            <li {%  if breaker.isEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ breaker.name }}</a></li>
         {%  endfor %}
         <li {%  if noBreakerEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ 'lego.choice.neither'|trans }}</a></li>
     </ul>

@@ -1,0 +1,24 @@
+<tr>
+    <td colspan="{{ nbCol }}">
+        {%  if separator.template %}
+            {% include separator.template with {'collection':collection, 'title': separator.title } %}
+        {%  elseif separator.twig %}
+            {{ separator.renderTwig(collection)|raw }}
+        {%  else %}
+            <strong>{{ separator.title }}</strong>
+            {% if separator.isFooter %}| {{ 'lego.label.number_of_entities'|trans }}: {{  collection.entities|length }}{%  endif %}
+            {% if separator.isHeader %}: {{  collection.name|capitalize }}{%  endif %}
+        {%  endif  %}
+
+        {%  if separator.isHeader %}
+            <div  class="pull-right">
+                <i class="lego-breaker-collapse fa fa-minus" data-breaker="{{ component.gid('breaker_content') ~ '_' ~ collection.id }}"></i>
+            </div>
+            {%  if collection.breaker.hasBreakers %}
+                <div  class="pull-right" style="margin-right:20px;">
+                    {% include component.partial('breaker_choice') with {'breaker':collection.breaker} %}
+                </div>
+            {%  endif %}
+        {%  endif %}
+    </td>
+</tr>
