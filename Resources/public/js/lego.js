@@ -177,6 +177,20 @@ $(function(){
         }
     });
 
+    $('body').on('click', '.lego-breaker-collapse', function(evt){
+        var elm = $(this);
+        elm.removeClass('fa-minus');
+        elm.removeClass('fa-plus');
+        var breaker = $('#' + $(this).attr('data-breaker'));
+        if(breaker.is(':visible')){
+            elm.addClass('fa-plus');
+            breaker.hide();
+        }else{
+            elm.addClass('fa-minus');
+            breaker.show();
+        }
+    });
+
 
 });
 

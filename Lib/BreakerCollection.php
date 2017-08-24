@@ -16,6 +16,10 @@ class BreakerCollection
         $this->name = $name;
     }
 
+    public function getId(){
+        return $this->breaker->getId().'_'.$this->getname();
+    }
+
     public function getBreaker(){
         return $this->breaker;
     }

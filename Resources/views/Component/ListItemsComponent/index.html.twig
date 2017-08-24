@@ -2,8 +2,8 @@
 <div class="box">
     <div class="box-header">
         <div class="pull-right">{% include component.partial('pager') with {'component':component} %}</div>
-        {% if component.hasBreakers and component.breakers|length > 1 %}
-            <div  class="pull-right"> {% include component.partial('choice_breaker') with {'breaker':component} %}</div>
+        {% if component.hasBreakers  %}
+            <div  class="pull-right"> {% include component.partial('breaker_choice') with {'breaker':component} %}</div>
         {%  endif %}
     </div>
 
