@@ -6,6 +6,7 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Symfony\Component\HttpFoundation\Request;
+use Idk\LegoBundle\Lib\Path;
 
 
 
@@ -13,6 +14,8 @@ abstract class AbstractConfigurator
 {
 
     const ROUTE_SUFFIX_EDIT_IN_PLACE = 'editinplace';
+    const ROUTE_SUFFIX_ORDER_COMPONENTS = 'ordercomponents';
+    const ROUTE_SUFFIX_ORDER_COMPONENTS_RESET = 'ordercomponentsreset';
     const ROUTE_SUFFIX_INDEX = 'index';
     const ROUTE_SUFFIX_ADD = 'add';
     const ROUTE_SUFFIX_EDIT = 'edit';
@@ -61,6 +64,10 @@ abstract class AbstractConfigurator
         if($parent) $this->setParent($parent);
         $this->container = $container;
         $this->build();
+    }
+
+    public function getId(){
+        return md5(get_class($this));
     }
 
     abstract function getPager();
@@ -402,6 +409,10 @@ abstract class AbstractConfigurator
         return $this->getComponents($this->currentComponentSuffixRoute);
     }
 
+    public function getCurrentComponentSuffixRoute(){
+        return $this->currentComponentSuffixRoute;
+    }
+
 
     public function getPage()
     {
@@ -446,19 +457,19 @@ abstract class AbstractConfigurator
     }
 
     public function getIndexComponents(){
-        return $this->components[self::ROUTE_SUFFIX_INDEX];
+        return $this->getComponents(self::ROUTE_SUFFIX_INDEX);
     }
 
     public function getAddComponents(){
-        return $this->components[self::ROUTE_SUFFIX_ADD];
+        return $this->getComponents(self::ROUTE_SUFFIX_ADD);
     }
 
     public function getEditComponents(){
-        return $this->components[self::ROUTE_SUFFIX_EDIT];
+        return $this->getComponents(self::ROUTE_SUFFIX_EDIT);
     }
 
     public function getShowComponents(){
-        return $this->components[self::ROUTE_SUFFIX_SHOW];
+        return $this->getComponents(self::ROUTE_SUFFIX_SHOW);
     }
 
     public function getComponent($id){
@@ -470,11 +481,41 @@ abstract class AbstractConfigurator
         return null;
     }
 
-    public function getComponents($routeSuffix){
-        if(isset($this->components[$routeSuffix])){
-            return $this->components[$routeSuffix];
+    public function getComponents($routeSuffix)
+    {
+        if (isset($this->components[$routeSuffix])) {
+
+            $key = $this->getId() . '_' . $routeSuffix . '_oc';
+
+            $components = $this->components[$routeSuffix];
+
+            if ($this->get('session')->has($key)) {
+                $order = $this->get('session')->get($key);
+                return $this->sortComponents($components, $order);
+            } else {
+                return $components;
+            }
         }
         return [];
+    }
+
+    private function sortComponents($components, $order){
+        $return = [];
+        foreach($order as $id){
+            foreach($components as $cid => $component){
+                if($cid == $id){
+                    $return[$id] = $component;
+                    break;
+                }
+            }
+        }
+        //check if new component which not in the order array
+        foreach($components as $cid => $component){
+            if(!in_array($cid, array_keys($return))){
+                $return[$cid] = $component;
+            }
+        }
+        return $return;
     }
 
     public function getIndexTemplate()
@@ -513,7 +554,7 @@ abstract class AbstractConfigurator
             $this->components[$routeSuffix] = [];
         }
         $component = $this->generateComponent($className, $options, $routeSuffix, $configuratorClassName);
-        $this->components[$routeSuffix][] = $component;
+        $this->components[$routeSuffix][$component->getId()] = $component;
         return $component;
     }
 
@@ -546,6 +587,15 @@ abstract class AbstractConfigurator
 
     public function getPathRoute($sufix = 'index'){
         return $this->getControllerPath().'_'.$sufix;
+    }
+
+    public function getPath($suffix = 'index', $params = []){
+        return new Path( $this->getPathRoute($suffix), $params);
+    }
+
+    public function getUrl($suffix, array $params = []){
+        $path = $this->getPath($suffix, $params);
+        return $this->get('router')->generate($path->getRoute(), $path->getParams());
     }
 
     public function getPathParams($item){

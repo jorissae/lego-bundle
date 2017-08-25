@@ -100,13 +100,15 @@ $(function(){
     $( ".jsa-widget-container" ).sortable({
         revert: true,
         items: "div.jsa-widget",
+        placeholder: "jsa-widget-holder",
         update: function(evt,ui){
-            jsa.save_widget();
+            jsa.save_widget($(this));
         }
     });
 
     $('body').on('click','.jsa-add-widget',function(evt){
         var widget_id = $(this).attr('data-widget');
+        var container = $(this);
         $.ajax({
             type        : 'post',
             url         : $(this).attr('data-url'),
@@ -132,13 +134,15 @@ $(function(){
 
 var jsa = {
 
-    save_widget: function(){
+    save_widget: function(container){
         var order = []
         $( ".jsa-widget-container").find('div.jsa-widget').each(function(elm){
-            order.push($(this).attr('data-widget'));
+            order.push($(this).attr('data-widget-id'));
         });
         console.log(order);
-        $.ajax({type: 'post', url: $(".jsa-widget-container").first().attr('data-save'), data: {order:order}});
+        console.log(container.attr('data-widget-order-save'));
+        console.log('ok');
+        $.ajax({type: 'post', url: container.attr('data-widget-order-save'), data: {order:order}});
     },
 
     update_elm: function (elm, data){

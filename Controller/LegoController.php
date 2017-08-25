@@ -5,6 +5,8 @@ namespace Idk\LegoBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Idk\LegoBundle\ComponentResponse\MessageComponentResponse;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Idk\LegoBundle\LegoEvents;
+use Idk\LegoBundle\Events\UpdateOrganizationComponentsEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -161,6 +163,29 @@ abstract class LegoController extends Controller
             $return = array('code'=>'OK','val'=>(string)$stringValue,'setter'=>$value);
         }
         return new Response(json_encode($return));
+    }
+
+    protected function doOrderComponents(AbstractConfigurator $configurator, Request $request){
+        $key = $configurator->getId().'_'.$request->get('suffix_route').'_oc';
+        $this->get('session')->set($key , $request->request->get('order'));
+        $this ->get('event_dispatcher')->dispatch(
+            LegoEvents::onMoveComponents,
+            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $key, $request->request->get('order')));
+        return new JsonResponse(['status'=>'ok']);
+    }
+
+    protected function doOrderComponentsReset(AbstractConfigurator $configurator, Request $request){
+
+        $key = $configurator->getId().'_'.$request->get('suffix_route').'_oc';
+        $order = null;
+        if($this->get('session')->has($key)){
+            $order = $this->get('session')->get($key);
+            $this->get('session')->remove($key);
+        }
+        $this ->get('event_dispatcher')->dispatch(
+            LegoEvents::onResetOrderComponents,
+            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $key, $order));
+        return $this->redirectToRoute($configurator->getPathRoute($request->get('suffix_route')));
     }
 
     protected function doAutoCompleteAction(AbstractConfigurator $configurator, Request $request){

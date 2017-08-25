@@ -18,33 +18,38 @@ TODO
 
 CURRENT
 
-- Log [ ]
+- Log history [ ]
 - Pagination [X]
 - Field-route [X]
-- Onglets [ ]
-- LayoutBase [ ]
+- Onglet component [ ]
+- Default LayoutBase [ ]
 - Custom Bulk Action [ ]
 - Right Bar [ ]
-- Sub-Filter [ ]
+- Sub-Filter and Xhr filter [ ]
 - Upload File [ ]
 - EntityAction and ListAction auto [ ]
-- Rupteur [/]
+- Rupteur [X]
 - Group [ ]
 - Form auto [X]
-- Call template [ ]
-- Url object [ ]
+- Call template (ViewParams)[ ]
+- Url object (LegoPath) [ ]
 - Header and Menu object [ ]
-- Multi component (CustomComponent) [ ]
+- Multi component (CustomComponent or Multi ActionComponent) [ ]
 - Skeleton [ ]
-- Reload line [ ]
-- Move component [ ]
+- Reload line with item action [ ]
+- Move component [X]
 - Dashboard []
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
+- FormField, ImportField [ ]
 
 Important :
 
-- LegoViewParams et LegoPath
+- LegoViewParams, LegoPath, Upload File
+
+Optimisation :
+
+Pager, Breaker, var's session components (And Del+Add), Filter, Action
 
 Exemple configurator
 

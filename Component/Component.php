@@ -77,6 +77,7 @@ abstract class Component{
         return new Path( $this->getConfigurator()->getPathRoute('component'), ['cid'=>$this->getId()]);
     }
 
+
     public function getUrl(array $params = []){
         $path = $this->getPath();
         return $this->get('router')->generate($path->getRoute(), $path->getParams($params));

@@ -79,7 +79,8 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         $queryBuilder = $this->getRepository()->createQueryBuilder('b');
         $this->adaptQueryBuilder($queryBuilder);
         $queryHelper = new QueryHelper();
-
+        //var_dump($this->getCurrentComponents());
+        //die();
         foreach($this->getCurrentComponents() as $component){
             /* @var Component $component */
             $component->catchQueryBuilder($queryBuilder);

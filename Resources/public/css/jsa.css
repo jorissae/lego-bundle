@@ -1,3 +1,9 @@
 .jsa-click, .jsa-ajax{
     cursor:pointer;
 }
+
+.jsa-widget-holder{
+    border: 1px dotted #8c8c8c;
+    margin: 0 1em 1em 0;
+    height: 50px;
+}

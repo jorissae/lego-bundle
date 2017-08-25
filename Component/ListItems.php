@@ -59,7 +59,7 @@ class ListItems extends Component{
     }
 
     public function getPager(){
-        return $this->getConfigurator()->getPager($this->page,$this->nbEntityPerPage, $this->getOption('page_unlimited', false));
+        return  $this->getConfigurator()->getPager($this->page,$this->nbEntityPerPage, $this->getOption('page_unlimited', false));
     }
 
     protected function requiredOptions(){

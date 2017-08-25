@@ -139,6 +139,30 @@ trait Controller
     }
 
     /**
+ * order components
+ *
+ * @Route("/oc/{suffix_route}")
+ * @Method({"GET", "POST"})
+ * @return array
+ */
+    public function orderComponentsAction(Request $request)
+    {
+        return parent::doOrderComponents($this->getConfigurator(), $request);
+    }
+
+    /**
+     * order components
+     *
+     * @Route("/ocreset/{suffix_route}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function orderComponentsResetAction(Request $request)
+    {
+        return parent::doOrderComponentsReset($this->getConfigurator(), $request);
+    }
+
+    /**
      * The auto completion action
      *
      * @Route("/ac")
