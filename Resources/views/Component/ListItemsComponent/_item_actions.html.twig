@@ -15,7 +15,7 @@
                                 data-confirm="Voulez vous vraiment effectuer cette action ?"
                                 data-donnes="{'index':{{ index }} }"
                                 data-type="html"
-                                data-callback="reloadLine"
+                                data-callback="legoReloadLine"
                                 data-url="{{ path(url["path"],url[("params")] ) }}"
                                 class="jsa-ajax btn btn-primary btn-xs">
                                 {% if itemAction.getIconFor(item) is not null %}<i class="fa fa-{{ itemAction.getIconFor(item) }}"></i>{% endif %}

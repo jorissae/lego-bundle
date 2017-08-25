@@ -111,7 +111,7 @@ $(function(){
                     $('#'+line).replaceWith(retour.val);
                     $("select.select2").select2();
                 }else{
-                    elm.html('<i class="fa fa-check-circle"></i>');
+                    elm.html('<i style="color:#00a65a;" class="jsa-click fa fa-save"></i>');
                     input.val(retour.val);
                     span_in.hide();
                     if(retour.val) span.html(retour.val); else span.html('<em>&nbsp;</em>');
@@ -120,7 +120,7 @@ $(function(){
             }
             if(callback) window[callback](retour,elm);
         }).fail(function( error ){
-            elm.html('<i style="color:red" class="fa fa-warning"></i>');
+            lego.error(error);
         });
     });
 
@@ -229,15 +229,22 @@ var lego = {
 };
 
 if(jsa) {
-    jsa.evt.reloadLine = function (elm, data) {
+    jsa.evt.legoReloadLine = function (elm, data) {
         $('#' + elm.attr('data-line')).replaceWith(data);
     };
 
-    jsa.evt.deleteLine = function (elm, data) {
+    jsa.evt.legoDeleteLine = function (elm, data) {
         if (data.status == 'ok') {
             $('#' + elm.attr('data-line')).hide();
         } else {
             this.error(data.message);
         }
+    };
+
+    jsa.evt.legoPreChoiceBreaker = function (elm, data) {
+        console.log('ok');
+        var elm = $(elm).parents('.btn-group').first().find('.caret');
+        elm.removeClass();
+        elm.addClass('fa fa-spinner fa-pulse fa-fw');
     };
 }

@@ -1,4 +1,4 @@
-<div class="btn-group">
+<div class="btn-group lego-breaker-choice" style="margin-right:5px;">
     <button type="button" class="btn btn-default btn-flat">{{ 'lego.header_choice.breaker'|trans }}</button>
     <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="caret"></span>
@@ -9,8 +9,8 @@
             {%  if breaker.isEnable %}
                 {%  set noBreakerEnable = false %}
             {%  endif %}
-            <li {%  if breaker.isEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ breaker.name }}</a></li>
+            <li {%  if breaker.isEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-pre-callback="legoPreChoiceBreaker" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ breaker.name }}</a></li>
         {%  endfor %}
-        <li {%  if noBreakerEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ 'lego.choice.neither'|trans }}</a></li>
+        <li {%  if noBreakerEnable %}class="active"{%  endif %}><a href="#" class="jsa-ajax" data-pre-callback="legoPreChoiceBreaker" data-callback="jLoadInTarget" data-url="{{ component.url({"breaker": breaker.id}) }}" data-target="{{ component.id }}">{{ 'lego.choice.neither'|trans }}</a></li>
     </ul>
 </div>
