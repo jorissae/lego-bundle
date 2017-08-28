@@ -13,6 +13,7 @@ class Breaker
     private $fieldName;
     private $enable;
     private $breakers = [];
+    private $parentBreaker = null;
     private $id;
     private $order;
 
@@ -59,6 +60,10 @@ class Breaker
 
     }
 
+    private function setParent(Breaker $parentBreaker){
+        $this->parentBreaker = $parentBreaker;
+    }
+
     public function getId(){
         return $this->id;
     }
@@ -93,6 +98,7 @@ class Breaker
 
     public function addBreaker($label, array $options = []){
         $breaker = new Breaker($label, $options);
+        $breaker->setParent($this);
         $this->breakers[] = $breaker;
         return $breaker;
     }
@@ -125,10 +131,16 @@ class Breaker
     }
 
     public function enable(){
+        if($this->parentBreaker){
+            $this->parentBreaker->enable();
+        }
         return $this->enable = true;
     }
 
     public function disable(){
+        foreach($this->getBreakers() as $breaker){
+            $breaker->disable();
+        }
         return $this->enable = false;
     }
 

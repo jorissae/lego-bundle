@@ -1,4 +1,4 @@
-{% extends '::lego.html.twig' %}
+{% extends lego_view.layout %}
 {% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
 {% block page_title %}{{configurator.getTitle()}}{% endblock %}
 {% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}

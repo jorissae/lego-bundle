@@ -11,13 +11,14 @@ class BreakerCollection
     private $collections = null;
     private $name = null;
 
+
     public function __construct(Breaker $breaker, $name){
         $this->breaker = $breaker;
         $this->name = $name;
     }
 
     public function getId(){
-        return $this->breaker->getId().'_'.$this->getname();
+        return spl_object_hash($this);
     }
 
     public function getBreaker(){

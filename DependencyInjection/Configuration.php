@@ -18,7 +18,15 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('idk_lego');
+        $rootNode = $treeBuilder->root('idk_lego');
+        $rootNode
+            ->children()
+                ->scalarNode('skin')->defaultValue('skin_blue')->end()
+                ->scalarNode('layout')->defaultValue('IdkLegoBundle:Layout:lego.html.twig')->end()
+                ->scalarNode('layout_login')->defaultValue('IdkLegoBundle:Layout:lego_login.html.twig')->end()
+                ->scalarNode('service_menu_class')->defaultValue('Idk\LegoBundle\Service\Menu')->end()
+                ->scalarNode('service_header_class')->defaultValue('Idk\LegoBundle\Service\Header')->end()
+                ->scalarNode('service_footer_class')->defaultValue('Idk\LegoBundle\Service\Footer')->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

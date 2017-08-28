@@ -22,7 +22,7 @@ CURRENT
 - Pagination [X]
 - Field-route [X]
 - Onglet component [ ]
-- Default LayoutBase [ ]
+- Default LayoutBase [X]
 - Custom Bulk Action [ ]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
@@ -49,7 +49,9 @@ Important :
 
 Optimisation :
 
-Pager, Breaker, var's session components (And Del+Add), Filter, Action
+Pager, var's session components (And Del+Add), Filter, Action
+
+tbody 
 
 Exemple configurator
 

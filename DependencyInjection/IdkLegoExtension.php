@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class IdkLegoExtension extends Extension// implements PrependExtensionInterface
+class IdkLegoExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritDoc}
@@ -28,38 +28,33 @@ class IdkLegoExtension extends Extension// implements PrependExtensionInterface
             ));
         }
 
-        $configuration = new Configuration();
-        $this->processConfiguration($configuration, $configs);
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('form.yml');
+
+        $configuration = new Configuration();
+        $processedConfig =  $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter( 'lego.skin', $processedConfig[ 'skin' ] );
+        $container->setParameter( 'lego.layout', $processedConfig[ 'layout' ] );
+        $container->setParameter( 'lego.layout_login', $processedConfig[ 'layout_login' ] );
+        $container->setParameter( 'lego.service.menu.class', $processedConfig[ 'service_menu_class' ] );
+        $container->setParameter( 'lego.service.header.class', $processedConfig[ 'service_header_class' ] );
+        $container->setParameter( 'lego.service.footer.class', $processedConfig[ 'service_footer_class' ] );
+
     }
 
-    /*public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container)
     {
 
-        $parameterName = 'datePicker_startDate';
-
-        $config = array();
-        $config['globals'][$parameterName] = '01/01/1970';
-
+        $config = [];
+        $parameterName = 'lego_view';
+        $config['globals'][$parameterName] = '@lego.service.globals_parameters_provider';
         if($container->hasParameter($parameterName)) {
             $config['globals'][$parameterName] = $container->getParameter($parameterName);
         }
-
         $container->prependExtensionConfig('twig', $config);
-        $configs = $container->getExtensionConfig($this->getAlias());
-        $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $liip = array(
-            'filter_sets'=>array(
-                'attachable_thumb'=>array(
-                    'quality' => 100,
-                    'filters' => array(
-                        'thumbnail'=> array('size'=>array(100,100),'mode'=>'outbound','allow_upscale'=>true
-        )))));
-        $container->prependExtensionConfig('liip_imagine',$liip);
-
-    }*/
+    }
 }
 

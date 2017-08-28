@@ -213,19 +213,22 @@ class ListItems extends Component{
     }
 
     private function initBreakers(){
-        if($this->get('session')->has($this->gid('breaker'))){
-            $this->disableBreakers();
-            if($this->get('session')->get($this->gid('breaker')) !== $this->getId()){
-                $this->enableBreakers($this->getBreakers(), $this->get('session')->get($this->gid('breaker')));
-            }else{
-                $this->get('session')->remove($this->gid('breaker'));
+        foreach($this->getAllBreakers() as $breaker){
+            if($breaker->isEnable()){
+                $breaker->enable();
             }
         }
-    }
-
-    private function disableBreakers(){
-        foreach($this->getAllBreakers() as $breaker){
-            $breaker->disable();
+        if($this->get('session')->has($this->gid('breaker'))){
+            foreach($this->getBreakers() as $breaker){
+                $breaker->disable();
+            }
+            if($this->get('session')->get($this->gid('breaker')) !== $this->getId()){
+                foreach($this->getAllBreakers() as $breaker){
+                    if($this->get('session')->get($this->gid('breaker')) == $breaker->getId()){
+                        $breaker->enable();
+                    }
+                }
+            }
         }
     }
 
@@ -240,22 +243,4 @@ class ListItems extends Component{
     private function getAllBreakers(){
         return $this->getBreakersChildren($this->getBreakers());
     }
-
-    private function enableBreakers($breakers, $id){
-        $return = null;
-        foreach($breakers as $breaker){
-            if($breaker->getId() == $id){
-                $breaker->enable();
-                return $breaker;
-            }else{
-                $return = $this->enableBreakers($breaker->getBreakers(), $id);
-                if($return){
-                    $breaker->enable();
-                    return $return;
-                }
-            }
-        }
-        return $return;
-    }
-
 }

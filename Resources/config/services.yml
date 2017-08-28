@@ -27,6 +27,10 @@ services:
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
 
+    lego.service.globals_parameters_provider:
+            class: Idk\LegoBundle\Service\GlobalsParametersProvider
+            arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%"]
+
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension
         arguments: ["@service_container"]
