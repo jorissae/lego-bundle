@@ -37,6 +37,13 @@ services:
         tags:
             -  { name: twig.extension }
 
+    lego.listener.upload_file:
+        class: Idk\LegoBundle\Listener\UploadFileListener
+        arguments:    ["%kernel.project_dir%"]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
 
     lego.twig.filter:
         class: Idk\LegoBundle\Twig\FilterTwigExtension

@@ -26,7 +26,7 @@ CURRENT
 - Custom Bulk Action [ ]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
-- Upload File [ ]
+- Upload File [X]
 - EntityAction and ListAction auto [ ]
 - Rupteur [X]
 - Group [ ]
@@ -38,20 +38,19 @@ CURRENT
 - Skeleton [ ]
 - Reload line with item action [ ]
 - Move component [X]
-- Dashboard []
+- Dashboard [ ]
+- Macro [ ]
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
-- FormField, ImportField [ ]
+- FormField, ExportField [X]
 
 Important :
 
-- Order, FormField, templateField, LegoViewParams, LegoPath, Upload File , Upload custom
+- FormField, templateField, LegoViewParams, LegoPath
 
 Optimisation :
 
-Pager, var's session components (And Del+Add), Filter, Action
-
-tbody 
+Pager, var's session components (And Del+Add data in session), Filter, Action, tbody, Upload file+
 
 Exemple configurator
 

@@ -41,6 +41,8 @@ class Field
 
     private $twig;
 
+    private $image;
+
     /**
      * @param string $name     The name
      * @param string $header   The header
@@ -58,6 +60,8 @@ class Field
         $this->twig = (isset($options['twig']))? $options['twig']:null;
         $this->style = (isset($options['style']))? $options['style']:null;
         $this->type = (isset($options['type']))? $options['type']:null;
+        $this->image = (isset($options['image']))? $options['image']:null;
+        if($this->image) $this->type = 'image';
     }
 
     public function set($key,$value){
@@ -179,8 +183,20 @@ class Field
         return ($this->is('color'));
     }
 
+    public function isFile(){
+        return ($this->is('file'));
+    }
+
+    public function isImage(){
+        return ($this->is('image'));
+    }
+
     public function is($type){
         return (strtolower($this->type) == strtolower($type));
+    }
+
+    public function getImage(){
+        return $this->image;
     }
 
     public function generateTwigValue(AbstractConfigurator $configurator, $entity){

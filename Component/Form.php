@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 
+
+
 class Form extends Component{
 
     private $form;
@@ -49,7 +51,6 @@ class Form extends Component{
             if ($this->form->isValid()) {
                 $em = $this->getConfigurator()->getEntityManager();
                 $em->persist($entity);
-                $this->uploader(null,null);
                 $em->flush();
                 if($request->get('id')){
                     $response = new SuccessComponentResponse($this->trans('lego.form.success.edit'));
@@ -72,29 +73,6 @@ class Form extends Component{
     public function getTitle(){
         return $this->getOption('title', $this->trans('lego.title.form'));
     }
-
-
-    /* todo */
-    protected function uploader($configurator,$obj){
-        /*if($configurator->getUploadFileGetter()) {
-            if(is_array($configurator->getUploadFileGetter())){
-                foreach($configurator->getUploadFileGetter() as $method){
-                    $uploadFile = call_user_func(array($obj, $method));
-                    $this->upload($obj, $uploadFile);
-                }
-            }else{
-                $uploadFile = call_user_func(array($obj, $configurator->getUploadFileGetter()));
-                $this->upload($obj, $uploadFile);
-            }
-        }*/
-    }
-
-    /*protected function upload($obj, $uploadFile){
-        if($uploadFile instanceof UploadedFile){
-            $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
-            $uploadableManager->markEntityToUpload($obj, $uploadFile);
-        }
-    }*/
 
 
 
