@@ -1,9 +1,9 @@
-{% extends lego_view.layoutLogin %}
+{% extends 'IdkLegoBundle:Layout:base_login.html.twig' %}
 
 {% block page_content  %}
 <div class="login-box">
     <div class="login-logo">
-        <a href="../../index2.html"><b>Admin</b>LEGO</a>
+        {%  block title_box %}<a href="../../index2.html"><b>Admin</b>LEGO</a>{%  endblock %}
     </div>
 
     <div class="login-box-body">

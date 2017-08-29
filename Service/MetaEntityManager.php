@@ -19,6 +19,9 @@ class MetaEntityManager
 
     public function generateFields($className, array $columns = null){
         $return = [];
+        foreach($columns as $column){
+            $return[$column] = null;
+        }
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         foreach($reflectionClass->getProperties() as $k => $p) {
@@ -31,12 +34,37 @@ class MetaEntityManager
                 }
             }
         }
+        $trashcan = [];
+        foreach($return as $k => $field){
+            if(!$field) $trashcan[] = $k;
+        }
+        foreach($trashcan as $key) unset($return[$key]);
         return $return;
     }
 
     public function generateExportFields($className, array $columns = null){
-        $fields = $this->generateFields($className, $columns);
-        return $fields;
+        $return = [];
+        $r = new AnnotationReader();
+        $reflectionClass = new \ReflectionClass($className);
+        $entityExport = $r->getClassAnnotation($reflectionClass, Annotation\EntityExport::class);
+        if($entityExport) {
+            foreach ($entityExport->getFields() as $fieldName) {
+                $field = new Annotation\FieldExport();
+                $field->setName($fieldName);
+                $return[$fieldName] = $field;
+            }
+        }
+        foreach($reflectionClass->getProperties() as $k => $p) {
+            foreach ($r->getPropertyAnnotations($p) as $annotation) {
+                if (get_class($annotation) == Annotation\FieldExport::class and ($columns == null or in_array($p->getName(), $columns))) {
+                    /* @var Annotation\FieldExport $field */
+                    $field = $annotation;
+                    $field->setName($p->getName());
+                    $return[$p->getName()] = $field;
+                }
+            }
+        }
+        return $return;
     }
 
     public function generateFilters($className, array $columns = null){

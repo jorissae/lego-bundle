@@ -52,9 +52,9 @@ class Form extends Component{
                 $this->uploader(null,null);
                 $em->flush();
                 if($request->get('id')){
-                    $response = new SuccessComponentResponse('lego.form.success.edit');
+                    $response = new SuccessComponentResponse($this->trans('lego.form.success.edit'));
                 } else {
-                    $response = new SuccessComponentResponse('lego.form.success.add');
+                    $response = new SuccessComponentResponse($this->trans('lego.form.success.add'));
                     $this->resetForm();
                 }
                 $response->setRedirect($this->getConfigurator()->getPathRoute('index'));
@@ -67,6 +67,10 @@ class Form extends Component{
 
     private function resetForm(){
         $this->form = $this->get('form.factory')->create($this->getOption('form'), $this->getConfigurator()->newInstance());
+    }
+
+    public function getTitle(){
+        return $this->getOption('title', $this->trans('lego.title.form'));
     }
 
 

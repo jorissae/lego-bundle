@@ -91,4 +91,8 @@ abstract class Component{
         return md5($this->id.$id);
     }
 
+    protected function trans($str, $vars= []){
+        return $this->get('translator')->trans($str, $vars);
+    }
+
 }
