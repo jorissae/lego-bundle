@@ -24,8 +24,10 @@ class ListItems extends Component{
     private $page = 1;
     private $nbEntityPerPage = null;
     private $breakers = [];
+    private $sorters = [];
 
     protected function init(){
+        $this->sorters = $this->getOption('sorters', []);
         return;
     }
 
@@ -139,6 +141,14 @@ class ListItems extends Component{
         return $this->getOption('hide_entity_actions', false);
     }
 
+    public function addSorter($name, $type = 'ASC'){
+        $this->sorters[] = [$name,$type];
+    }
+
+    public function getSorters(){
+        return $this->sorters;
+    }
+
     public function catchQueryBuilder(QueryBuilder $queryBuilder)
     {
         $queryHelper = new QueryHelper();
@@ -147,6 +157,11 @@ class ListItems extends Component{
                 $path = $queryHelper->getPath($queryBuilder, 'b', $breaker->getFieldName());
                 $queryBuilder->addOrderBy($path['alias'] . $path['column'], $breaker->getOrder());
             }
+        }
+        foreach($this->getSorters() as $sorter){
+            $path = $queryHelper->getPath($queryBuilder, 'b', $sorter[0]);
+            $typeSorter = (isset($sorter[1]) and strtoupper($sorter[1]) == 'DESC')? 'DESC':'ASC';
+            $queryBuilder->addOrderBy($path['alias'] . $path['column'], $typeSorter);
         }
 
         if($this->request->get('id') and $this->getConfigurator()->getParent()) {

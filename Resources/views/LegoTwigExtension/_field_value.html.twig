@@ -116,6 +116,10 @@
         {% endif %}
     {% elseif field.isColor %}
         <div style="background-color:{{real_value}}; border:1px solid black; width:20px; height:20px; display:inline-block;"></div>&nbsp;{{ string_value|raw }}
+    {%  elseif  field.isImage %}
+        {%  if string_value %}
+            <img width="{{ field.image.width }}" src="{{ field.image.directory }}/{{ string_value|raw }}" alt="{{ string_value|raw }}"/>
+        {%  endif %}
     {% else %}
         {{ string_value|raw }}
     {% endif %}
