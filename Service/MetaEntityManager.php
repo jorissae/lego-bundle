@@ -19,8 +19,10 @@ class MetaEntityManager
 
     public function generateFields($className, array $columns = null){
         $return = [];
-        foreach($columns as $column){
-            $return[$column] = null;
+        if(is_array($columns)) {
+            foreach ($columns as $column) {
+                $return[$column] = null;
+            }
         }
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
@@ -34,6 +36,7 @@ class MetaEntityManager
                 }
             }
         }
+
         $trashcan = [];
         foreach($return as $k => $field){
             if(!$field) $trashcan[] = $k;
