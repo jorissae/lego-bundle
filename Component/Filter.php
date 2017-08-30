@@ -68,44 +68,7 @@ class Filter extends Component{
     }
 
     public function bindRequest(Request $request){
-        $this->request = $request;
-        $query      = $request->query;
-        $session    = $request->getSession();
-        $configuratorName = 'listconfig_' . $request->get('_route');
-
-
-
-        $this->page             = ($query->get('page'))? (int)$query->get('page'):1;
-        $this->orderBy          = preg_replace('/[^[a-zA-Z0-9\_\.]]/', '', $query->get('orderBy', $this->getConfigurator()->getOrderBy()));
-        $this->orderDirection   = $query->getAlpha('orderDirection', $this->getConfigurator()->getOrderDirection());
-        if($query->get('rupteurs')){
-            $this->currentRupteurs = explode('/',$request->query->get('rupteurs'));
-        }
-
-        // there is a session and the filter param is not set
-        if ($session and $session->has($configuratorName)) {
-            $configuratorSessionData = $request->getSession()->get($configuratorName);
-            if(!$query->has('filter')){
-                if (!$query->has('orderBy') and $configuratorSessionData['orderBy']) {
-                    $this->orderBy = $configuratorSessionData['orderBy'];
-                }
-
-                if (!$query->has('orderDirection') and $configuratorSessionData['orderDirection']) {
-                    $this->orderDirection = $configuratorSessionData['orderDirection'];
-                }
-            }
-        }
-
-
-        // save current parameters
-        if($session){
-            $session->set($configuratorName, array(
-                'page'              => $this->page,
-                'orderBy'           => $this->orderBy,
-                'orderDirection'    => $this->orderDirection,
-            ));
-        }
-
+        parent::bindRequest($request);
         $this->getFilterBuilder()->bindRequest($request,$this->defaultValueFilter());
     }
 }

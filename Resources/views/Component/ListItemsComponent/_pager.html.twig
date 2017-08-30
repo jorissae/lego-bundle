@@ -18,15 +18,15 @@
         {% if pager.isNext %}<li><a data-target="{{ component.id }}" data-pre-callback="jPreLoadInSelf" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.page+1}) }}">»</a></li>{%  endif %}
         {% if pager.isNNext %}<li><a data-target="{{ component.id }}" data-pre-callback="jPreLoadInSelf" data-callback="jLoadInTarget" class="jsa-ajax" href="{{ component.url({'page':pager.lastPage}) }}">{{ pager.lastPage }}</a></li>{%  endif %}
         <li><input class="lego-choice-page" data-last="{{ pager.lastPage }}" data-first="{{ pager.firstPage }}" data-target="{{ component.id }}" data-url="{{ component.url }}" style="height: 30px; width: 65px; text-align: left;" maxlength="5" value="{{ pager.page }}"/></li>
-        <li><i style="margin-left:-25px; cursor:pointer;" class="fa fa-sign-in float-right lego-choice-page-action"></i></li>
+        <li><i style="margin-left:-25px; cursor:pointer;" data-target="{{ component.id }}" class="fa fa-sign-in float-right lego-choice-page-action"></i></li>
         {%  if component.canModifyNbEntityPerPage %}
             <li style="display:none;"><input  class="lego-choice-entity-per-page"  data-target="{{ component.id }}" data-url="{{ component.url }}" style="height: 30px; width: 65px; text-align: left;" maxlength="5" value="{{ pager.nbPerPage }}"/></li>
-            <li title="{{ 'lego.action.modify_nb_entity_per_page'|trans }}"><i style="margin-left:14px; cursor:pointer;" class="fa fa-cogs float-right lego-choice-entity-per-page-action"></i></li>
+            <li title="{{ 'lego.action.modify_nb_entity_per_page'|trans }}"><i style="margin-left:14px; cursor:pointer;" data-target="{{ component.id }}" class="fa fa-cogs float-right lego-choice-entity-per-page-action"></i></li>
         {%  endif %}
     </ul>
 {%  elseif  component.canModifyNbEntityPerPage %}
     <ul class="pagination pagination-sm inline">
         <li style="display:none;"><input  class="lego-choice-entity-per-page"  data-target="{{ component.id }}" data-url="{{ component.url }}" style="height: 30px; width: 65px; text-align: left;" maxlength="5" value="{{ pager.nbPerPage }}"/></li>
-        <li title="{{ 'lego.action.modify_nb_entity_per_page'|trans }}"><i style="margin-left:14px; cursor:pointer;" class="fa fa-cogs float-right lego-choice-entity-per-page-action"></i></li>
+        <li title="{{ 'lego.action.modify_nb_entity_per_page'|trans }}"><i data-target="{{ component.id }}" style="margin-left:14px; cursor:pointer;" class="fa fa-cogs float-right lego-choice-entity-per-page-action"></i></li>
     </ul>
 {%  endif %}

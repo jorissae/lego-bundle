@@ -109,7 +109,6 @@ $(function(){
             }else{
                 if(reload == 'tr' && line){
                     $('#'+line).replaceWith(retour.val);
-                    $("select.select2").select2();
                 }else{
                     elm.html('<i style="color:#00a65a;" class="jsa-click fa fa-save"></i>');
                     input.val(retour.val);
@@ -126,50 +125,56 @@ $(function(){
 
     $('body').on('change','.lego-choice-page',function(evt){
         var elm = $(this);
+        var id = elm.attr('data-target');
         var min = parseInt(elm.attr('data-first'));
         var max = parseInt(elm.attr('data-last'));
         if(elm.val() < min) elm.val(min);
         if(elm.val() > max) elm.val(max);
-        $('.lego-choice-page').each(function(evt){
+        $('#' + id + ' .lego-choice-page').each(function(evt){
             $(this).val(elm.val());
         })
     });
 
     $('body').on('change','.lego-choice-entity-per-page',function(evt){
         var elm = $(this);
+        var id = elm.attr('data-target');
         var min = 1;
         if(elm.val() < min) elm.val(min);
-        $('.lego-choice-entity-per-page').each(function(evt){
+        $('#' + id + ' .lego-choice-entity-per-page').each(function(evt){
             $(this).val(elm.val());
         })
     });
 
     $('body').on('keyup','.lego-choice-page',function(evt){
         if(evt.keyCode == 13){
-            $('.lego-choice-page-action').first().click();
+            var id = elm.attr('data-target');
+            $('#' + id + ' .lego-choice-page-action').first().click();
         }
     });
 
     $('body').on('keyup','.lego-choice-entity-per-page',function(evt){
         if(evt.keyCode == 13){
-            $('.lego-choice-entity-per-page-action').first().click();
+            var id = $(this).attr('data-target');
+            $('#' + id + ' .lego-choice-entity-per-page-action').first().click();
         }
     });
 
     $('body').on('click','.lego-choice-page-action',function(evt){
-        var elm = $('.lego-choice-page').first();
-        $('.lego-choice-page-action').addClass('fa-spin');
+        var id = $(this).attr('data-target');
+        var elm = $('#' + id + ' .lego-choice-page').first();
+        $('#' + id + ' .lego-choice-page-action').addClass('fa-spin');
         var link = '<a data-target="' + elm.attr('data-target') + '" data-callback="jLoadInTarget" href="' + elm.attr('data-url') + '?page=' + elm.val() + '"></a>';
         jsa.ajax($(link));
-        //jsa.ajax($('<a data-callback="afterLoad" href="'+Routing.generate(elm.attr('data-route'),{'page':elm.val()})+'"></a>'));
     });
 
     $('body').on('click', '.lego-choice-entity-per-page-action', function(evt){
+        var id = $(this).attr('data-target');
         var elm = $(this).parent().prev();
         if(elm.is(':visible')){
-            $('.lego-choice-entity-per-page-action').addClass('fa-spin');
-            var inputElm = $('.lego-choice-entity-per-page').first();
-            var link = '<a data-target="' + inputElm.attr('data-target') + '" data-callback="jLoadInTarget" href="' + inputElm.attr('data-url') + '?nbepp=' + inputElm.val() + '"></a>';
+            $('#' + id + ' .lego-choice-entity-per-page-action').addClass('fa-spin');
+            var inputElm = $('#' + id + ' .lego-choice-entity-per-page').first();
+            var separator = (inputElm.attr('data-url').indexOf('?') > 0)? "&":"?";
+            var link = '<a data-target="' + inputElm.attr('data-target') + '" data-callback="jLoadInTarget" href="' + inputElm.attr('data-url') + separator + 'nbepp=' + inputElm.val() + '"></a>';
             jsa.ajax($(link));
         }else{
             elm.show();

@@ -2,6 +2,6 @@
 
 <div  data-widget-order-save="{{ configurator.getUrl('ordercomponents', {'suffix_route': configurator.currentComponentSuffixRoute}) }}" class="jsa-widget-container">
     {% for component in components %}
-        <div data-widget-id="{{ component.id }}" id="{{ component.id }}" class="jsa-widget  {{ component.class }}">{% include component.template with component.templateAllParameters %}</div>
+        <div data-widget-id="{{ component.id }}" id="{{ component.id }}" class="{% if component.movable %}jsa-widget{% endif %}  {{ component.class }}">{% include component.template with component.templateAllParameters %}</div>
     {%  endfor %}
 </div>

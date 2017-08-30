@@ -31,6 +31,15 @@ class ListItems extends Component{
         return;
     }
 
+    public function getListenParamsForReload()
+    {
+        if($this->getConfigurator()->getParent()) {
+            return ['id'];
+        }else{
+            return [];
+        }
+    }
+
     public function bindRequest(Request $request)
     {
         parent::bindRequest($request);
@@ -151,6 +160,7 @@ class ListItems extends Component{
 
     public function catchQueryBuilder(QueryBuilder $queryBuilder)
     {
+
         $queryHelper = new QueryHelper();
         foreach($this->getAllBreakers() as $breaker){
             if($breaker->isEnable()) {
@@ -158,6 +168,7 @@ class ListItems extends Component{
                 $queryBuilder->addOrderBy($path['alias'] . $path['column'], $breaker->getOrder());
             }
         }
+
         foreach($this->getSorters() as $sorter){
             $path = $queryHelper->getPath($queryBuilder, 'b', $sorter[0]);
             $typeSorter = (isset($sorter[1]) and strtoupper($sorter[1]) == 'DESC')? 'DESC':'ASC';

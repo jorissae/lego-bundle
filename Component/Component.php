@@ -18,17 +18,33 @@ abstract class Component{
 
     protected $request;
 
+    protected $suffixRoute;
+
     public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
+        $this->suffixRoute = $suffixRoute;
         $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
+        $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
         $this->init();
+    }
+
+    public function getValId(){
+        return $this->valId;
     }
 
     abstract protected function init();
     abstract protected function requiredOptions();
     abstract protected function getTemplate();
     abstract protected function getTemplateParameters();
+
+    public function isMovable(){
+        return false;
+    }
+
+    public function getListenParamsForReload(){
+        return [];
+    }
 
     public function bindRequest(Request $request){
         $this->request = $request;
@@ -74,7 +90,16 @@ abstract class Component{
     }
 
     public function getPath(){
-        return new Path( $this->getConfigurator()->getPathRoute('component'), ['cid'=>$this->getId()]);
+        $params = [];
+        foreach($this->getListenParamsForReload() as $key){
+            if($this->request->get($key)){
+                $params[$key] = $this->request->get($key);
+            }
+        }
+        $params['cid'] = $this->getId();
+        $params['suffix_route'] = $this->suffixRoute;
+        $configurator = ($this->getConfigurator()->getParent())? $this->getConfigurator()->getParent():$this->getConfigurator();
+        return new Path($configurator->getPathRoute('component'), $params);
     }
 
 

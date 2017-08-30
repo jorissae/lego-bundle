@@ -52,7 +52,7 @@ abstract class LegoController extends Controller
 
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
         $redirect = null;
-        $componentResponses = $configurator->bindRequest($request, $entityId);
+        $componentResponses = $configurator->bindRequest($request);
         foreach($componentResponses as $componentResponse){
             if($componentResponse instanceof MessageComponentResponse) {
                 if($componentResponse->hasRedirect()){
@@ -228,7 +228,8 @@ abstract class LegoController extends Controller
     }
 
     protected function doComponentAction(AbstractConfigurator $configurator, Request $request){
-        $component = $configurator->getComponent($request->get('cid'));
+        $component = $configurator->getComponent($request->get('suffix_route'),$request->get('cid'));
+        $configurator->bindRequestCurrentComponents($request, $component);
         $component->xhrBindRequest($request);
         return new JsonResponse(['html'=>$this->renderView($component->getTemplate(), $component->getTemplateAllParameters())]);
     }

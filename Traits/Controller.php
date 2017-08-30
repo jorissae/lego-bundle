@@ -177,7 +177,7 @@ trait Controller
     /**
      * The auto completion action
      *
-     * @Route("/component/{cid}")
+     * @Route("/component/{cid}/{suffix_route}")
      * @Method({"GET", "POST"})
      * @return array
      */

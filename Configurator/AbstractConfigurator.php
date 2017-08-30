@@ -5,6 +5,7 @@ namespace Idk\LegoBundle\Configurator;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Idk\LegoBundle\Annotation\Entity\Field;
+use Idk\LegoBundle\Component\Component;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Path;
 
@@ -379,21 +380,31 @@ abstract class AbstractConfigurator
         return $this->editTemplate;
     }
 
-    public function bindRequest(Request $request, $entityId = null)
+    public function bindRequest(Request $request, $routeSuffix = null)
     {
         $this->request = $request;
-        $lastUnserscore = strrchr( $request->get('_route'), '_');
+        if(!$routeSuffix) {
+            $lastUnserscore = strrchr($request->get('_route'), '_');
 
-        $index = substr($lastUnserscore, 1);
-        $index = ($index == 'export')? 'index':$index;
-        $componentResponse = [];
-        $this->currentComponentSuffixRoute = $index;
-
-        foreach($this->getChildren($this->currentComponentSuffixRoute) as $configurator){
-            $configurator->bindRequest($request);
+            $index = substr($lastUnserscore, 1);
+            $index = ($index == 'export') ? 'index' : $index;
+        }else{
+            $index = $routeSuffix;
         }
-        foreach($this->components[$this->currentComponentSuffixRoute] as $components){
-            $componentResponse[] = $components->bindRequest($request);
+        $this->currentComponentSuffixRoute = $index;
+        return $this->bindRequestCurrentComponents($request);
+    }
+
+
+    public function bindRequestCurrentComponents(Request $request, Component $excepted = null){
+        $componentResponse = [];
+        foreach($this->getChildren($this->currentComponentSuffixRoute) as $configurator){
+            $configurator->bindRequest($request, $this->currentComponentSuffixRoute);
+        }
+        foreach($this->components[$this->currentComponentSuffixRoute] as $component){
+            if($component->getConfigurator()->getId() == $this->getId() and ($excepted == null or $component->getId() != $excepted->getId())) {
+                $componentResponse[] = $component->bindRequest($request);
+            }
         }
         return $componentResponse;
     }
@@ -472,10 +483,11 @@ abstract class AbstractConfigurator
         return $this->getComponents(self::ROUTE_SUFFIX_SHOW);
     }
 
-    public function getComponent($id){
-        foreach($this->components as $route => $components){
-            foreach($components as $component){
-                if($component->getId() == $id) return $component;
+    public function getComponent($routeSuffix, $id){
+        $this->currentComponentSuffixRoute = $routeSuffix;
+        foreach($this->components[$routeSuffix] as $component){
+            if($component->getId() == $id) {
+                return $component;
             }
         }
         return null;
@@ -563,15 +575,17 @@ abstract class AbstractConfigurator
         $reflectionClass =  new \ReflectionClass($className);
         if($configuratorClassName){
             $configurator = $this->generateConfigurator($configuratorClassName);
-            $configurator->addComponent($className,$options, $routeSuffix);
+            $component = $configurator->addComponent($className,$options, $routeSuffix);
             $this->addChild($routeSuffix, $configurator);
+            return $component;
         }else{
-            $configurator = $this;
+            return $reflectionClass->newInstance($options, $this, $routeSuffix);
         }
-        return $reflectionClass->newInstance($options, $configurator, $routeSuffix);
+
     }
 
     private function addChild($routeSuffix, AbstractConfigurator $configurator){
+        //2* le mem configurateur ?? TODO dedoublon
         if(!isset($this->children[$routeSuffix])){
             $this->children[$routeSuffix] = [];
         }
