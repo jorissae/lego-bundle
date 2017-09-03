@@ -2,7 +2,6 @@
     <div class="col-md-12 btn-group">
         {% for action in component.bulkActions %}
             {% if action.role is null or is_granted(action.role) %}
-                {% set url = action.getUrl() %}
                 {% if action.template is not null %}
                     {% include action.template with {'action': action} %}
                 {% elseif action.choices %}
@@ -10,7 +9,7 @@
                         <div class="form-group">
                             <label class="col-sm-4" for="bul_action_{{ action.id }}">{{ action.getlabel }}</label>
                             <div class="col-sm-8">
-                                <select data-url="{{ path(url["path"], url[("params")] ) }}" data-ida="{{ action.id }}" class="select2 lego-bulk-combobox">
+                                <select data-url="{{ path(action.path.route, action.path.params ) }}" data-ida="{{ action.id }}" class="select2 lego-bulk-combobox">
                                     <option value=""></option>
                                     {% for key,value in action.choices %}
                                         <option value="{{ key }}">{{ value }}</option>
@@ -20,7 +19,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a href="{{ path(url["path"], url[("params")] ) }}" data-ida="{{ action.id }}" class="btn btn-default disabled lego-bulk-button pull-right">
+                    <a href="{{ path(action.path.route, action.path.params ) }}" data-ida="{{ action.id }}" class="btn btn-default disabled lego-bulk-button pull-right">
                         {% if action.getIcon() is not null %}
                             <i class="icon-{{ action.icon }} }}"></i> {{ action.label|trans }}
                         {% else %}
@@ -44,8 +43,12 @@
                 lego.post($(this).attr('href'), {
                     'ids': ids
                 }, function (data) {
-                    $('#{{ component.id }}').html(data.html);
-                    lego.success(data.message);
+                    if(data.status == 'ok'){
+                        lego.post('{{ component.url }}', {},function(data){
+                            $('#{{ component.id }}').html(data.html);
+                        });
+                        lego.success(data.message);
+                    }
                 });
             });
 
@@ -61,8 +64,12 @@
                     'ids': ids,
                     'value': $(this).val(),
                 }, function (data) {
-                    $('#{{ component.id }}').html(data.html);
-                    lego.success(data.message);
+                    if(data.status == 'ok'){
+                        lego.post('{{ component.url }}', {},function(data){
+                            $('#{{ component.id }}').html(data.html);
+                        });
+                        lego.success(data.message);
+                    }
                 });
             });
 

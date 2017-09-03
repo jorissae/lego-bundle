@@ -32,7 +32,7 @@ CURRENT
 - Group [ ]
 - Form auto [X]
 - Call template (ViewParams)[ ]
-- Url object (LegoPath) [ ]
+- Url object (LegoPath) [X]
 - Header and Menu object [ ]
 - Multi component (CustomComponent or Multi ActionComponent) [ ]
 - Skeleton [ ]
@@ -46,11 +46,11 @@ CURRENT
 
 Important :
 
-- FormField, templateField, LegoViewParams, LegoPath
+- FormField, templateField, LegoViewParams
 
 Optimisation :
 
-Pager, var's session components (And Del+Add data in session), Filter, Action, tbody, Upload file+
+Pager,  Filter, Action, tbody, Upload file+
 
 Exemple configurator
 

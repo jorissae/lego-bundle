@@ -2,17 +2,10 @@
 
 namespace Idk\LegoBundle\Lib\Actions;
 
-/**
- * The simple item action is a default implementation of the item action interface, this can be used
- * in very simple use cases.
- */
+use Idk\LegoBundle\Lib\Path;
+
 class EntityAction
 {
-
-    /**
-     * @var callable
-     */
-    private $routerGenerator;
 
     /**
      * @var string
@@ -69,7 +62,6 @@ class EntityAction
     {
 
         $this->label = $label;
-        $this->routerGenerator = (isset($options['route_callback']))? $options['route_callback']:null;
         $this->route = (isset($options['route']))? $options['route']:null;
         $this->icon = (isset($options['icon']))? $options['icon']:null;
         $this->template = (isset($options['template']))? $options['template']:null;
@@ -134,15 +126,12 @@ class EntityAction
      *
      * @return string
      */
-    public function getUrlFor($item)
+    public function getPath($item)
     {
-        $routeGenerator = $this->routerGenerator;
-        if ($routeGenerator && is_callable($routeGenerator)) {
-           return $routeGenerator($item);
-        } elseif($this->params){
-            return array('path'=>$this->route,'params'=>$this->getParams());
+        if($this->params){
+            return new Path($this->route, $this->getParams());
         } elseif($this->route){
-            return array('path'=>$this->route,'params'=>array('id'=>$item->getId()));
+            return new Path($this->route, ['id' => $item->getId()]);
         }
 
         return null;

@@ -166,25 +166,24 @@ abstract class LegoController extends Controller
     }
 
     protected function doOrderComponents(AbstractConfigurator $configurator, Request $request){
-        $key = $configurator->getId().'_'.$request->get('suffix_route').'_oc';
-        $this->get('session')->set($key , $request->request->get('order'));
+        $order = $configurator->getConfiguratorSessionStorage('order', []);
+        $order[$request->get('suffix_route')] = $request->request->get('order');
+        $configurator->setConfiguratorSessionStorage('order', $order);
         $this ->get('event_dispatcher')->dispatch(
             LegoEvents::onMoveComponents,
-            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $key, $request->request->get('order')));
+            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $request->request->get('order')));
         return new JsonResponse(['status'=>'ok']);
     }
 
     protected function doOrderComponentsReset(AbstractConfigurator $configurator, Request $request){
-
-        $key = $configurator->getId().'_'.$request->get('suffix_route').'_oc';
-        $order = null;
-        if($this->get('session')->has($key)){
-            $order = $this->get('session')->get($key);
-            $this->get('session')->remove($key);
+        $order = $configurator->getConfiguratorSessionStorage('order');
+        if($order != null and isset($order[$request->get('suffix_route')])){
+            unset($order[$request->get('suffix_route')]);
         }
+        $configurator->setConfiguratorSessionStorage('order', $order);
         $this ->get('event_dispatcher')->dispatch(
             LegoEvents::onResetOrderComponents,
-            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $key, $order));
+            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $order));
         return $this->redirectToRoute($configurator->getPathRoute($request->get('suffix_route')));
     }
 
@@ -235,33 +234,13 @@ abstract class LegoController extends Controller
     }
 
     protected function doBulkAction(AbstractConfigurator $configurator, Request $request){
-        $component = $configurator->getComponent($request->get('cid'));
-        $component->xhrBindRequest($request);
-        $bulkAction = $component->getBulkAction($request->get('ida'));
         $type = $request->query->get('type');
         $ids = $request->request->get('ids');
         $em = $this->getEntityManager();
-
-        $set = 'set'.ucfirst($bulkAction->getField());
-        $classMetaData = $configurator->getClassMetadata();
         $i=0;
-        $value = $bulkAction->getValue();
         $entities= $configurator->getRepository()->createQueryBuilder('i')->where('i.id IN (:ids)')->setParameter('ids',$ids)->getQuery()->getResult();
-        if($type == 'change'){
-            if($request->request->get('value')){
-                if ($classMetaData->hasAssociation($bulkAction->getField())){
-                    $value = $em->getRepository($classMetaData->getAssociationTargetClass($bulkAction->getField()))->find($request->request->get('value'));
-                }else{
-                    $value = $request->request->get('value');
-                }
-            }
-            foreach($entities as $entity){
-                $entity->$set($value);
-                $em->persist($entity);
-                $i++;
-            }
-            $msg = $this->trans('lego_update_entities', ['%nb%' => $i]);
-        }elseif($type == 'delete'){
+        $msg = null;
+        if($type == 'delete'){
             foreach($entities as $entity){
                 $em->remove($entity);
                 $i++;
@@ -269,9 +248,7 @@ abstract class LegoController extends Controller
             $msg = $this->trans('lego_delete_entities', ['%nb%' => $i]);
         }
         $em->flush();
-        //$this->addNoticeFlash($msg);
-        //return $this->redirect($this->getRequest()->headers->get('referer'));
-        return new JsonResponse(['html'=>$this->renderView($component->getTemplate(), $component->getTemplateAllParameters()), 'message' => $msg]);
+        return new JsonResponse(['status'=>'ok', 'message' => $msg]);
     }
 
     protected function doDeleteAction(AbstractConfigurator $configurator, $entityId, Request $request)

@@ -2,6 +2,7 @@
 
 namespace Idk\LegoBundle\Lib\Actions;
 
+use Idk\LegoBundle\Lib\Path;
 /**
  * The simple list action is a default implementation of the list action interface, this can be used
  * in very simple use cases.
@@ -82,18 +83,13 @@ class ListAction
         return $this->role;
     }
 
-    /**
-     * @return array
-     */
-    public function getUrl()
+    public function getUrl(){
+        return $this->url;
+    }
+
+    public function getPath()
     {
-        $return = null;
-        if($this->url){
-            $return = $this->url;
-        }else{
-            $return = ['route'=>$this->route,'params'=>$this->getParams()];
-        }
-        return $return;
+        return new Path($this->route, $this->params);
     }
 
     /**

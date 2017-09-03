@@ -497,13 +497,10 @@ abstract class AbstractConfigurator
     {
         if (isset($this->components[$routeSuffix])) {
 
-            $key = $this->getId() . '_' . $routeSuffix . '_oc';
-
             $components = $this->components[$routeSuffix];
-
-            if ($this->get('session')->has($key)) {
-                $order = $this->get('session')->get($key);
-                return $this->sortComponents($components, $order);
+            $order = $this->getConfiguratorSessionStorage('order');
+            if ($order != null and isset($order[$routeSuffix])) {
+                return $this->sortComponents($components, $order[$routeSuffix]);
             } else {
                 return $components;
             }
@@ -614,6 +611,25 @@ abstract class AbstractConfigurator
 
     public function getPathParams($item){
             return ['id' => $item->getId()];
+    }
+
+    public function getConfiguratorSessionStorage($key, $default = null){
+        if($this->get('session')->has($this->getId())){
+            $componentSessionStorage = $this->get('session')->get($this->getId());
+            return (isset($componentSessionStorage[$key]))? $componentSessionStorage[$key]:$default;
+        }else{
+            return $default;
+        }
+    }
+
+    public function setConfiguratorSessionStorage($key, $value){
+        if(!$this->get('session')->has($this->getId())){
+            $this->get('session')->set($this->getId(), []);
+        }
+        $componentSessionStorage = $this->get('session')->get($this->getId());
+        $componentSessionStorage[$key] = $value;
+        $this->get('session')->set($this->getId(), $componentSessionStorage);
+        return $this;
     }
 
 

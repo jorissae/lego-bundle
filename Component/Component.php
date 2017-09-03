@@ -89,6 +89,25 @@ abstract class Component{
         return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
     }
 
+    public function getComponentSessionStorage($key, $default = null){
+        if($this->get('session')->has($this->getId())){
+            $componentSessionStorage = $this->get('session')->get($this->getId());
+            return (isset($componentSessionStorage[$key]))? $componentSessionStorage[$key]:$default;
+        }else{
+            return $default;
+        }
+    }
+
+    public function setComponentSessionStorage($key, $value){
+        if(!$this->get('session')->has($this->getId())){
+            $this->get('session')->set($this->getId(), []);
+        }
+        $componentSessionStorage = $this->get('session')->get($this->getId());
+        $componentSessionStorage[$key] = $value;
+        $this->get('session')->set($this->getId(), $componentSessionStorage);
+        return $this;
+    }
+
     public function getPath(){
         $params = [];
         foreach($this->getListenParamsForReload() as $key){

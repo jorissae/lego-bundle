@@ -9,14 +9,12 @@ class UpdateOrganizationComponentsEvent extends Event
 {
     protected $configurator;
     protected $routeSuffix;
-    protected $key;
     protected $order;
 
-    public function __construct(AbstractConfigurator $configurator, $routeSuffix, $key, $order)
+    public function __construct(AbstractConfigurator $configurator, $routeSuffix, $order)
     {
         $this->configurator = $configurator;
         $this->routeSuffix = $routeSuffix;
-        $this->key = $key;
         $this->order = $order;
     }
 
@@ -27,8 +25,6 @@ class UpdateOrganizationComponentsEvent extends Event
     {
         return $this->order;
     }
-
-
 
     /**
      * @return AbstractConfigurator
@@ -45,15 +41,6 @@ class UpdateOrganizationComponentsEvent extends Event
     {
         return $this->routeSuffix;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
 
 
 }

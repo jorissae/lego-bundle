@@ -2,6 +2,8 @@
 
 namespace Idk\LegoBundle\Lib\Actions;
 
+use Idk\LegoBundle\Lib\Path;
+
 /**
  * The simple bulk action is a default implementation of the bulk action interface, this can be used
  * in very simple use cases.
@@ -73,12 +75,10 @@ class BulkAction
         $this->cid = $cid;
     }
 
-    /**
-     * @return array
-     */
-    public function getUrl()
+
+    public function getPath()
     {
-        return array('path'=>$this->route,'params'=> array_merge($this->params, ['ida'=>$this->id, 'cid' => $this->cid]));
+        return new Path($this->route,  array_merge($this->params, ['ida'=>$this->id, 'cid' => $this->cid]));
     }
 
     /**
