@@ -258,7 +258,7 @@ class ListItems extends Component{
             }
             if($this->getComponentSessionStorage('breaker') !== $this->getId()){
                 foreach($this->getAllBreakers() as $breaker){
-                    if($this->get('session')->get($this->gid('breaker')) == $breaker->getId()){
+                    if($this->getComponentSessionStorage('breaker') == $breaker->getId()){
                         $breaker->enable();
                     }
                 }
