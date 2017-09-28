@@ -44,10 +44,11 @@
                     'ids': ids
                 }, function (data) {
                     if(data.status == 'ok'){
+                        var msg = data.message;
                         lego.post('{{ component.url }}', {},function(data){
                             $('#{{ component.id }}').html(data.html);
+                            lego.success(msg);
                         });
-                        lego.success(data.message);
                     }
                 });
             });

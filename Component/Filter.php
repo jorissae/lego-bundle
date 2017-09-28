@@ -49,7 +49,7 @@ class Filter extends Component{
     }
 
     public function defaultValueFilter(){
-        return array();
+        return [];
     }
 
     public function valueFilter($id){
