@@ -14,7 +14,7 @@ IDK LEGO BUNDLE V 0.1 alpha
 
 TODO 
 
-- 30/09/2017 DOC
+- DOC
 
 CURRENT
 
@@ -46,7 +46,7 @@ CURRENT
 
 Important :
 
-- FormField, templateField, LegoViewParams
+- Check FormField, templateField, LegoViewParams, Header and Menu item
 
 Optimisation :
 
