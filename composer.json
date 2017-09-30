@@ -3,7 +3,7 @@
     "description": "legobundle bundle for Symfony 3",
     "keywords": ["Lego","bundle"],
     "type": "symfony-bundle",
-    "license": "Commercial",
+    "license": "MIT",
     "authors": [
         {
             "name": "Joris saenger",
