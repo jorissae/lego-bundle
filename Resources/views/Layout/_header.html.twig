@@ -19,10 +19,10 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 {%  for item in header.items %}
-                    <li class="dropdown {{ item.class }}">
+                    <li class="dropdown {{ item.cssClass }}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             {%  if item.icon %}<i class="fa fa-{{ item.icon }}"></i>{%  endif %}
-                            {%  if item.label %}<span class="label {{ item.label.class }}">{{ item.label.libelle }}</span>{%  endif %}
+                            {%  if item.label %}<span class="label {{ item.label.cssClass }}">{{ item.label.libelle }}</span>{%  endif %}
                             {%  if item.libelle %}<span class="hidden-xs">{{ item.libelle }}</span>{%  endif %}
                         </a>
                         <ul class="dropdown-menu">

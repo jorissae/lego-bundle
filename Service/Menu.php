@@ -2,6 +2,8 @@
 namespace Idk\LegoBundle\Service;
 
 
+use Idk\LegoBundle\Lib\LayoutItem\LabelItem;
+use Idk\LegoBundle\Lib\LayoutItem\MenuItem;
 use Symfony\Component\Yaml\Yaml;
 
 
@@ -25,17 +27,15 @@ class Menu
     }
 
     public function getItems(){
-        return [
-            ['libelle'=>'ADMIN', 'type'=>'header'],
-            [
-                'type' => 'body',
-                'libelle' => 'Dashboard',
-                'icon' => 'dashboard',
-                'path' => 'homepage',
-                'labels'=> [['class'=>'bg-red','libelle'=>5]],
-                'children' => [['libelle'=>'index', 'path'=>'homepage', 'icon'=>'circle-o']],
-            ]
-        ];
+        $return = [];
+        $return[] = new MenuItem('ADMIN', ['type'=>MenuItem::TYPE_HEADER]);
+        $return[] = new MenuItem('Dashboard', [
+            'icon' => 'dashboard',
+            'route' => 'homepage',
+            'labels'=> [new LabelItem(5, ['css_class'=>'bg-red'])],
+            'children' => [new MenuItem('index',['route'=>'homepage', 'icon'=>'circle-o'])]
+        ]);
+        return $return;
     }
 
 

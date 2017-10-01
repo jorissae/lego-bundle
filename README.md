@@ -9,8 +9,15 @@
                             88  `"Ybbd8"'  `"YbbdP"Y8  `"YbbdP"'   
                                            aa,    ,88              
                                             "Y8bbdP"        
+                            -------------------------------------
+                                  Light - Easy - Good - Open 
 ```                
 IDK LEGO BUNDLE V 0.1 alpha
+
+Build your pages simply by adding configurable components.
+Add a filter, add a list, add a form then go
+
+ ===> For Symfony 3.X
 
 TODO 
 
@@ -33,7 +40,7 @@ CURRENT
 - Form auto [X]
 - Call template (ViewParams)[ ]
 - Url object (LegoPath) [X]
-- Header and Menu object [ ]
+- Header and Menu object [X]
 - Multi component (CustomComponent or Multi ActionComponent) [ ]
 - Skeleton [ ]
 - Reload line with item action [ ]
@@ -42,11 +49,11 @@ CURRENT
 - Macro [ ]
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
-- FormField, ExportField [X]
+- ExportField [X]
 
 Important :
 
-- Check FormField, templateField, LegoViewParams, Header and Menu item
+- Check FormField, templateField, LegoViewParams
 
 Optimisation :
 

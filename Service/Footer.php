@@ -2,9 +2,6 @@
 namespace Idk\LegoBundle\Service;
 
 
-use Symfony\Component\Yaml\Yaml;
-
-
 class Footer
 {
 
