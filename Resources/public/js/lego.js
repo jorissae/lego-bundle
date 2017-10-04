@@ -195,7 +195,7 @@ $(function(){
 
     $('body').on('keyup','.lego-choice-page',function(evt){
         if(evt.keyCode == 13){
-            var id = elm.attr('data-target');
+            var id = $(this).attr('data-target');
             $('#' + id + ' .lego-choice-page-action').first().click();
         }
     });
