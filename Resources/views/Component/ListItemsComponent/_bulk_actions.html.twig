@@ -9,7 +9,12 @@
                         <div class="form-group">
                             <label class="col-sm-4" for="bul_action_{{ action.id }}">{{ action.getlabel }}</label>
                             <div class="col-sm-8">
-                                <select data-url="{{ path(action.path.route, action.path.params ) }}" data-ida="{{ action.id }}" class="select2 lego-bulk-combobox">
+                                <select
+                                        data-url="{{ path(action.path.route, action.path.params ) }}"
+                                        data-component-id="{{ component.id }}"
+                                        data-component-url="{{ component.url }}"
+                                        data-container-id="{{ component.gid('body') }}"
+                                        data-ida="{{ action.id }}" class="select2 lego-bulk-combobox">
                                     <option value=""></option>
                                     {% for key,value in action.choices %}
                                         <option value="{{ key }}">{{ value }}</option>
@@ -19,7 +24,12 @@
                         </div>
                     </div>
                 {% else %}
-                    <a href="{{ path(action.path.route, action.path.params ) }}" data-ida="{{ action.id }}" class="btn btn-default disabled lego-bulk-button pull-right">
+                    <a href="{{ path(action.path.route, action.path.params ) }}"
+                       data-component-id="{{ component.id }}"
+                       data-component-url="{{ component.url }}"
+                       data-container-id="{{ component.gid('body') }}"
+                       data-ida="{{ action.id }}"
+                       class="btn btn-default disabled lego-bulk-button pull-right">
                         {% if action.getIcon() is not null %}
                             <i class="icon-{{ action.icon }} }}"></i> {{ action.label|trans }}
                         {% else %}
@@ -32,48 +42,6 @@
     </div>
     <script>
         $(function() {
-            $('body').on('click', '#{{ component.gid('body') }} .lego-bulk-button', function (evt) {
-                evt.preventDefault();
-                var ids = [];
-                $('#{{ component.gid('body') }} .lego-bulk-checkbox').each(function (evt) {
-                    if ($(this).is(':checked')) {
-                        ids.push(parseInt($(this).val()));
-                    }
-                });
-                lego.post($(this).attr('href'), {
-                    'ids': ids
-                }, function (data) {
-                    if(data.status == 'ok'){
-                        var msg = data.message;
-                        lego.post('{{ component.url }}', {},function(data){
-                            $('#{{ component.id }}').html(data.html);
-                            lego.success(msg);
-                        });
-                    }
-                });
-            });
-
-            $('body').on('change', '#{{ component.gid('body') }} .lego-bulk-combobox', function (evt) {
-                evt.preventDefault();
-                var ids = [];
-                $('#{{ component.gid('body') }} .lego-bulk-checkbox').each(function (evt) {
-                    if ($(this).is(':checked')) {
-                        ids.push(parseInt($(this).val()));
-                    }
-                });
-                lego.post($(this).attr('data-url'), {
-                    'ids': ids,
-                    'value': $(this).val(),
-                }, function (data) {
-                    if(data.status == 'ok'){
-                        lego.post('{{ component.url }}', {},function(data){
-                            $('#{{ component.id }}').html(data.html);
-                        });
-                        lego.success(data.message);
-                    }
-                });
-            });
-
 
             $('body').on('change', '#{{ component.gid('body') }} .lego-bulk-checkbox', function (evt) {
                 var allChecked = true;

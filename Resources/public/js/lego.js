@@ -20,6 +20,54 @@ $(function(){
         }
     });
 
+    $('body').on('click', '.lego-bulk-button', function (evt) {
+        evt.preventDefault();
+        var container_checkbox_id = $(this).attr('data-container-id');
+        var component_url = $(this).attr('data-component-url');
+        var component_id =  $(this).attr('data-component-id');
+        var ids = [];
+        $('#'+container_checkbox_id+' .lego-bulk-checkbox').each(function (evt) {
+            if ($(this).is(':checked')) {
+                ids.push(parseInt($(this).val()));
+            }
+        });
+        lego.post($(this).attr('href'), {
+            'ids': ids
+        }, function (data) {
+            if(data.status == 'ok'){
+                var msg = data.message;
+                lego.post(component_url, {},function(data){
+                    $('#'+component_id).html(data.html);
+                    lego.success(msg);
+                });
+            }
+        });
+    });
+
+    $('body').on('change', '.lego-bulk-combobox', function (evt) {
+        evt.preventDefault();
+        var container_checkbox_id = $(this).attr('data-container-id');
+        var component_url = $(this).attr('data-component-url');
+        var component_id =  $(this).attr('data-component-id');
+        var ids = [];
+        $('#'+container_checkbox_id+' .lego-bulk-checkbox').each(function (evt) {
+            if ($(this).is(':checked')) {
+                ids.push(parseInt($(this).val()));
+            }
+        });
+        lego.post($(this).attr('data-url'), {
+            'ids': ids,
+            'value': $(this).val(),
+        }, function (data) {
+            if(data.status == 'ok'){
+                lego.post(component_url, {},function(data){
+                    $('#'+component_id).html(data.html);
+                });
+                lego.success(data.message);
+            }
+        });
+    });
+
     $('body').on('click','.lego-edit-in-place',function(){
         $(this).hide();
         $('#span-in-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).show();
