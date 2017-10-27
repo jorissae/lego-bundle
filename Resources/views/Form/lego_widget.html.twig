@@ -242,6 +242,21 @@ $(function(){
     </script>
 {% endblock %}
 
+{% block wysihtml_widget %}
+    <textarea style="width:100%;" rows="10" id="{{id}}" {{ block('widget_attributes') }}>{{value}}</textarea>
+    <script>
+        $('#{{ id }}').wysihtml5();
+    </script>
+{% endblock %}
+
+{% block ckeditor_widget %}
+    <textarea style="width:100%;"  rows="10" id="{{id}}" {{ block('widget_attributes') }}>{{value}}</textarea>
+    <script>
+        $('#{{ id }}').wysihtml5();
+        //TODO CKEDITOR
+    </script>
+{% endblock %}
+
 {% block number_widget %}
     <input type="number" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
     <script>

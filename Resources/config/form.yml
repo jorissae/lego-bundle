@@ -30,6 +30,16 @@ services:
       tags:
           - { name: form.type, alias: lego_markdown }
 
+  lego.form.wysihtml:
+      class: Idk\LegoBundle\Form\Type\WysihtmlType
+      tags:
+          - { name: form.type, alias: lego_wysihtml }
+
+  lego.form.ckeditor:
+        class: Idk\LegoBundle\Form\Type\CkEditorType
+        tags:
+            - { name: form.type, alias: lego_ckeditor }
+
   lego.form.date:
       class: Idk\LegoBundle\Form\Type\DateType
       tags:

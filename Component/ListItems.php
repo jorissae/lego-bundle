@@ -31,6 +31,11 @@ class ListItems extends Component{
         return;
     }
 
+    public function getAllQueryParams()
+    {
+        return ['page', 'breaker', 'nbepp'];
+    }
+
     public function getListenParamsForReload()
     {
         if($this->getConfigurator()->getParent()) {

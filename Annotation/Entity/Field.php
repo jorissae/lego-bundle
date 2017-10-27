@@ -94,6 +94,10 @@ class Field
         return $this->header;
     }
 
+    public function setHeader($header){
+        return $this->header = $header;
+    }
+
     /**
      * @return bool
      */

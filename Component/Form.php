@@ -19,7 +19,7 @@ class Form extends Component{
     }
 
     protected function requiredOptions(){
-        return ['form'];
+        return [];
     }
 
     public function getTemplate($name = 'index'){
@@ -30,6 +30,18 @@ class Form extends Component{
         return ['form' => $this->form->createView(), 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
     }
 
+    public function generateForm($entity){
+        if(!$this->getOption('form',null)){
+            $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
+            foreach($this->get('lego.service.meta_entity_manager')->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
+                $formBuilder->add($field->getName(), $field->getType(), ['label'=>$field->getHeader()]);
+            }
+            return $formBuilder->getForm();
+        }else {
+            return $this->get('form.factory')->create($this->getOption('form'), $entity);
+        }
+    }
+
     public function bindRequest(Request $request){
         if($request->get('id')){
             $entity = $this->getConfigurator()->getRepository()->find($request->get('id'));
@@ -37,15 +49,7 @@ class Form extends Component{
             $entity = $this->getConfigurator()->newInstance();
         }
 
-        if(!$this->getOption('form',null)){
-            $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
-            foreach($this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName()) as $field){
-                $formBuilder->add($field->getName(), null, ['label'=>$field->getHeader()]);
-            }
-            $this->form = $formBuilder->getForm();
-        }else {
-            $this->form = $this->get('form.factory')->create($this->getOption('form'), $entity);
-        }
+        $this->form = $this->generateForm($entity);
         $this->form->handleRequest($request);
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
             if ($this->form->isValid()) {
@@ -67,7 +71,7 @@ class Form extends Component{
     }
 
     private function resetForm(){
-        $this->form = $this->get('form.factory')->create($this->getOption('form'), $this->getConfigurator()->newInstance());
+        $this->form = $this->generateForm($this->getConfigurator()->newInstance());
     }
 
     public function getTitle(){

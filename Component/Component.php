@@ -20,6 +20,8 @@ abstract class Component{
 
     protected $suffixRoute;
 
+    protected $listenQueryParameters = [];
+
     public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
@@ -31,6 +33,11 @@ abstract class Component{
 
     public function getValId(){
         return $this->valId;
+    }
+
+    public function addListenQueryParameter($queryParametersGlobal, $queryParametersComponent){
+        $this->listenQueryParameters[$queryParametersComponent] = $queryParametersGlobal;
+        return $this;
     }
 
     abstract protected function init();
@@ -46,8 +53,25 @@ abstract class Component{
         return [];
     }
 
+    public function getAllQueryParams(){
+        return [];
+    }
+
     public function bindRequest(Request $request){
+        $this->initQueryParameters($request);
         $this->request = $request;
+    }
+
+    public function initQueryParameters(Request $request){
+        foreach($this->getAllQueryParams() as $param){
+            if(!$request->query->has($param)) {
+                if ($this->hasQueryListen($request, $param)) $this->setComponentSessionStorage($param, $request->query->get($this->listenQueryParameters[$param]));
+            }
+        }
+    }
+
+    public function hasQueryListen(Request $request, $key){
+        return (isset($this->listenQueryParameters[$key]) && $request->query->has($this->listenQueryParameters[$key]));
     }
 
     public function getClass(){

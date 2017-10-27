@@ -45,6 +45,46 @@ class MetaEntityManager
         return $return;
     }
 
+    public function generateFormFields($className, array $columns = null){
+        $return = [];
+
+        $fields = $this->generateFields($className);
+        $r = new AnnotationReader();
+        $reflectionClass = new \ReflectionClass($className);
+        $entityForm = $r->getClassAnnotation($reflectionClass, Annotation\EntityForm::class);
+        if($entityForm) {
+            foreach ($entityForm->getFields() as $fieldName) {
+                $field = new Annotation\FieldForm();
+                $field->setName($fieldName);
+                $field->setHeader($fields[$fieldName]->getHeader());
+                $return[$fieldName] = $field;
+            }
+        }
+        foreach($reflectionClass->getProperties() as $k => $p) {
+            foreach ($r->getPropertyAnnotations($p) as $annotation) {
+                $reflectionAnnotationClass = new \ReflectionClass(get_class($annotation));
+                if ($reflectionAnnotationClass->isSubclassOf(Annotation\FieldForm::class) and ($columns == null or in_array($p->getName(), $columns))) {
+                    /* @var Annotation\FieldForm $fieldForm */
+                    $fieldForm = $annotation;
+                    if(!$annotation->getHeader()) $annotation->setHeader($fields[$p->getName()]->getHeader());
+                    $fieldForm->setName($p->getName());
+                    $return[$p->getName()] = $fieldForm;
+                }
+            }
+        }
+        if(count($return)){
+            return $return;
+        }else{
+            foreach($fields as $field){
+                $fieldForm = new Annotation\FieldForm();
+                $fieldForm->setName($field->getName());
+                $fieldForm->setHeader($field->getHeader());
+                $return[$field->getName()] = $fieldForm;
+            }
+            return $return;
+        }
+    }
+
     public function generateExportFields($className, array $columns = null){
         $return = [];
         $r = new AnnotationReader();
