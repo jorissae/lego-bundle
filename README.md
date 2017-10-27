@@ -53,11 +53,11 @@ CURRENT
 
 Important :
 
-- Check FormField, templateField, LegoViewParams
+- Check templateField, LegoViewParams
 
 Optimisation :
 
-Pager,  Filter, Action, tbody, Upload file+
+Pager,  Filter, Action, tbody imbrique, Upload file+
 
 Exemple configurator
 
