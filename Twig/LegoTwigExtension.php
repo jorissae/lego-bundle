@@ -45,6 +45,7 @@ class LegoTwigExtension extends \Twig_Extension
             'configurator'      => $component->getConfigurator(),
             'item'     => $item,
             'string_value' => $field->getStringValue($component->getConfigurator(), $item),
+            'real_value' => $field->getValue($component->getConfigurator(), $item)
         ));
     }
 

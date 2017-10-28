@@ -6,12 +6,7 @@
 {% endif %}
 {% for field in component.fields%}
     <td>
-    {% if field.template is not null %}
-        {% set path = component.configurator.getPathByField(item,field) %}
-        {% include field.template with {'entity': item, 'field': field, 'value': component.configurator.getValue(item, field.name), 'configurator': configurator, 'path': path} %}
-    {% else %}
         {{ render_field_value(component, field, item) }}
-    {% endif %}
     </td>
 {% endfor %}
 {% include component.partial('item_actions') with {'component':component, 'item':item} %}

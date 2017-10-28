@@ -2,7 +2,9 @@
 namespace Idk\LegoBundle\Annotation\Entity;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Idk\LegoBundle\Lib\ViewParams;
 use Idk\LegoBundle\Twig\FilterTwigExtension;
+use Twig\Template;
 
 /**
  * @Annotation
@@ -176,11 +178,17 @@ class Field
 
 
     public function getStringValue(AbstractConfigurator $configurator,$entity){
-        if($this->getTwig()){
+        if($this->getTwig()) {
             return $this->generateTwigValue($configurator, $entity);
+        } else if($this->getTemplate()){
+            return $this->generateTemplateValue($configurator, $entity);
         }else{
             return $configurator->getStringValue($entity, $this->getName());
         }
+    }
+
+    public function getValue(AbstractConfigurator $configurator,$entity){
+        return $configurator->getValue($entity, $this->getName());
     }
 
     public function isColor(){
@@ -206,13 +214,29 @@ class Field
     }
 
     public function generateTwigValue(AbstractConfigurator $configurator, $entity){
-            $value = $configurator->getValue($entity, $this->getName());
-            $loader = new \Twig_Loader_Array();
-            $twig = new \Twig_Environment($loader);
-            $twig->addExtension(new FilterTwigExtension());
-            $template = $twig->createTemplate($this->getTwig());
-            $render = $template->render(['entity' => $entity,'label' => $this->getHeader(), 'value' => $value]);
-            return $render;
+        $value = $this->getValue($configurator, $entity);
+        $template = $configurator->get('twig')->createTemplate($this->getTwig());
+        $render = $template->render(['view' => $this->getViewParams($configurator, $entity, $value)]);
+        return $render;
+    }
+
+    public function generateTemplateValue(AbstractConfigurator $configurator, $entity){
+        $value = $this->getValue($configurator, $entity);
+        return $configurator->get('twig')->render($this->getTemplate(), ['view' => $this->getViewParams($configurator, $entity, $value)]);
+    }
+
+    public function getViewParams($configurator, $entity, $value){
+        /*
+            WARNING: getStringValue --> generate*Value --> getViewParams
+            Do not ever call self::getStringValue here because call infiny loop
+            setField is not use because in the case The final user could call view.field.stringValue and call an infiny loop
+         */
+        $vp = new ViewParams();
+        $vp->setEntity($entity);
+        $vp->setConfigurator($configurator);
+        $vp->setValue($value);
+        $vp->setLabel($this->getHeader());
+        return $vp;
     }
 
 

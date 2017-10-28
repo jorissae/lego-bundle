@@ -1,5 +1,4 @@
 {% set columnName = field.name %}
-{% set real_value = configurator.getValue(item, columnName) %}
 {% set path = configurator.getPathByField(item,field) %}
 
 {% if field.isEditInPlace(item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}

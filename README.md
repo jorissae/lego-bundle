@@ -38,7 +38,7 @@ CURRENT
 - Rupteur [X]
 - Group [ ]
 - Form auto [X]
-- Call template (ViewParams)[ ]
+- Call template (ViewParams)[X]
 - Url object (LegoPath) [X]
 - Header and Menu object [X]
 - Multi component (CustomComponent or Multi ActionComponent) [ ]
@@ -51,9 +51,6 @@ CURRENT
 - Check double bindRequest in subComponent [ ]
 - ExportField [X]
 
-Important :
-
-- Check templateField, LegoViewParams
 
 Optimisation :
 

@@ -3,14 +3,10 @@
         <div class="row">
             {%  if entity  %}
                 {% for field in component.fields %}
-                        {% if field.template is not null %}
-                            {% include field.template with {'entity': entity, 'field': field, 'value': configurator.getValue(item, columnName), 'configurator': configurator} %}
-                        {% else %}
-                            <dl class="dl-horizontal">
-                                <dt>{{ field.header }}</dt>
-                                <dd>{{ render_field_value(component,field,entity) }}</dd>
-                            </dl>
-                        {% endif %}
+                        <dl class="dl-horizontal">
+                            <dt>{{ field.header }}</dt>
+                            <dd>{{ render_field_value(component,field,entity) }}</dd>
+                        </dl>
                 {% endfor %}
             {%  else %}
                 <div class="col-md-12">
