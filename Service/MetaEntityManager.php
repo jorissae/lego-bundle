@@ -54,20 +54,19 @@ class MetaEntityManager
         $entityForm = $r->getClassAnnotation($reflectionClass, Annotation\EntityForm::class);
         if($entityForm) {
             foreach ($entityForm->getFields() as $fieldName) {
-                $field = new Annotation\FieldForm();
-                $field->setName($fieldName);
-                $field->setHeader($fields[$fieldName]->getHeader());
+                $field = new Annotation\Form\FieldForm();
+                $field->setField($fields[$fieldName]);
                 $return[$fieldName] = $field;
             }
         }
         foreach($reflectionClass->getProperties() as $k => $p) {
             foreach ($r->getPropertyAnnotations($p) as $annotation) {
                 $reflectionAnnotationClass = new \ReflectionClass(get_class($annotation));
-                if ($reflectionAnnotationClass->isSubclassOf(Annotation\FieldForm::class) and ($columns == null or in_array($p->getName(), $columns))) {
-                    /* @var Annotation\FieldForm $fieldForm */
+                if ($reflectionAnnotationClass->isSubclassOf(Annotation\Form\AbstractForm::class) and ($columns == null or in_array($p->getName(), $columns))) {
+                    /* @var Annotation\Form\AbstractForm $fieldForm */
                     $fieldForm = $annotation;
-                    if(!$annotation->getHeader()) $annotation->setHeader($fields[$p->getName()]->getHeader());
                     $fieldForm->setName($p->getName());
+                    if(isset($fields[$p->getName()])) $annotation->setField($fields[$p->getName()]);
                     $return[$p->getName()] = $fieldForm;
                 }
             }
@@ -76,9 +75,8 @@ class MetaEntityManager
             return $return;
         }else{
             foreach($fields as $field){
-                $fieldForm = new Annotation\FieldForm();
-                $fieldForm->setName($field->getName());
-                $fieldForm->setHeader($field->getHeader());
+                $fieldForm = new Annotation\Form\FieldForm();
+                $fieldForm->setField($field);
                 $return[$field->getName()] = $fieldForm;
             }
             return $return;

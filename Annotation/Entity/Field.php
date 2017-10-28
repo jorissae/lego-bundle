@@ -200,7 +200,9 @@ class Field
     }
 
     public function getImage(){
-        return $this->image;
+        $img = $this->image;
+        $img['width'] = (isset($img['width']) && $img['width'])? $img['width']:'50px';
+        return $img;
     }
 
     public function generateTwigValue(AbstractConfigurator $configurator, $entity){

@@ -10,7 +10,7 @@ use Idk\LegoBundle\Form\Type\WysihtmlType;
 /**
  * @Annotation
  */
-class WysihtmlForm extends FieldForm
+class WysihtmlForm extends AbstractForm
 {
 
     public function __construct($options){

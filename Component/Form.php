@@ -34,7 +34,7 @@ class Form extends Component{
         if(!$this->getOption('form',null)){
             $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
             foreach($this->get('lego.service.meta_entity_manager')->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
-                $formBuilder->add($field->getName(), $field->getType(), ['label'=>$field->getHeader()]);
+                $formBuilder->add($field->getName(), $field->getType(), ['label'=>$field->getLabel()]);
             }
             return $formBuilder->getForm();
         }else {
