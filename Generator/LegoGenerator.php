@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 
 use Idk\LegoBundle\Helper\GeneratorUtils;
 
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -63,12 +64,12 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
      *
      * @return void
      */
-    public function generate(Bundle $bundle, $entity, ClassMetadata $metadata, OutputInterface $output, $label)
+    public function generate(Bundle $bundle, $entity, ClassMetadata $metadata, OutputInterface $output,InputInterface $input,  $label)
     {
         $parts = explode('\\', $entity);
         $entityName = array_pop($parts);
-        $generateAdminType = !method_exists($entity, 'getAdminType');
 
+        $generateAdminType = ($input->getOption('generateFormType') == 'yes');
         if ($generateAdminType) {
             try {
                 $this->generateAdminType($bundle, $entityName, $metadata);

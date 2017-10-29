@@ -24,7 +24,10 @@ class GenerateLegoCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
-            ->setDefinition(array( new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to create an admin list for (shortcut notation)')))
+            ->setDefinition(array(
+                new InputOption('entity', 'ent', InputOption::VALUE_REQUIRED, 'The entity class name to create an admin list for (shortcut notation)'),
+                new InputOption('generateFormType', 'gft', InputOption::VALUE_REQUIRED, 'yes for create Form type (shortcut notation)')
+            ))
             ->setDescription('Generates a IDKLEGO')
             ->setHelp(<<<EOT
 The <info>idk:generate:lego</info> command generates an Lego for a Doctrine ORM entity.
@@ -66,7 +69,8 @@ EOT
 
         $generator = $this->getGenerator($this->getApplication()->getKernel()->getBundle("IdkLegoBundle"));
         $generator->setDialog($dialog);
-        $generator->generate($bundle, $entityClass, $metadata[0], $output, $label);
+
+        $generator->generate($bundle, $entityClass, $metadata[0], $output, $input, $label);
     }
 
     /**
@@ -78,7 +82,7 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $questionHelper = $this->getQuestionHelper();
-        $questionHelper->writeSection($output, 'Welcome to the Lle admin list generator');
+        $questionHelper->writeSection($output, 'Welcome to the LEGO generator');
 
         // entity
         $entity = null;
@@ -91,7 +95,7 @@ EOT
         if (is_null($entity)) {
             $output->writeln(array(
                 '',
-                'This command helps you to generate an admin list for your entity.',
+                'This command helps you to generate an lego for your entity.',
                 '',
                 'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
                 '',
@@ -105,6 +109,12 @@ EOT
             $entity = $questionHelper->ask($input, $output, $question);
             $input->setOption('entity', $entity);
         }
+
+        $questionHelper = $this->getQuestionHelper();
+        $input->setOption('generateFormType', 'no');
+        $question = new Question($questionHelper->getQuestion('Would you like to generate FormType ? (yes or no) ', $input->getOption('generateFormType')), $input->getOption('generateFormType'));
+        $generateFormType = $questionHelper->ask($input, $output, $question);
+        $input->setOption('generateFormType', $generateFormType);
 
     }
 

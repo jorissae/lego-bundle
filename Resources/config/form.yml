@@ -35,6 +35,11 @@ services:
       tags:
           - { name: form.type, alias: lego_wysihtml }
 
+  lego.form.json:
+      class: Idk\LegoBundle\Form\Type\JsonType
+      tags:
+          - { name: form.type, alias: lego_json }
+
   lego.form.ckeditor:
         class: Idk\LegoBundle\Form\Type\CkEditorType
         tags:

@@ -42,7 +42,7 @@ CURRENT
 - Url object (LegoPath) [X]
 - Header and Menu object [X]
 - Multi component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [ ]
+- Skeleton [X]
 - Reload line with item action [ ]
 - Move component [X]
 - Dashboard [ ]
