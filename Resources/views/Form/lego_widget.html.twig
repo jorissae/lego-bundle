@@ -258,28 +258,33 @@ $(function(){
 {% endblock %}
 
 {% block json_widget %}
-    //JSON EDITOR TODO
-    <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
+    <div id="{{ id }}_json" style="width: 400px; height: 400px; float:left;"></div>
+    <textarea style="width: 400px; height: 400px; float:left;" id="{{ id }}_txt"></textarea>
+    <textarea style="display:none;" {{ block('widget_attributes') }}></textarea>
 
     <script>
         // create the editor
-        var container = document.getElementById("jsoneditor");
-        var options = {};
+        var container = document.getElementById("{{  id }}_json");
+        var options = {
+            onChange: function(){
+                $('#{{ id }}_txt').val(JSON.stringify(editor.get(), null, 2));
+                $('#{{ id }}').val(JSON.stringify(editor.get()));
+            }
+        };
+        $('#{{  id }}').change(function(){
+            editor.set(JSON.parse($('#{{ id }}').val()));
+        });
         var editor = new JSONEditor(container, options);
 
         // set json
-        var json = {
-            "Array": [1, 2, 3],
-            "Boolean": true,
-            "Null": null,
-            "Number": 123,
-            "Object": {"a": "b", "c": "d"},
-            "String": "Hello World"
-        };
+        {%  if value  %}
+            var json = JSON.parse('{{  value|json_encode()|raw }}');
+        {%  else %}
+            var json = {};
+        {%  endif %}
         editor.set(json);
-
-        // get json
-        var json = editor.get();
+        $('#{{ id }}_txt').val(JSON.stringify(editor.get(), null, 2));
+        $('#{{ id }}').val(JSON.stringify(editor.get()));
     </script>
 {% endblock %}
 
