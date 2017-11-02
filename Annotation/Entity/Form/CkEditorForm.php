@@ -2,13 +2,13 @@
 
 namespace Idk\LegoBundle\Annotation\Entity\Form;
 
-use Idk\LegoBundle\Form\Type\JsonType as BaseType;
+use Idk\LegoBundle\Form\Type\CkEditorType as BaseType;
 
 
 /**
  * @Annotation
  */
-class JsonForm extends AbstractForm
+class CkEditorForm extends AbstractForm
 {
 
     public function __construct($options){

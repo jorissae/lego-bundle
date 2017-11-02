@@ -5,7 +5,7 @@ namespace Idk\LegoBundle\FilterType;
 /**
  * AbstractFilterType
  *
- * Abstract base class for all admin list filters
+ * Abstract base class for all LEGO filters
  */
 abstract class AbstractFilterType implements FilterTypeInterface
 {

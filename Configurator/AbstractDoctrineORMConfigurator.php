@@ -4,7 +4,6 @@ namespace Idk\LegoBundle\Configurator;
 
 use Idk\LegoBundle\Component\Component;
 use Idk\LegoBundle\Lib\Pager;
-use Traversable;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
@@ -16,7 +15,7 @@ use Idk\LegoBundle\Lib\QueryHelper;
 use Idk\LegoBundle\Annotation\Entity\Field;
 
 /**
- * An abstract admin list configurator that can be used with the orm query builder
+ * An abstract LEGO configurator that can be used with the orm query builder
  */
 abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 {
@@ -27,10 +26,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     private $query = null;
 
 
-    /**
-     * @param EntityManager $em        The entity manager
-     * @param AclHelper     $aclHelper The acl helper
-     */
+
     public function __construct($container, AbstractConfigurator $parent = null)
     {
         parent::__construct($container, $parent);

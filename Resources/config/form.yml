@@ -66,11 +66,11 @@ services:
       tags:
           - { name: form.type, alias: lego_datetime }
 
-  lego.form.dependent_select:
-      class: Idk\LegoBundle\Form\Type\DependentSelectType
+  lego.form.dependent_combobox:
+      class: Idk\LegoBundle\Form\Type\DependentComboboxType
       arguments:    ["@doctrine.orm.entity_manager"]
       tags:
-          - { name: form.type, alias: lego_dependent_select }
+          - { name: form.type, alias: lego_dependent_combobox }
 
   lego.form.enity_hidden:
       class: Idk\LegoBundle\Form\Type\EntityHiddenType

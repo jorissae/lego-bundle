@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * The admin list controller for Cabinet
+ * The Lego log controller
  * @Route("/admin/log")
  */
 class LogController extends Controller

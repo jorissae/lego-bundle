@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generates all classes for an admin list
+ * Generates all classes for an Lego
  */
 class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
 {
@@ -96,6 +96,8 @@ class LegoGenerator extends \Sensio\Bundle\GeneratorBundle\Generator\Generator
             $output->writeln($this->dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
             $output->writeln('Generating the Controller code: <error>ERROR</error>');
         }
+
+        $output->writeln('In your "service_menu_class" add new MenuItem(\''.$entityName.'\', [\'icon\'=>\'cogs\', \'route\' => \'app_'.strtolower($entityName).'lego_index\']));');
 
     }
 

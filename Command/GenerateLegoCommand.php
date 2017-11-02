@@ -25,7 +25,7 @@ class GenerateLegoCommand extends GenerateDoctrineCommand
     {
         $this
             ->setDefinition(array(
-                new InputOption('entity', 'ent', InputOption::VALUE_REQUIRED, 'The entity class name to create an admin list for (shortcut notation)'),
+                new InputOption('entity', 'ent', InputOption::VALUE_REQUIRED, 'The entity class name to create an LEGO for (shortcut notation)'),
                 new InputOption('generateFormType', 'gft', InputOption::VALUE_REQUIRED, 'yes for create Form type (shortcut notation)')
             ))
             ->setDescription('Generates a IDKLEGO')

@@ -12,7 +12,7 @@
                             -------------------------------------
                                   Light - Easy - Good - Open 
 ```                
-IDK LEGO BUNDLE V 0.1 alpha
+IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
 
 Build your pages simply by adding configurable components.
 Add a filter, add a list, add a form then go
@@ -21,9 +21,7 @@ Add a filter, add a list, add a form then go
 
 TODO 
 
-- DOC
-
-CURRENT
+CURRENT v alpha
 
 - Log history [ ]
 - Pagination [X]
@@ -50,67 +48,96 @@ CURRENT
 - Widget Systeme [ ]
 - Check double bindRequest in subComponent [ ]
 - ExportField [X]
+- Doc [ ]
 
+v beta
+
+- work without fosuser (optional) [ ]
+- Gestion ROLE [ ]
+
+
+Next (November 2017):
+
+Check all type Form, (Sub-)Filter, Group, Custom action, itemAction and bulkAction
 
 Optimisation :
 
 Pager,  Filter, Action, tbody imbrique, Upload file+
 
-Exemple configurator
+
+Your config.yml
+
+```yaml
+idk_lego:
+    skin: skin-yellow
+    layout: ::lego.html.twig
+    service_menu_class: AppBundle\Service\Menu
+    service_header_class: AppBundle\Service\Header
+    service_footer_class: AppBundle\Service\Footer
+```
+
+Exemple Menu
 
 ```php
 <?php
 
+namespace AppBundle\Service;
+
+use Idk\LegoBundle\Service\Menu as Base;
+use Idk\LegoBundle\Lib\LayoutItem\MenuItem;
+
+class Menu extends Base
+{
+    public function getItems(){
+        return [
+            new MenuItem('Titre', ['type' => MenuItem::TYPE_HEADER]),
+            new MenuItem('Dashboard', ['icon' => 'dashboard', 'route' => 'homepage']),
+            new MenuItem('Configurateur', ['icon'=>'cogs', 'route' => 'app_configlego_index'])
+        ];
+    }
+}
+```
+
+Exemple configurator
+
+```php
+<?php
 namespace AppBundle\Configurator;
 
-use AppBundle\Entity\Jeu;
-use AppBundle\Form\JeuType;
-
-use Idk\LegoBundle\Lib\Actions\BulkAction;
+use AppBundle\Entity\Config;
 use Idk\LegoBundle\Configurator\AbstractDoctrineORMConfigurator;
 use Idk\LegoBundle\Component as CPNT;
-
-
-class JeuConfigurator extends AbstractDoctrineORMConfigurator
+/**
+ * The LEGO configurator for Config
+ */
+class ConfigConfigurator extends AbstractDoctrineORMConfigurator
 {
 
-    const ENTITY_CLASS_NAME = Jeu::class;
-    const TITLE = 'Gestion des jeux';
+    const ENTITY_CLASS_NAME = Config::class;
+    const TITLE = 'Gestion des configs';
 
-    public function buildAll(){
-
-        //Index
-        $this->addIndexComponent(CPNT\Action::class,['actions'=>[CPNT\Action::ADD, CPNT\Action::EXPORT_CSV, CPNT\Action::EXPORT_XLSX]]);
-        $this->addIndexComponent(CPNT\Custom::class, ['src'=>'AppBundle:JeuLego:showid']);
-        $this->addIndexComponent(CPNT\Filter::class,[]);
-        $showItem = $this->addIndexComponent(CPNT\Item::class,['fields'=> ['editeur' ,'name', 'nbPlayer', 'age']]);
-        $showItem->add('editeur.id', ['label'=>'Id editeur']);
-        $list = $this->addIndexComponent(CPNT\ListItems::class,  [
-            'fields'=> ['id', 'editeur', 'name', 'nbPlayer', 'age'],
-            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE, CPNT\ListItems::ENTITY_ACTION_SHOW],
-            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE, new BulkAction('Mon action', ['choices'=> ['A'=>'Action A', 'B'=>'Action B'], 'route'=>'app_jeulego_bulk'])]
+    public function buildIndex()
+    {
+        $this->addIndexComponent(CPNT\Action::class, ['actions' => [CPNT\Action::ADD]]);
+        $this->addIndexComponent(CPNT\Filter::class, []);
+        $this->addIndexComponent(CPNT\ListItems::class, [
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
+            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE]
         ]);
-        $list->add('editeur.id', ['label'=>'Id editeur']);
-        $this->addIndexComponent(CPNT\ListItems::class,[
-            'fields'=>['name'],
-            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
-        ], EditeurConfigurator::class);
 
-        //Add
-        $this->addAddComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
-        $this->addAddComponent(CPNT\Form::class, ['form' => JeuType::class]);
+        $this->addAddComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
+        $this->addAddComponent(CPNT\Form::class, []);
 
-        //Edit
-        $this->addEditComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
-        $this->addEditComponent(CPNT\Form::class, ['form' => JeuType::class]);
+        $this->addEditComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
+        $this->addEditComponent(CPNT\Form::class, []);
 
-        //Show
-        $this->addShowComponent(CPNT\Action::class,['actions'=> [CPNT\Action::BACK]]);
-        $this->addShowComponent(CPNT\Item::class,['fields'=> ['name', 'nbPlayer', 'age']]);
-        $this->addShowComponent(CPNT\ListItems::class,[
-            'fields'=>['name'],
-            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
-        ], EditeurConfigurator::class);
+        $this->addShowComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
+        $this->addShowComponent(CPNT\Item::class, []);
+    }
+
+    public function getControllerPath()
+    {
+        return 'app_configlego';
     }
 }
 
@@ -140,7 +167,7 @@ class Jeu
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Lego\Field(path="show", twig="jeu_{{ value }}")
+     * @Lego\Field(path="show", twig="jeu_{{ view.value }}")
      */
     private $id;
 

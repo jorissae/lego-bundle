@@ -9,7 +9,7 @@ use Idk\LegoBundle\Traits\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * The admin list controller for {{ entity_class }}
+ * The LEGO controller for {{ entity_class }}
  * @Route("/{{ entity_class|lower }}")
  */
 class {{ entity_class }}LegoController extends LegoController

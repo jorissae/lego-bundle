@@ -11,7 +11,7 @@ use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
 
-class DependentSelectType extends AbstractType
+class DependentComboboxType extends AbstractType
 {
 
 
@@ -61,7 +61,7 @@ class DependentSelectType extends AbstractType
 
     public function getName()
     {
-        return 'lego_dependent_select';
+        return 'lego_dependent_combobox';
     }
 }
 

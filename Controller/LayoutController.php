@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * The admin list controller for Cabinet
+ * The layout controller
  * @Route("/admin/layout")
  */
 class LayoutController extends Controller
