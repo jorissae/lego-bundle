@@ -313,6 +313,9 @@ abstract class AbstractConfigurator
             $type = $this->getType($item,$columnName);
         }
         $result = $this->getValue($item, $columnName);
+        if($type == 'json_array'){
+            return 'Json';
+        }
         if(is_array($result)){
             return nl2br(implode("\n",$result));
         }
@@ -322,6 +325,7 @@ abstract class AbstractConfigurator
         }elseif($type == 'text'){
             return ($result)? nl2br($result):$result;
         }
+
         if ($result instanceof \DateTime) {
             if($type == 'datetime'){
                 return ($result->format('Y') > 0)? $result->format('d/m/Y H:i:s'):null;

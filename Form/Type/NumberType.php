@@ -34,6 +34,11 @@ class NumberType extends AbstractType
         return 'lego_number';
     }
 
+    public function getBlockPrefix()
+    {
+        return 'lego_number';
+    }
+
 }
 
 

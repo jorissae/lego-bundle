@@ -58,6 +58,12 @@ class MetaEntityManager
                 $field->setField($fields[$fieldName]);
                 $return[$fieldName] = $field;
             }
+        }else{
+            foreach($fields as $field){
+                $fieldForm = new Annotation\Form\FieldForm();
+                $fieldForm->setField($field);
+                $return[$field->getName()] = $fieldForm;
+            }
         }
         foreach($reflectionClass->getProperties() as $k => $p) {
             foreach ($r->getPropertyAnnotations($p) as $annotation) {
@@ -71,16 +77,7 @@ class MetaEntityManager
                 }
             }
         }
-        if(count($return)){
-            return $return;
-        }else{
-            foreach($fields as $field){
-                $fieldForm = new Annotation\Form\FieldForm();
-                $fieldForm->setField($field);
-                $return[$field->getName()] = $fieldForm;
-            }
-            return $return;
-        }
+        return $return;
     }
 
     public function generateExportFields($className, array $columns = null){

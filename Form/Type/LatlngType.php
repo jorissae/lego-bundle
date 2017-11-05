@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
  
-class LatlngType extends AbstractType
+class LatLngType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -25,13 +25,15 @@ class LatlngType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        if(!is_array($view->vars['value'])){
+            $view->vars['value'] = ['lat'=>0,'lng'=>0];
+        }
         $view->vars['id_map'] = $view->vars['id'].'_map';
         $view->vars['id_reset'] = $view->vars['id'].'_reset';
-        $view->vars['id'] = $view->vars['id'];
         $view->vars['width'] = $options['width'];
         $view->vars['height'] = $options['height'];
-        $view->vars['lat'] = ($view->vars['value']['lat'])? $view->vars['value']['lat']:$options['lat'];
-        $view->vars['lng'] = ($view->vars['value']['lng'])? $view->vars['value']['lng']:$options['lng'];
+        $view->vars['lat'] = (isset($view->vars['value']['lat']) and $view->vars['value']['lat'])? $view->vars['value']['lat']:$options['lat'];
+        $view->vars['lng'] = (isset($view->vars['value']['lng']) and $view->vars['value']['lng'])? $view->vars['value']['lng']:$options['lng'];
         $view->vars['zoom'] = $options['zoom'];
         $view->vars['map_type'] = $options['map_type'];
     }
@@ -46,6 +48,10 @@ class LatlngType extends AbstractType
         return 'lego_latlng';
     }
 
+    public function getBlockPrefix()
+    {
+        return 'lego_lat_lng';
+    }
 }
 
 

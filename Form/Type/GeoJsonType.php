@@ -27,7 +27,6 @@ class GeoJsonType extends AbstractType
     {
         $view->vars['id_map'] = $view->vars['id'].'_map';
         $view->vars['id_reset'] = $view->vars['id'].'_reset';
-        $view->vars['id'] = $view->vars['id'];
         $view->vars['width'] = $options['width'];
         $view->vars['height'] = $options['height'];
         $view->vars['lat'] = $options['lat'];
@@ -44,6 +43,11 @@ class GeoJsonType extends AbstractType
     public function getName()
     {
         return 'lego_geojson';
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'lego_geo_json';
     }
 
 }

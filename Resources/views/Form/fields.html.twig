@@ -197,6 +197,7 @@
 
 
 {# Misc #}
+
 {% block datetime_widget %}
     {% use 'form_div_layout.html.twig' with datetime_widget as base_datetime_widget %}
     <div class="form-group date-time-group">
@@ -222,7 +223,6 @@
         {{ block('base_time_widget') }}
     </div>
 {% endblock time_widget %}
-
 
 {% block form_errors %}
 {% spaceless %}

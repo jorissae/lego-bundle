@@ -21,7 +21,7 @@ services:
           - { name: form.type, alias: lego_geojson }
 
   lego.form.latlng:
-      class: Idk\LegoBundle\Form\Type\LatlngType
+      class: Idk\LegoBundle\Form\Type\LatLngType
       tags:
           - { name: form.type, alias: lego_latlng }
 

@@ -40,6 +40,11 @@ class TimeType extends AbstractType
         return 'lego_time';
     }
 
+    public function getBlockPrefix()
+    {
+        return 'lego_time';
+    }
+
 }
 
 

@@ -54,6 +54,12 @@ class DateType extends AbstractType
         return 'lego_date';
     }
 
+
+    public function getBlockPrefix()
+    {
+        return 'lego_date';
+    }
+
 }
 
 

@@ -1,5 +1,7 @@
-{% block geojson_widget %}
-
+{% block lego_geo_json_widget %}
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcRv1Xg6n_zmz9-npl2UnmnhX1Hg5-i5s&libraries=drawing">
+</script>
 <br />
 <div style="width:{{ width }}; height:{{ height }};" id="{{ id_map}}"></div>
 <input type="hidden" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }} />
@@ -78,8 +80,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 {% endblock %}
 
 
-{% block latlng_widget %}
-
+{% block lego_lat_lng_widget %}
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcRv1Xg6n_zmz9-npl2UnmnhX1Hg5-i5s">
+</script>
 <br />
 <div style="width:{{ width }}; height:{{ height }};" id="{{ id }}_map"></div>
 <div id="{{ id }}_action_centrer" class="btn btn-default">Centrer</div>
@@ -143,46 +147,46 @@ $(function(){
 {% endblock %}
 
 
-{% block date_widget %}
+{% block lego_date_widget %}
     <input {% if placeholder %} placeholder="{{ placeholder }}" {% endif %} class="form-control" type="text" value="{{ value }}" id="{{id_date_picker}}" {{ block('widget_attributes') }}/>
-    {% if js %}
     <script>
 		$(function(){
-		    var noday = JSON.parse('{{ noday }}');
 		    $('#{{id_date_picker}}').datepicker({
-            defaultDate: '{{ value }}',
-            dateFormat: '{{ date_format }}',
-            {% if edit_month %} changeMonth: {{ edit_month }}, {% endif %}
-            {% if edit_year %} changeYear: {{ edit_year }},{% endif %}
-            beforeShowDay: function(date) {
-                var day = date.getDay();
-
-                return [(noday.indexOf(day) < 0), ''];
-            },
-            {% if min is not null %} minDate: {{ min|raw }}, {% endif %}
-            {% if max is not null %} maxDate: {{ max|raw }}, {% endif %}
-            {% if is_birthday %} yearRange : 'c-100:c+1', {% endif %}
+                defaultDate: '{{ value }}',
+                dateFormat: '{{ date_format }}',
+                {% if edit_month %} changeMonth: {{ edit_month }}, {% endif %}
+                {% if edit_year %} changeYear: {{ edit_year }},{% endif %}
+                beforeShowDay: function(date) {
+                    var day = date.getDay();
+                    return [(JSON.parse('{{ noday }}').indexOf(day) < 0), ''];
+                },
+                {% if min is not null %} minDate: {{ min|raw }}, {% endif %}
+                {% if max is not null %} maxDate: {{ max|raw }}, {% endif %}
+                {% if is_birthday %} yearRange : 'c-100:c+1', {% endif %}
             });
 		});
 	</script>
-    {% endif %}
 {% endblock %}
 
-{% block datetime_widget %}
+{% block lego_date_time_widget %}
+    DT
     <input type="text" value="{{ value }}" id="{{id_date_picker}}" {{ block('widget_attributes') }}/>
 	<script>
-	    $('#{{id_date_picker}}').datetimepicker({
-	        locale: 'fr',
-	    });
+	    $('#{{id_date_picker}}').datetimepicker();
 	</script>
 
 {% endblock %}
 
 
-{% block time_widget %}
+{% block lego_time_widget %}
+    T
     <input class="form-control" type="text" value="{{ value }}" id="{{id_time_picker}}" {{ block('widget_attributes') }}/>
     <script>
         $('#{{id_time_picker}}').timepicker({
+            format: 'hh:ii',
+            maxView: 0,
+            minView: 0,
+            startView: 0,
             locale: 'fr',
             {% if min_time %} minTime: '{{ min_time }}', {% endif %}
             {% if max_time %} maxTime: '{{ max_time }}', {% endif %}
@@ -210,6 +214,8 @@ $(function(){
         });
     </script>
 {% endblock %}
+
+
 
 {% block markdown_widget %}
     <textarea rows="30" id="{{id}}" {{ block('widget_attributes') }} data-provide="markdown">{{value}}</textarea>
@@ -258,16 +264,15 @@ $(function(){
 {% endblock %}
 
 {% block json_widget %}
-    <div id="{{ id }}_json" style="width: 400px; height: 400px; float:left;"></div>
-    <textarea style="width: 400px; height: 400px; float:left;" id="{{ id }}_txt"></textarea>
+    <div id="{{ id }}_json" style="width: 100%; height: 400px; float:left;"></div>
     <textarea style="display:none;" {{ block('widget_attributes') }}></textarea>
 
     <script>
         // create the editor
         var container = document.getElementById("{{  id }}_json");
         var options = {
+            mode: '{{ mode }}', //code, text, tree
             onChange: function(){
-                $('#{{ id }}_txt').val(JSON.stringify(editor.get(), null, 2));
                 $('#{{ id }}').val(JSON.stringify(editor.get()));
             }
         };
@@ -278,17 +283,17 @@ $(function(){
 
         // set json
         {%  if value  %}
-            var json = JSON.parse('{{  value|json_encode()|raw }}');
+            var json = JSON.parse('{{  value|raw }}');
         {%  else %}
             var json = {};
         {%  endif %}
         editor.set(json);
-        $('#{{ id }}_txt').val(JSON.stringify(editor.get(), null, 2));
         $('#{{ id }}').val(JSON.stringify(editor.get()));
     </script>
 {% endblock %}
 
-{% block number_widget %}
+{% block lego_number_widget %}
+    N
     <input type="number" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
     <script>
     var elm = $('#{{id}}');
