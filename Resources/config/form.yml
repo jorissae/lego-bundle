@@ -72,7 +72,7 @@ services:
       tags:
           - { name: form.type, alias: lego_dependent_combobox }
 
-  lego.form.enity_hidden:
+  lego.form.entity_hidden:
       class: Idk\LegoBundle\Form\Type\EntityHiddenType
       arguments:    ["@doctrine.orm.entity_manager"]
       tags:
@@ -83,3 +83,9 @@ services:
       class: Idk\LegoBundle\Form\Type\RangeType
       tags:
           - { name: form.type, alias: lego_range }
+
+  lego.form.gedmo_translatable:
+      class: Idk\LegoBundle\Form\Type\GedmoTranslatableType
+      arguments: ['fr', ['en','de','fr'], '@lego.service.gedmo_translatable_field_manager', '@translator']
+      tags:
+         - { name: form.type, alias: lego_gedmo_translatable }

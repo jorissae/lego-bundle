@@ -4,6 +4,7 @@ parameters:
     lego.service.header.class: Idk\LegoBundle\Service\Header
     lego.service.footer.class: Idk\LegoBundle\Service\Footer
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
+    lego.service.gedmo_translatable_field_manager.class: Idk\LegoBundle\Service\GedmoTranslatableFieldManager
 
 services:
 
@@ -26,6 +27,10 @@ services:
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
+
+    lego.service.gedmo_translatable_field_manager:
+        class:  '%lego.service.gedmo_translatable_field_manager.class%'
+        arguments: ["@doctrine"]
 
     lego.service.globals_parameters_provider:
             class: Idk\LegoBundle\Service\GlobalsParametersProvider
