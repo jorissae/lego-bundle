@@ -95,7 +95,8 @@ class GedmoTranslatableFieldManager
         $fieldName = $form->getName();
         $submittedValues = $form->getData();
         foreach ($locales as $locale) {
-            if (array_key_exists($locale, $submittedValues) && (($value = $submittedValues[$locale]) !== NULL)) {
+            if (array_key_exists($locale, $submittedValues)) {
+                $value = $submittedValues[$locale];
                 // personal
                 if(\method_exists($entity, self::GEDMO_PERSONAL_TRANSLATIONS_SET) && \is_callable(array($entity, self::GEDMO_PERSONAL_TRANSLATIONS_SET)))
                 {
@@ -107,7 +108,7 @@ class GedmoTranslatableFieldManager
                             $needAddTranslation = false;
                         }
                     }
-                    if($needAddTranslation) {
+                    if($needAddTranslation && $value !== null) {
                         $entity->addTranslation(new $translationClassName($locale, $fieldName, $value));
                     }
                 }
