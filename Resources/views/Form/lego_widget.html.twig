@@ -151,18 +151,9 @@ $(function(){
     <input {% if placeholder %} placeholder="{{ placeholder }}" {% endif %} class="form-control" type="text" value="{{ value }}" id="{{id_date_picker}}" {{ block('widget_attributes') }}/>
     <script>
 		$(function(){
-		    $('#{{id_date_picker}}').datepicker({
-                defaultDate: '{{ value }}',
-                dateFormat: '{{ date_format }}',
-                {% if edit_month %} changeMonth: {{ edit_month }}, {% endif %}
-                {% if edit_year %} changeYear: {{ edit_year }},{% endif %}
-                beforeShowDay: function(date) {
-                    var day = date.getDay();
-                    return [(JSON.parse('{{ noday }}').indexOf(day) < 0), ''];
-                },
-                {% if min is not null %} minDate: {{ min|raw }}, {% endif %}
-                {% if max is not null %} maxDate: {{ max|raw }}, {% endif %}
-                {% if is_birthday %} yearRange : 'c-100:c+1', {% endif %}
+		    $('#{{id_date_picker}}').datetimepicker({
+                format: 'DD/MM/YYYY',
+				locale: 'fr'
             });
 		});
 	</script>
@@ -172,7 +163,12 @@ $(function(){
     DT
     <input type="text" value="{{ value }}" id="{{id_date_picker}}" {{ block('widget_attributes') }}/>
 	<script>
-	    $('#{{id_date_picker}}').datetimepicker();
+	    $(function(){
+		    $('#{{id_date_picker}}').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+				locale: 'fr'
+            });
+		});
 	</script>
 
 {% endblock %}
@@ -182,36 +178,12 @@ $(function(){
     T
     <input class="form-control" type="text" value="{{ value }}" id="{{id_time_picker}}" {{ block('widget_attributes') }}/>
     <script>
-        $('#{{id_time_picker}}').timepicker({
-            format: 'hh:ii',
-            maxView: 0,
-            minView: 0,
-            startView: 0,
-            locale: 'fr',
-            {% if min_time %} minTime: '{{ min_time }}', {% endif %}
-            {% if max_time %} maxTime: '{{ max_time }}', {% endif %}
-        });
-        $('#{{id_time_picker}}').change(function(evt){
-            var spl = $(this).val().split(':');
-            if(spl.length){
-                if(spl.length > 2 || spl[0].length > 2 || (spl[1] && spl[1].length > 2)){
-                    spl[1] = '00';
-                    spl[0] = '00';
-                }
-                if(spl.length == 2 && spl[1].length == 1){
-                    spl[1] = '0'+spl[1];
-                }
-                if(spl[0].length == 1){
-                    spl[0] = '0'+spl[0];
-                }
-                if(spl.length == 1 && spl[0].length == 2){
-                    spl[1] = '00';
-                }
-                if(spl[0] > 23) spl[0] = '23';
-                if(spl[1] > 59) spl[1] = '59';
-            }
-            $(this).val(spl[0]+':'+spl[1]);
-        });
+        $(function(){
+		    $('#{{id_time_picker}}').datetimepicker({
+                format: 'HH:mm',
+				locale: 'fr'
+            });
+		});
     </script>
 {% endblock %}
 
