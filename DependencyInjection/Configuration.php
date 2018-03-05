@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('skin')->defaultValue('skin-blue')->end()
                 ->scalarNode('layout')->defaultValue('IdkLegoBundle:Layout:lego.html.twig')->end()
                 ->scalarNode('layout_login')->defaultValue('IdkLegoBundle:Layout:lego_login.html.twig')->end()
-                ->scalarNode('route_login')->defaultValue('idk_lego_security_login')->end()
+                ->scalarNode('route_login')->defaultValue('idk_lego_security_check')->end()
                 ->scalarNode('route_logout')->defaultValue('idk_lego_security_logout')->end()
                 ->scalarNode('service_menu_class')->defaultValue('Idk\LegoBundle\Service\Menu')->end()
                 ->scalarNode('service_header_class')->defaultValue('Idk\LegoBundle\Service\Header')->end()
