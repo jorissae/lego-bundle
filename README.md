@@ -72,7 +72,7 @@ security:
             - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/, role: ROLE_USER }
 ```
-5: create user
+5: create user (php bin/console idk:create:user)
 6: composer require server
 7: bin/console server:run 0.0.0.0:8000
  ===> For Symfony 3.X

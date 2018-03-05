@@ -5,12 +5,17 @@ parameters:
     lego.service.footer.class: Idk\LegoBundle\Service\Footer
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
     lego.service.gedmo_translatable_field_manager.class: Idk\LegoBundle\Service\GedmoTranslatableFieldManager
+    lego.service.password_encoder.class: Idk\LegoBundle\Service\PasswordEncoder
 
 services:
 
     _defaults:
         autowire: true
         public: true
+        autoconfigure: true
+
+    Idk\LegoBundle\Command\:
+         resource: '../../Command'
 
     lego.service.export:
         class:  '%lego.service.export.class%'
@@ -71,7 +76,10 @@ services:
         class:        Idk\LegoBundle\Service\LogManager
         arguments:    ["@doctrine.orm.entity_manager"]
         tags:
-            - { name: log_manager, alias: log_manager } 
+            - { name: log_manager, alias: log_manager }
+
+    lego.security.password_encoder:
+        class: "%lego.service.password_encoder.class%"
 
 
 
