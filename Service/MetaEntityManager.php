@@ -2,18 +2,19 @@
 namespace Idk\LegoBundle\Service;
 
 
+use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Annotation\Entity as Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 
 
 
-class MetaEntityManager
+class MetaEntityManager implements MetaEntityManagerInterface
 {
 
     private $em;
 
-    public function __construct($em) {
+    public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
     }
 
@@ -120,6 +121,8 @@ class MetaEntityManager
 
     public function generateFilters($className, array $columns = null){
         $return = [];
+
+        $fields = $this->generateFields($className,null, true);
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         foreach($reflectionClass->getProperties() as $k => $p) {
@@ -129,6 +132,7 @@ class MetaEntityManager
                     /* @var Annotation\Filter\AbstractFilter $filter */
                     $filter = $annotation;
                     $filter->setName($p->getName());
+                    if(isset($fields[$p->getName()])) $filter->setField($fields[$p->getName()]);
                     $return[$p->getName()] = $filter;
                 }
             }

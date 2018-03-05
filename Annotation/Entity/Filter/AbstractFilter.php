@@ -1,6 +1,8 @@
 <?php
 namespace Idk\LegoBundle\Annotation\Entity\Filter;
 
+use Idk\LegoBundle\Annotation\Entity\Field;
+
 
 abstract class AbstractFilter
 {
@@ -39,6 +41,12 @@ abstract class AbstractFilter
         return ($this->label)? $this->label:$this->name;
     }
 
+    public function setLabel($label){
+        $this->label = $label;
+        $this->options['label'] = $this->label;
+        return $this;
+    }
+
     public function getOption($key, $default = null){
         return (isset($this->options[$key]))? $this->options[$key]:$default;
     }
@@ -48,4 +56,8 @@ abstract class AbstractFilter
         return $reflectionClass->newInstance($this->name, $this->options);
     }
 
+    public function setField(Field $field){
+        if(!$this->name) $this->name = $field->getName();
+        if(!$this->label) $this->setLabel($field->getHeader());
+    }
 }

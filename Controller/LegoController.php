@@ -46,7 +46,7 @@ abstract class LegoController extends Controller
         $this->addFlash('info',$msg);
     }
 
-    protected function addFlash($type,$msg){
+    protected function addFlash(string $type,string $msg){
         $this->get('session')->getFlashBag()->add($type, $msg);
     }
 
@@ -245,7 +245,7 @@ abstract class LegoController extends Controller
                 $em->remove($entity);
                 $i++;
             }
-            $msg = $this->trans('lego_delete_entities', ['%nb%' => $i]);
+            $msg = $this->trans('lego.delete_entities', ['%nb%' => $i]);
         }
         $em->flush();
         return new JsonResponse(['status'=>'ok', 'message' => $msg]);

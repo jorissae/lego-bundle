@@ -15,8 +15,12 @@
         {%  endif %}
     </div>
     <div class="pull-right">
+
         {%  if route_logout %}
-        <a href="{{  path(route_logout) }}" class="btn btn-default btn-flat">{{ 'lego.action.signe_out' | trans }}</a>
+            {%  if route_logout == 'lego.route.logout' %}
+                {%  set route_logout = lego_view.routeLogout %}
+            {% endif %}
+            <a href="{{  path(route_logout) }}" class="btn btn-default btn-flat">{{ 'lego.action.signe_out' | trans }}</a>
         {%  endif %}
     </div>
 </li>

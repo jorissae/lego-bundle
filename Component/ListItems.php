@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Actions\BulkAction;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\QueryHelper;
+use Idk\LegoBundle\Service\MetaEntityManager;
 
 class ListItems extends Component{
 
@@ -25,6 +26,11 @@ class ListItems extends Component{
     private $nbEntityPerPage = null;
     private $breakers = [];
     private $sorters = [];
+    private $mem;
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
 
     protected function init(){
         $this->sorters = $this->getOption('sorters', []);
@@ -127,7 +133,7 @@ class ListItems extends Component{
     }
 
     public function getFields(){
-        return array_merge($this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
+        return array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
     }
 
     public function getEntityActions(){

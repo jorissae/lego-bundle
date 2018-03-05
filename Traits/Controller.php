@@ -1,6 +1,7 @@
 <?php
 namespace Idk\LegoBundle\Traits;
 
+use Idk\LegoBundle\Service\MetaEntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;

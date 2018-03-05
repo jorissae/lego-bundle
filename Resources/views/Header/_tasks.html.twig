@@ -4,10 +4,10 @@
         {%  for task in tasks %}
         <li>
             <a href="#">
-                <h3>
+                <h6>
                     {{ task.title }}
                     <small class="pull-right">{{ task.percent }}%</small>
-                </h3>
+                </h6>
                 <div class="progress xs">
                     <div class="progress-bar progress-bar-aqua" style="width: {{  task.percent }}%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                         <span class="sr-only">{{  task.percent }}% Complete</span>

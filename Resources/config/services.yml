@@ -8,33 +8,37 @@ parameters:
 
 services:
 
+    _defaults:
+        autowire: true
+        public: true
+
     lego.service.export:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv"]
 
     lego.service.menu:
         class:  '%lego.service.menu.class%'
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
 
     lego.service.header:
         class:  '%lego.service.header.class%'
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
 
     lego.service.footer:
         class:  '%lego.service.footer.class%'
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
 
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
+    Idk\LegoBundle\Service\MetaEntityManager: '@lego.service.meta_entity_manager'
+    #Idk\LegoBundle\Service\MetaEntityManagerInterface: '@lego.service.meta_entity_manager'
+
 
     lego.service.gedmo_translatable_field_manager:
         class:  '%lego.service.gedmo_translatable_field_manager.class%'
         arguments: ["@doctrine"]
 
     lego.service.globals_parameters_provider:
-            class: Idk\LegoBundle\Service\GlobalsParametersProvider
-            arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%"]
+        class: Idk\LegoBundle\Service\GlobalsParametersProvider
+        arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%", "%lego.route.login%", "%lego.route.logout%"]
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension

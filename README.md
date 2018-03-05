@@ -55,6 +55,29 @@ v beta
 - work without fosuser (optional) [ ]
 - Gestion ROLE [ ]
 
+Symfony 4
+
+-require translator
+```yaml
+default_locale: fr
+    translator:
+       fallbacks: ['fr']
+```
+-require doctrine
+-require templating
+-require generator
+
+framework.yml:
+```yaml
+freamworks:
+    templating:
+        engines: ['twig']
+```
+"doctrine/doctrine-bundle": "^1.6",
+"doctrine/orm": "^2.5",
+"symfony/templating":"^4.0.4",
+"friendsofsymfony/user-bundle": "~2.0"
+
 
 Next (November 2017):
 

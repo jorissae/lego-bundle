@@ -1,0 +1,15 @@
+parameters:
+    lego.component.filter.class: Idk\LegoBundle\Component\Filter
+    lego.component.action.class: Idk\LegoBundle\Component\Action
+
+services:
+
+    _defaults:
+        autowire: true
+        public: true
+
+    Idk\LegoBundle\Component\:
+        shared: false
+        resource: '../../Component'
+
+

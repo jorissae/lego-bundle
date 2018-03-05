@@ -56,4 +56,4 @@ lego.choice.neither: Aucun
 lego.label.number_of_entities: Nombre d'éléments
 lego.action.reset_order_components: Organisation par defaut
 lego.title.form: Formulaire
-lego_delete_entities: %nb% éléments supprimé
+lego.delete_entities: "%nb% éléments supprimé"

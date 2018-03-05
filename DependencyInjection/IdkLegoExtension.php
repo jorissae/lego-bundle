@@ -31,6 +31,7 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('form.yml');
+        $loader->load('components.yml');
 
         $configuration = new Configuration();
         $processedConfig =  $this->processConfiguration($configuration, $configs);
@@ -38,6 +39,8 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         $container->setParameter( 'lego.skin', $processedConfig[ 'skin' ] );
         $container->setParameter( 'lego.layout', $processedConfig[ 'layout' ] );
         $container->setParameter( 'lego.layout_login', $processedConfig[ 'layout_login' ] );
+        $container->setParameter( 'lego.route.login', $processedConfig['route_login']);
+        $container->setParameter( 'lego.route.logout', $processedConfig['route_logout']);
         $container->setParameter( 'lego.service.menu.class', $processedConfig[ 'service_menu_class' ] );
         $container->setParameter( 'lego.service.header.class', $processedConfig[ 'service_header_class' ] );
         $container->setParameter( 'lego.service.footer.class', $processedConfig[ 'service_footer_class' ] );

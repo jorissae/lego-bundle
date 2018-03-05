@@ -5,7 +5,8 @@ namespace Idk\LegoBundle\Service;
 use Idk\LegoBundle\Lib\LayoutItem\LabelItem;
 use Idk\LegoBundle\Lib\LayoutItem\MenuItem;
 use Symfony\Component\Yaml\Yaml;
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class Menu
 {
@@ -13,7 +14,7 @@ class Menu
     private $em;
     private $security;
 
-    public function __construct($em, $security) {
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security) {
         $this->em = $em;
         $this->security = $security;
     }

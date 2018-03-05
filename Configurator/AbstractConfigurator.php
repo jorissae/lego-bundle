@@ -580,7 +580,7 @@ abstract class AbstractConfigurator
             $this->addChild($routeSuffix, $configurator);
             return $component;
         }else{
-            return $reflectionClass->newInstance($options, $this, $routeSuffix);
+            return $this->get($className)->build($options, $this, $routeSuffix);//$reflectionClass->newInstance()->build($options, $this, $routeSuffix);
         }
 
     }

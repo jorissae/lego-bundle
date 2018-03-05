@@ -22,19 +22,24 @@ abstract class Component{
 
     protected $listenQueryParameters = [];
 
-    public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
+    public function __construct(){
+    }
+
+    final function build(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
         $this->suffixRoute = $suffixRoute;
         $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
         $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
         $this->init();
+        return $this;
     }
 
     public function getValId(){
         return $this->valId;
     }
 
+    //les params utiliser en ajax peuve etre utilisé sans ajax
     public function addListenQueryParameter($queryParametersGlobal, $queryParametersComponent){
         $this->listenQueryParameters[$queryParametersComponent] = $queryParametersGlobal;
         return $this;
@@ -49,6 +54,7 @@ abstract class Component{
         return false;
     }
 
+    //params reporting from query to ajax request
     public function getListenParamsForReload(){
         return [];
     }

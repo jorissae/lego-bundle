@@ -2,8 +2,10 @@
 namespace Idk\LegoBundle\Service;
 
 
+use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Lib\LayoutItem\HeaderItem;
 use Idk\LegoBundle\Lib\LayoutItem\LabelItem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Yaml\Yaml;
 
 
@@ -13,7 +15,7 @@ class Header
     private $em;
     private $security;
 
-    public function __construct($em, $security) {
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security) {
         $this->em = $em;
         $this->security = $security;
     }
@@ -65,11 +67,11 @@ class Header
                 'icon' => 'flag-o',
                 'libelle' => null,
                 'label'=> new LabelItem(10, ['css_class'=>'label-danger']),
-                'class'=> 'tasks-menu',
+                'css_class'=> 'tasks-menu',
             ]),
             new HeaderItem([
                 'template' => 'IdkLegoBundle:Header:_user.html.twig',
-                'template_parameters' => ['user'=> $this->getUser(), 'route_logout' => 'fos_user_security_logout', 'route_profile'=> null],
+                'template_parameters' => ['user'=> $this->getUser(), 'route_logout' => 'lego.route.logout', 'route_profile'=> null],
                 'libelle' => $this->getUser()->getUsername(),
                 'css_class'=> 'user-menu',
             ])

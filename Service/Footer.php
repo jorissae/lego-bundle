@@ -1,6 +1,8 @@
 <?php
 namespace Idk\LegoBundle\Service;
 
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Footer
 {
@@ -8,7 +10,7 @@ class Footer
     private $em;
     private $security;
 
-    public function __construct($em, $security) {
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security) {
         $this->em = $em;
         $this->security = $security;
     }

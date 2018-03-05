@@ -10,11 +10,15 @@ class GlobalsParametersProvider
     private $skin;
     private $layout;
     private $layoutLogin;
+    private $routeLogin;
+    private $routeLogout;
 
-    public function __construct($skin, $layout, $layoutLogin) {
+    public function __construct($skin, $layout, $layoutLogin, $routeLogin, $routeLogout) {
         $this->skin = $skin;
         $this->layout = $layout;
         $this->layoutLogin = $layoutLogin;
+        $this->routeLogin = $routeLogin;
+        $this->routeLogout = $routeLogout;
     }
 
     /**
@@ -40,6 +44,16 @@ class GlobalsParametersProvider
     {
         return $this->layoutLogin;
     }
+
+    public function getRouteLogin(){
+        return $this->routeLogin;
+    }
+
+    public function getRouteLogout(){
+        return $this->routeLogout;
+    }
+
+
 
 
 
