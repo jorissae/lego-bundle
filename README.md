@@ -12,7 +12,7 @@
                             -------------------------------------
                                   Light - Easy - Good - Open 
 ```                
-IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
+SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
 
 Build your pages simply by adding configurable components.
 Add a filter, add a list, add a form then go
