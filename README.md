@@ -75,6 +75,10 @@ security:
 5: create user (php bin/console idk:create:user)
 6: composer require server
 7: bin/console server:run 0.0.0.0:8000
+
+With fos_user:
+idk_lego:
+    route_login: fos_user_security_check
  ===> For Symfony 3.X
 
 TODO 
