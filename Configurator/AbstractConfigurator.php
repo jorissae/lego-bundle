@@ -6,6 +6,7 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Component\Component;
+use Idk\LegoBundle\Service\Tag\ComponentChain;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Path;
 
@@ -293,13 +294,6 @@ abstract class AbstractConfigurator
         }
     }
 
-
-    public function getExportFields(array $columns = null)
-    {
-        return $this->get('lego.service.meta_entity_manager')->generateExportFields($this->getEntityName(), $columns);
-    }
-
-
     public function getStringValue($item, $columnName)
     {
         $type = null;
@@ -580,6 +574,8 @@ abstract class AbstractConfigurator
             $this->addChild($routeSuffix, $configurator);
             return $component;
         }else{
+            $this->componentsChain = $this->get(ComponentChain::class);
+            return $this->componentsChain->build($className, $options, $this, $routeSuffix);
             return $this->get($className)->build($options, $this, $routeSuffix);//$reflectionClass->newInstance()->build($options, $this, $routeSuffix);
         }
 

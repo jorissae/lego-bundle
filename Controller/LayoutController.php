@@ -3,12 +3,9 @@
 namespace Idk\LegoBundle\Controller;
 
 
+use Idk\LegoBundle\Service\Interf\MenuInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The layout controller
@@ -17,8 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class LayoutController extends Controller
 {
 
-    public function menuAction(){
-        $menu = $this->get('lego.service.menu');
+    public function menuAction(MenuInterface $menu){
         return $this->render($menu->getTemplate(), ['menu' => $menu]);
     }
 

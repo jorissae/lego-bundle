@@ -17,11 +17,19 @@ services:
     Idk\LegoBundle\Command\:
          resource: '../../Command'
 
+    Idk\LegoBundle\Controller\:
+         resource: '../../Controller'
+
+    Idk\LegoBundle\Service\Tag\ComponentChain: ~
+    Idk\LegoBundle\Service\Tag\WidgetChain:
+        arguments: [!tagged lego.widget]
+
     lego.service.export:
         class:  '%lego.service.export.class%'
-        arguments: ["@templating", "@lego.service.csv"]
+        arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
 
     lego.service.menu:
+        public: false
         class:  '%lego.service.menu.class%'
 
     lego.service.header:
@@ -31,6 +39,7 @@ services:
         class:  '%lego.service.footer.class%'
 
     lego.service.meta_entity_manager:
+        public: false
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
     Idk\LegoBundle\Service\MetaEntityManager: '@lego.service.meta_entity_manager'

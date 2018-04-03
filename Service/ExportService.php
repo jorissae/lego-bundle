@@ -9,14 +9,20 @@ class ExportService
 {
     private $renderer;
     private $serviceCsv;
+    private $mem;
 
     const EXT_CSV = 'csv';
     const EXT_EXCEL = 'xlsx';
 
-    public function __construct($renderer, $serviceCsv)
+    public function __construct($renderer, $serviceCsv, MetaEntityManager $mem)
     {
         $this->renderer = $renderer;
         $this->serviceCsv = $serviceCsv;
+        $this->mem = $mem;
+    }
+
+    public function getExportFields($entityName, array $columns = null){
+        return $this->mem->generateExportFields($entityName, $columns);
     }
 
     public function getDownloadableResponse(AbstractConfigurator $configurator, $format)
@@ -35,12 +41,12 @@ class ExportService
 
     public function createCsvResponse(AbstractConfigurator $configurator){
         $allIterator = $configurator->getAllIterator();
-        foreach($configurator->getExportFields() as $field){
+        foreach($this->getExportFields($configurator->getEntityName()) as $field){
             $csv[0][] = $field->getHeader();
         }
         $i=1;
         foreach($allIterator as $entity){
-            foreach($configurator->getExportFields() as $field) {
+            foreach($this->getExportFields($configurator->getEntityName()) as $field) {
                 $csv[$i][] = $configurator->getStringValue($entity, $field->getName());
             }
                 $i++;
@@ -63,7 +69,7 @@ class ExportService
         $number = 1;
 
         $row = [];
-        foreach ($configurator->getExportFields() as $field) {
+        foreach ($this->getExportFields($configurator->getEntityName()) as $field) {
             $row[] = $field->getHeader();
         }
         $objWorksheet->fromArray($row, null, 'A' . $number++);
@@ -72,7 +78,7 @@ class ExportService
         foreach($allIterator as $entity) {
 
             $row = [];
-            foreach ($configurator->getExportFields() as $field) {
+            foreach ($this->getExportFields($configurator->getEntityName()) as $field) {
                 $coordinate = $objWorksheet->getCellByColumnAndRow(count($row), $number)->getCoordinate();
                 $data = $configurator->getStringValue($entity, $field->getName());
                 if (is_object($data)) {
