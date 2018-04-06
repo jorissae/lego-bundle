@@ -26,14 +26,17 @@ services:
     Idk\LegoBundle\Service\LegoHeaderInterface: '@Idk\LegoBundle\Service\Header'
     Idk\LegoBundle\Service\Footer: ~
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
+    Idk\LegoBundle\Service\Tag\ComponentChain: ~
+    Idk\LegoBundle\Service\Tag\WidgetChain:
+        arguments: [!tagged lego.widget]
 
     lego.service.export:
         class:  '%lego.service.export.class%'
-        arguments: ["@templating", "@lego.service.csv"]
-
+        arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
 
 
     lego.service.meta_entity_manager:
+        public: false
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
     Idk\LegoBundle\Service\MetaEntityManager: '@lego.service.meta_entity_manager'

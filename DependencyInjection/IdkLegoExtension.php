@@ -2,9 +2,12 @@
 
 namespace Idk\LegoBundle\DependencyInjection;
 
+use Idk\LegoBundle\DependencyInjection\Compiler\ComponentPass;
+//use Idk\LegoBundle\DependencyInjection\Compiler\WidgetPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
@@ -13,8 +16,9 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class IdkLegoExtension extends Extension implements PrependExtensionInterface
+class IdkLegoExtension extends Extension implements ExtensionInterface, PrependExtensionInterface
 {
+
     /**
      * {@inheritDoc}
      */
@@ -27,6 +31,7 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
             $container->getParameter('twig.form.resources')
             ));
         }
+
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
@@ -46,11 +51,13 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         $container->setParameter( 'lego.service.footer', $processedConfig[ 'service_footer' ] );
         $container->setParameter( 'lego.user.class', $processedConfig[ 'user_class' ] );
 
+
+
+
     }
 
     public function prepend(ContainerBuilder $container)
     {
-
         $config = [];
         $parameterName = 'lego_view';
         $config['globals'][$parameterName] = '@Idk\LegoBundle\Service\GlobalsParametersProvider';

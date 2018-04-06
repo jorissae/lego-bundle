@@ -6,6 +6,7 @@ use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Idk\LegoBundle\Service\MetaEntityManager;
 
 
 
@@ -13,6 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 class Form extends Component{
 
     private $form;
+    private $mem;
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
 
     protected function init(){
 
@@ -33,7 +39,7 @@ class Form extends Component{
     public function generateForm($entity){
         if(!$this->getOption('form',null)){
             $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
-            foreach($this->get('lego.service.meta_entity_manager')->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
+            foreach($this->mem->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
                 $formBuilder->add($field->getName(), $field->getType(), $field->getOptions());
             }
             return $formBuilder->getForm();

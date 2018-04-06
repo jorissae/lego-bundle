@@ -6,10 +6,11 @@ services:
 
     _defaults:
         autowire: true
-        public: true
+        public: false
 
     Idk\LegoBundle\Component\:
         shared: false
         resource: '../../Component'
+        tags: [lego.component]
 
 

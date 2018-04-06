@@ -6,12 +6,9 @@ namespace Idk\LegoBundle\Controller;
 use Idk\LegoBundle\Service\LegoFooterInterface;
 use Idk\LegoBundle\Service\LegoHeaderInterface;
 use Idk\LegoBundle\Service\LegoMenuInterface;
+use Idk\LegoBundle\Service\Interf\MenuInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The layout controller
