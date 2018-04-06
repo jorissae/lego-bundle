@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Yaml\Yaml;
 
 
-class Header
+class Header implements LegoHeaderInterface
 {
 
     private $em;

@@ -4,7 +4,7 @@ namespace Idk\LegoBundle\Service;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class Footer
+class Footer implements LegoFooterInterface
 {
 
     private $em;

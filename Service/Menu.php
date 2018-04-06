@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class Menu
+class Menu implements LegoMenuInterface
 {
 
     private $em;

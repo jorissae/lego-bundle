@@ -26,9 +26,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('layout_login')->defaultValue('IdkLegoBundle:Layout:lego_login.html.twig')->end()
                 ->scalarNode('route_login')->defaultValue('idk_lego_security_check')->end()
                 ->scalarNode('route_logout')->defaultValue('idk_lego_security_logout')->end()
-                ->scalarNode('service_menu_class')->defaultValue('Idk\LegoBundle\Service\Menu')->end()
-                ->scalarNode('service_header_class')->defaultValue('Idk\LegoBundle\Service\Header')->end()
-                ->scalarNode('service_footer_class')->defaultValue('Idk\LegoBundle\Service\Footer')->end();
+                ->scalarNode('service_menu')->defaultValue('Idk\LegoBundle\Service\Menu')->end()
+                ->scalarNode('service_header')->defaultValue('Idk\LegoBundle\Service\Header')->end()
+                ->scalarNode('service_footer')->defaultValue('Idk\LegoBundle\Service\Footer')->end()
+                ->scalarNode('user_class')->defaultValue('App\Entity\User')->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

@@ -1,8 +1,8 @@
 parameters:
     lego.service.export.class: Idk\LegoBundle\Service\ExportService
-    lego.service.menu.class: Idk\LegoBundle\Service\Menu
-    lego.service.header.class: Idk\LegoBundle\Service\Header
-    lego.service.footer.class: Idk\LegoBundle\Service\Footer
+    lego.service.menu: '@Idk\LegoBundle\Service\Menu'
+    lego.service.header: '@Idk\LegoBundle\Service\Header'
+    lego.service.footer: '@Idk\LegoBundle\Service\Footer'
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
     lego.service.gedmo_translatable_field_manager.class: Idk\LegoBundle\Service\GedmoTranslatableFieldManager
     lego.service.password_encoder.class: Idk\LegoBundle\Service\PasswordEncoder
@@ -17,18 +17,21 @@ services:
     Idk\LegoBundle\Command\:
          resource: '../../Command'
 
+    Idk\LegoBundle\Controller\:
+         resource: '../../Controller'
+
+    Idk\LegoBundle\Service\Menu: ~
+    Idk\LegoBundle\Service\LegoMenuInterface: '@Idk\LegoBundle\Service\Menu'
+    Idk\LegoBundle\Service\Header: ~
+    Idk\LegoBundle\Service\LegoHeaderInterface: '@Idk\LegoBundle\Service\Header'
+    Idk\LegoBundle\Service\Footer: ~
+    Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
+
     lego.service.export:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv"]
 
-    lego.service.menu:
-        class:  '%lego.service.menu.class%'
 
-    lego.service.header:
-        class:  '%lego.service.header.class%'
-
-    lego.service.footer:
-        class:  '%lego.service.footer.class%'
 
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'
@@ -41,9 +44,9 @@ services:
         class:  '%lego.service.gedmo_translatable_field_manager.class%'
         arguments: ["@doctrine"]
 
-    lego.service.globals_parameters_provider:
+    Idk\LegoBundle\Service\GlobalsParametersProvider:
         class: Idk\LegoBundle\Service\GlobalsParametersProvider
-        arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%", "%lego.route.login%", "%lego.route.logout%"]
+        arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%", "%lego.route.login%", "%lego.route.logout%", "%lego.user.class%"]
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension

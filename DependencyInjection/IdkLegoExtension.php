@@ -41,9 +41,10 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
         $container->setParameter( 'lego.layout_login', $processedConfig[ 'layout_login' ] );
         $container->setParameter( 'lego.route.login', $processedConfig['route_login']);
         $container->setParameter( 'lego.route.logout', $processedConfig['route_logout']);
-        $container->setParameter( 'lego.service.menu.class', $processedConfig[ 'service_menu_class' ] );
-        $container->setParameter( 'lego.service.header.class', $processedConfig[ 'service_header_class' ] );
-        $container->setParameter( 'lego.service.footer.class', $processedConfig[ 'service_footer_class' ] );
+        $container->setParameter( 'lego.service.menu', $processedConfig[ 'service_menu' ] );
+        $container->setParameter( 'lego.service.header', $processedConfig[ 'service_header' ] );
+        $container->setParameter( 'lego.service.footer', $processedConfig[ 'service_footer' ] );
+        $container->setParameter( 'lego.user.class', $processedConfig[ 'user_class' ] );
 
     }
 
@@ -52,7 +53,7 @@ class IdkLegoExtension extends Extension implements PrependExtensionInterface
 
         $config = [];
         $parameterName = 'lego_view';
-        $config['globals'][$parameterName] = '@lego.service.globals_parameters_provider';
+        $config['globals'][$parameterName] = '@Idk\LegoBundle\Service\GlobalsParametersProvider';
         if($container->hasParameter($parameterName)) {
             $config['globals'][$parameterName] = $container->getParameter($parameterName);
         }
