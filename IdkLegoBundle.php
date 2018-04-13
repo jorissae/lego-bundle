@@ -3,6 +3,7 @@
 namespace Idk\LegoBundle;
 
 use Idk\LegoBundle\DependencyInjection\Compiler\ComponentPass;
+use Idk\LegoBundle\DependencyInjection\Compiler\WidgetPass;
 use Idk\LegoBundle\DependencyInjection\IdkLegoExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,6 +18,7 @@ class IdkLegoBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new ComponentPass());
+        //$container->addCompilerPass(new WidgetPass());
         //$container->registerExtension(new IdkLegoExtension());
     }
 }

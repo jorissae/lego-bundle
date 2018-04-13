@@ -3,6 +3,8 @@
 namespace Idk\LegoBundle\Widget;
 
 use Idk\LegoBundle\Service\GlobalsParametersProvider;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserWidget{
 

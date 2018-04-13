@@ -18,6 +18,10 @@ class ComponentChain
         $this->components[get_class($component)] = $component;
     }
 
+    public function getComponents(){
+        return $this->components;
+    }
+
     public function build($classname, $options, $configurateur, $routeSuffix){
         $component = clone $this->components[$classname];
         return $component->build($options,$configurateur,$routeSuffix);

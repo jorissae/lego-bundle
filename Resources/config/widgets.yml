@@ -4,9 +4,10 @@ services:
 
     _defaults:
         autowire: true
-        public: true
+        public: false
 
     Idk\LegoBundle\Widget\:
         resource: '../../Widget'
+        tags: [lego.widget]
 
 
