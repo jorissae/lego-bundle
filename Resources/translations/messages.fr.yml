@@ -12,21 +12,21 @@ lego.action.bulk_delete: Supprimer les éléments
 lego.action.modify_nb_entity_per_page: Modifier le nombre de ligne par page
 lego.error.entity_not_found: Elément introuvable
 lego.header.action: Actions
-lego.ask.confirmation.delete: Voulez vous vraiment supprimer cette élément ?
+lego.ask.confirmation.delete: Voulez-vous vraiment supprimer cet élément ?
 lego.word.yes: Oui
 lego.word.no: Non
 lego.flash.error: Erreur
 lego.flash.warning: Attention
 lego.flash.info: Information
 lego.flash.success: Succès
-lego.action.view_all: Voir tous
+lego.action.view_all: Voir tout
 lego.action.see_profil: Voir votre profil
 lego.action.signe_out: Logout
 lego.form.login_username: Nom d'utilisateur
 lego.form.login_password: Mot de passe
 lego.form.remember_me: Se souvenir de moi
 lego.form.submit_login: Login
-lego.form.choice_entity: Choisire un item
+lego.form.choice_entity: Choisir un item
 lego.form.success.add: Elément ajouté
 lego.form.success.edit: Elément mis à jour
 lego.action.forgot_password: Mot de passe oublié
@@ -35,7 +35,7 @@ lego.filter.no: Non
 lego.filter.all: Tous
 lego.filter.this: Le
 lego.filter.before: Avant le
-lego.filter.after: Apres le
+lego.filter.after: Après le
 lego.filter.empty: Est vide
 lego.filter.equal: Egale
 lego.filter.null: Non renseigné
@@ -54,6 +54,6 @@ lego.filter.content: Contient
 lego.header_choice.breaker: Choix du rupteur
 lego.choice.neither: Aucun
 lego.label.number_of_entities: Nombre d'éléments
-lego.action.reset_order_components: Organisation par defaut
+lego.action.reset_order_components: Organisation par défaut
 lego.title.form: Formulaire
 lego.delete_entities: "%nb% éléments supprimé"

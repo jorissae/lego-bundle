@@ -5,6 +5,7 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Form\Type\AutoCompletionType;
+use Idk\LegoBundle\Service\MetaEntityManager;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,11 @@ class Item extends Component{
     private $fields = [];
     private $entityId = null;
     private $formId = false;
+    private $mem;
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
 
     protected function init(){
         return;
@@ -29,7 +35,7 @@ class Item extends Component{
     }
 
     public function getFields(){
-        return array_merge($this->fields, $this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
+        return array_merge($this->fields, $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
     }
 
     public function getTemplate($name = 'index'){
