@@ -1,18 +1,18 @@
-<?php
+<?= "<?php" ?>
 
-namespace {{ namespace }}\Controller;
+namespace <?= $namespace; ?>;
 
 
-use AppBundle\Configurator\{{ entity_class }}Configurator as Configurator;
+use App\Configurator\<?= $entity_class ?>Configurator as Configurator;
 use Idk\LegoBundle\Controller\LegoController;
 use Idk\LegoBundle\Traits\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * The LEGO controller for {{ entity_class }}
- * @Route("/{{ entity_class|lower }}")
+ * The LEGO controller for <?= $entity_class ?><?= "\n" ?>
+ * @Route("/<?= strtolower($entity_class) ?>")
  */
-class {{ entity_class }}LegoController extends LegoController
+class <?= $entity_class ?>LegoController extends LegoController
 {
 
     use Controller;

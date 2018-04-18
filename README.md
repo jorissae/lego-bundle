@@ -85,8 +85,12 @@ or (fosUser)
 ```  
 php bin/console fos:user:create 
 ```  
-6: composer require server
-7: bin/console server:run 0.0.0.0:8000
+7: Create lego page
+```  
+php bin/console make:lego 
+```  
+8: composer require server
+9: bin/console server:run 0.0.0.0:8000
 
 
  ===> For Symfony 3.X
@@ -112,7 +116,7 @@ CURRENT v alpha
 - Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
 - Multi same component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [X] //  SF4 maker [] In class
+- Skeleton [X] //  SF4 maker [/] In class
 - Reload line with item action [ ]
 - Move component [X]
 - Dashboard [ ] In class

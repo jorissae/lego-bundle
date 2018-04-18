@@ -1,6 +1,7 @@
 <?php
 namespace Idk\LegoBundle\Maker;
 use Doctrine\Common\Annotations\Annotation;
+use Idk\LegoBundle\Service\MetaEntityManager;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\FileManager;
@@ -12,58 +13,127 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
+use Symfony\Bundle\MakerBundle\Doctrine\DoctrineEntityHelper;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Common\Inflector\Inflector;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\MakerBundle\Validator;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Validator\Validation;
 /**
- * @author Javier Eguiluz <javier.eguiluz@gmail.com>
- * @author Ryan Weaver <weaverryan@gmail.com>
+ * @author Joris Saenger <joris.saenger@gmail.com>
  */
 final class MakeLego extends AbstractMaker
 {
     private $fileManager;
-    public function __construct(FileManager $fileManager)
+    private $mem;
+    private $entityHelper;
+
+    public function __construct(FileManager $fileManager, MetaEntityManager $mem, DoctrineEntityHelper $entityHelper)
     {
         $this->fileManager = $fileManager;
+        $this->mem = $mem;
+        $this->entityHelper = $entityHelper;
     }
     public static function getCommandName(): string
     {
         return 'make:lego';
     }
-    public function configureCommand(Command $command, InputConfiguration $inputConf)
+    public function configureCommand(Command $command, InputConfiguration $inputConfig)
     {
         $command
             ->setDescription('Creates a new controller class')
-            ->addArgument('controller-class', InputArgument::OPTIONAL, sprintf('Choose a name for your controller class (e.g. <fg=yellow>%sController</>)', Str::asClassName(Str::getRandomTerm())))
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeController.txt'))
+            ->addArgument('entity-class', InputArgument::OPTIONAL, sprintf('The class name of the entity to create CRUD (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
+            ->addArgument('form', InputArgument::OPTIONAL, sprintf('Do you want generate FormType'))
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeLego.txt'))
         ;
+
+        $inputConfig->setArgumentAsNonInteractive('entity-class');
+        $inputConfig->setArgumentAsNonInteractive('form');
     }
-    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
+
+    public function interact(InputInterface $input, ConsoleStyle $io, Command $command)
     {
+        if (null === $input->getArgument('entity-class')) {
+            $argument = $command->getDefinition()->getArgument('entity-class');
+            $entities = $this->entityHelper->getEntitiesForAutocomplete();
+            $question = new Question($argument->getDescription());
+            $question->setAutocompleterValues($entities);
+            $value = $io->askQuestion($question);
+            $input->setArgument('entity-class', $value);
+        }
+        if (null === $input->getArgument('form')) {
+            $argument = $command->getDefinition()->getArgument('form');
+            $entities = $this->entityHelper->getEntitiesForAutocomplete();
+            $question = new ConfirmationQuestion($argument->getDescription(), false);
+            $value = $io->askQuestion($question);
+            $input->setArgument('form', $value);
+        }
+    }
+
+    private function createConfigurator(InputInterface $input, ConsoleStyle $io, Generator $generator){
         $controllerClassNameDetails = $generator->createClassNameDetails(
-            $input->getArgument('controller-class'),
-            'Controller\\',
-            'Controller'
+            $input->getArgument('entity-class'),
+            'Configurator\\',
+            'Configurator'
         );
-        $templateName = Str::asFilePath($controllerClassNameDetails->getRelativeNameWithoutSuffix()).'/index.html.twig';
         $controllerPath = $generator->generateClass(
             $controllerClassNameDetails->getFullName(),
-            'controller/Controller.tpl.php',
+            $this->getSkeletonTemplate('lego/Configurator/LegoConfigurator.php'),
             [
-                'route_path' => Str::asRoutePath($controllerClassNameDetails->getRelativeNameWithoutSuffix()),
-                'route_name' => Str::asRouteName($controllerClassNameDetails->getRelativeNameWithoutSuffix()),
-                'twig_installed' => $this->isTwigInstalled(),
-                'template_name' => $templateName,
+                'namespace' => 'App',
+                'entity_class' => $input->getArgument('entity-class'),
+                'generate_admin_type' => false
             ]
         );
-        if ($this->isTwigInstalled()) {
-            $generator->generateFile(
-                'templates/'.$templateName,
-                'controller/twig_template.tpl.php',
-                [
-                    'controller_path' => $controllerPath,
-                ]
-            );
-        }
         $generator->writeChanges();
         $this->writeSuccessMessage($io);
+    }
+
+    private function createController(InputInterface $input, ConsoleStyle $io, Generator $generator){
+        $controllerClassNameDetails = $generator->createClassNameDetails(
+            $input->getArgument('entity-class'),
+            'Controller\\',
+            'LegoController'
+        );
+        $controllerPath = $generator->generateClass(
+            $controllerClassNameDetails->getFullName(),
+            $this->getSkeletonTemplate('lego/Controller/EntityLegoController.php'),
+            [
+                'namespace' => 'App',
+                'entity_class' => $input->getArgument('entity-class')
+            ]
+        );
+        $generator->writeChanges();
+        $this->writeSuccessMessage($io);
+    }
+
+    private function createFormType(InputInterface $input, ConsoleStyle $io, Generator $generator){
+        $controllerClassNameDetails = $generator->createClassNameDetails(
+            $input->getArgument('entity-class'),
+            'Configurator\\',
+            'Configurator'
+        );
+    }
+
+    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
+    {
+        $entityClassDetails = $generator->createClassNameDetails(
+            Validator::entityExists($input->getArgument('entity-class'), $this->entityHelper->getEntitiesForAutocomplete()),
+            'Entity\\'
+        );
+        $io->text('Creat a configurator for ' . $entityClassDetails->getFullName(). ' ' .
+            ($input->getArgument('form')? 'with form':'without form'));
+
+
+        $this->createConfigurator($input, $io, $generator);
+        $this->createController($input, $io, $generator);
+        if($input->getArgument('form')) {
+            $this->createFormType($input, $io, $generator);
+        }
         $io->text('Next: Open your new controller class and add some pages!');
     }
     public function configureDependencies(DependencyBuilder $dependencies)
@@ -74,6 +144,10 @@ final class MakeLego extends AbstractMaker
             Annotation::class,
             'annotations'
         );
+    }
+
+    private function getSkeletonTemplate($templateName){
+        return __DIR__.'/../Resources/skeleton/'.$templateName;
     }
     private function isTwigInstalled()
     {
