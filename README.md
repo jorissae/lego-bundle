@@ -72,13 +72,23 @@ security:
             - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/, role: ROLE_USER }
 ```
-5: create user (php bin/console idk:create:user)
+4 bis: With fos_user:
+```yaml
+idk_lego:
+    route_login: fos_user_security_check
+```  
+5: create user 
+```  
+php bin/console idk:create:user
+```  
+or (fosUser)
+```  
+php bin/console fos:user:create 
+```  
 6: composer require server
 7: bin/console server:run 0.0.0.0:8000
 
-With fos_user:
-idk_lego:
-    route_login: fos_user_security_check
+
  ===> For Symfony 3.X
 
 TODO 
@@ -98,23 +108,23 @@ CURRENT v alpha
 - Rupteur [X]
 - Group [ ]
 - Form auto [X]
-- Call template (ViewParams)[X]
-- Url object (LegoPath) [X]
+- Call template (ViewParams)[X] all object pass to the view is a ViewParams
+- Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
-- Multi component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [X]
+- Multi same component (CustomComponent or Multi ActionComponent) [ ]
+- Skeleton [X] //  SF4 maker [] In class
 - Reload line with item action [ ]
 - Move component [X]
-- Dashboard [ ]
+- Dashboard [ ] In class
 - Macro [ ]
-- Widget Systeme [ ]
+- Widget Systeme [ ] In class
 - Check double bindRequest in subComponent [ ]
 - ExportField [X]
 - Doc [ ]
 
 v beta
 
-- work without fosuser (optional) [ ]
+- work without fosuser (optional) [X]
 - Gestion ROLE [ ]
 
 Symfony 4
