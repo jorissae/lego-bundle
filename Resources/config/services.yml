@@ -29,9 +29,9 @@ services:
     Idk\LegoBundle\Service\Tag\ComponentChain: ~
     Idk\LegoBundle\Service\Tag\WidgetChain:
         arguments: [!tagged lego.widget]
-    #Idk\LegoBundle\Maker\:
-    #    resource: '../../Maker'
-    #    tags: [maker.command]
+    Idk\LegoBundle\Maker\:
+        resource: '../../Maker'
+        tags: [maker.command]
 
     lego.service.export:
         class:  '%lego.service.export.class%'
