@@ -11,7 +11,7 @@ services:
 
     _defaults:
         autowire: true
-        public: true
+        public: false
         autoconfigure: true
 
     Idk\LegoBundle\Command\:
@@ -26,7 +26,8 @@ services:
     Idk\LegoBundle\Service\LegoHeaderInterface: '@Idk\LegoBundle\Service\Header'
     Idk\LegoBundle\Service\Footer: ~
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
-    Idk\LegoBundle\Service\Tag\ComponentChain: ~
+    Idk\LegoBundle\Service\Tag\ComponentChain:
+        public: true #bootstraping service
     Idk\LegoBundle\Service\Tag\WidgetChain:
         arguments: [!tagged lego.widget]
     Idk\LegoBundle\Maker\:
@@ -40,7 +41,6 @@ services:
 
 
     lego.service.meta_entity_manager:
-        public: false
         class:  '%lego.service.meta_entity_manager.class%'
         arguments: ["@doctrine.orm.entity_manager"]
     Idk\LegoBundle\Service\MetaEntityManager: '@lego.service.meta_entity_manager'
