@@ -150,13 +150,13 @@ freamworks:
         engines: ['twig']
 ```
 
-Next (November 2017):
+Next todo:
 
 Check all type Form, (Sub-)Filter, Group, Custom action, itemAction and bulkAction
 
-Optimisation :
+Optimisation todo:
 
-Pager, Filter, Action, tbody imbrique, Upload file+, maker
+Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker
 
 
 Your config.yml
@@ -165,9 +165,9 @@ Your config.yml
 idk_lego:
     skin: skin-yellow
     layout: ::lego.html.twig
-    service_menu_class: AppBundle\Service\Menu
-    service_header_class: AppBundle\Service\Header
-    service_footer_class: AppBundle\Service\Footer
+    service_menu_class: App\Service\Menu
+    service_header_class: App\Service\Header
+    service_footer_class: App\Service\Footer
 ```
 
 Exemple Menu
