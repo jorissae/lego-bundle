@@ -3,7 +3,7 @@
 namespace <?= $namespace ?>;
 
 <?php if($generate_admin_type) {?>
-use App\Form\<?= $entity_class ?>LegoType;
+use App\Form\<?= $entity_class ?>Type;
 <?php } ?>
 use App\Entity\<?= $entity_class ?>;
 use Idk\LegoBundle\Configurator\AbstractDoctrineORMConfigurator;
@@ -27,10 +27,10 @@ class <?= $entity_class ?>Configurator extends AbstractDoctrineORMConfigurator
         ]);
 
         $this->addAddComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
-        $this->addAddComponent(CPNT\Form::class, [<?php if ($generate_admin_type){?>'form' => <?= $entity_class ?>LegoType::class<?php } ?>]);
+        $this->addAddComponent(CPNT\Form::class, [<?php if ($generate_admin_type){?>'form' => <?= $entity_class ?>Type::class<?php } ?>]);
 
         $this->addEditComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
-        $this->addEditComponent(CPNT\Form::class, [<?php if( $generate_admin_type){?>'form' => <?= $entity_class ?>LegoType::class<?php } ?>]);
+        $this->addEditComponent(CPNT\Form::class, [<?php if( $generate_admin_type){?>'form' => <?= $entity_class ?>Type::class<?php } ?>]);
 
         $this->addShowComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
         $this->addShowComponent(CPNT\Item::class, []);

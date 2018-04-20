@@ -16,29 +16,30 @@ final class CreateUserLegoCommand extends ContainerAwareCommand
 {
 
     private $parametersProvider;
+    private $em;
 
-    public function __construct(GlobalsParametersProvider $parametersProvider)
+    public function __construct(GlobalsParametersProvider $parametersProvider, EntityManagerInterface $em)
     {
         parent::__construct('idk:create:user');
         $this->parametersProvider = $parametersProvider;
+        $this->em = $em;
     }
 
     protected function configure()
     {
         $this
-            ->setName('idk:create:user')
+            ->setName('idk:user:create')
             ->setDescription('Create a new user');
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em =  $this->getContainer()->get('doctrine')->getManager();
         $helper = $this->getHelper('question');
 
         $class = $this->parametersProvider->getUserClass();
         $user = new $class();
-        $question = new ConfirmationQuestion('Enabled  ? ', false);
+        $question = new ConfirmationQuestion('Enabled  yes|no ? [yes]', true);
         $enabled = $helper->ask($input, $output, $question);
         $question = new Question('username  ? ');
         $username = $helper->ask($input, $output, $question);
@@ -58,8 +59,8 @@ final class CreateUserLegoCommand extends ContainerAwareCommand
         $user->setEmail($email);
         $user->setRoles(['ROLE_USER']);
 
-        $em->persist($user);
-        $em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
     }
 

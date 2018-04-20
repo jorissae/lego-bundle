@@ -74,7 +74,7 @@ final class MakeLego extends AbstractMaker
         }
     }
 
-    private function createConfigurator(InputInterface $input, ConsoleStyle $io, Generator $generator){
+    private function createConfigurator(InputInterface $input, ConsoleStyle $io, Generator $generator, $form){
         $controllerClassNameDetails = $generator->createClassNameDetails(
             $input->getArgument('entity-class'),
             'Configurator\\',
@@ -86,7 +86,7 @@ final class MakeLego extends AbstractMaker
             [
                 'namespace' => 'App',
                 'entity_class' => $input->getArgument('entity-class'),
-                'generate_admin_type' => false
+                'generate_admin_type' => $form
             ]
         );
         $generator->writeChanges();
@@ -111,12 +111,23 @@ final class MakeLego extends AbstractMaker
         $this->writeSuccessMessage($io);
     }
 
-    private function createFormType(InputInterface $input, ConsoleStyle $io, Generator $generator){
-        $controllerClassNameDetails = $generator->createClassNameDetails(
+    private function createFormType(InputInterface $input, ConsoleStyle $io, Generator $generator, $entityClassDetails){
+        $formTypeClassNameDetails = $generator->createClassNameDetails(
             $input->getArgument('entity-class'),
-            'Configurator\\',
-            'Configurator'
+            'Form\\',
+            'Type'
         );
+        $controllerPath = $generator->generateClass(
+            $formTypeClassNameDetails->getFullName(),
+            $this->getSkeletonTemplate('lego/Form/EntityLegoType.php'),
+            [
+                'namespace' => 'App',
+                'entity_class' => $input->getArgument('entity-class'),
+                'fields' => $this->mem->generateFormFields($entityClassDetails->getFullName())
+            ]
+        );
+        $generator->writeChanges();
+        $this->writeSuccessMessage($io);
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
@@ -129,10 +140,10 @@ final class MakeLego extends AbstractMaker
             ($input->getArgument('form')? 'with form':'without form'));
 
 
-        $this->createConfigurator($input, $io, $generator);
+        $this->createConfigurator($input, $io, $generator, $input->getArgument('form'));
         $this->createController($input, $io, $generator);
         if($input->getArgument('form')) {
-            $this->createFormType($input, $io, $generator);
+            $this->createFormType($input, $io, $generator,$entityClassDetails);
         }
         $io->text('Next: Open your new controller class and add some pages!');
     }

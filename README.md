@@ -11,7 +11,9 @@
                                             "Y8bbdP"        
                             -------------------------------------
                                   Light - Easy - Good - Open 
-```                
+```
+Work directly WITH USER LOGIN :-D
+                
 SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
 
 Build your pages simply by adding configurable components.
@@ -90,6 +92,7 @@ php bin/console fos:user:create
 php bin/console make:lego 
 ```  
 8: composer require server
+
 9: bin/console server:run 0.0.0.0:8000
 
 
@@ -116,7 +119,7 @@ CURRENT v alpha
 - Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
 - Multi same component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [X] //  SF4 maker [/] In class
+- Skeleton [X] //  SF4 maker [X] In class
 - Reload line with item action [ ]
 - Move component [X]
 - Dashboard [ ] In class
@@ -139,9 +142,6 @@ default_locale: fr
     translator:
        fallbacks: ['fr']
 ```
--require doctrine
--require templating
--require generator
 
 framework.yml:
 ```yaml
@@ -149,11 +149,6 @@ freamworks:
     templating:
         engines: ['twig']
 ```
-"doctrine/doctrine-bundle": "^1.6",
-"doctrine/orm": "^2.5",
-"symfony/templating":"^4.0.4",
-"friendsofsymfony/user-bundle": "~2.0"
-
 
 Next (November 2017):
 
@@ -161,7 +156,7 @@ Check all type Form, (Sub-)Filter, Group, Custom action, itemAction and bulkActi
 
 Optimisation :
 
-Pager,  Filter, Action, tbody imbrique, Upload file+
+Pager, Filter, Action, tbody imbrique, Upload file+, maker
 
 
 Your config.yml
