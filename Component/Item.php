@@ -7,6 +7,7 @@ use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Form\Type\AutoCompletionType;
 use Idk\LegoBundle\Service\MetaEntityManager;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class Item extends Component{
@@ -14,10 +15,12 @@ class Item extends Component{
     private $fields = [];
     private $entityId = null;
     private $formId = false;
+    private $formFactory;
     private $mem;
 
-    public function __construct(MetaEntityManager $mem){
+    public function __construct(MetaEntityManager $mem, FormFactoryInterface $formFactory){
         $this->mem = $mem;
+        $this->formFactory = $formFactory;
     }
 
     protected function init(){
@@ -60,7 +63,7 @@ class Item extends Component{
             $formView = null;
             $entity =  $this->getConfigurator()->getRepository()->find($this->entityId);
         }else{
-            $form = $this->get('form.factory')->createBuilder(FormType::class, null, [])
+            $form = $this->formFactory->createBuilder(FormType::class, null, [])
                 ->add($this->gid('entity_id'), AutoCompletionType::class, ['label' => 'lego.form.choice_entity' ,'class' => $this->getConfigurator()->getClass(), 'route' => $this->getConfigurator()->getPathRoute('autocompletion')])
                 ->getForm();
             $formView = $form->createView();

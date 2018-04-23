@@ -20,14 +20,16 @@ services:
     Idk\LegoBundle\Controller\:
          resource: '../../Controller'
 
-    Idk\LegoBundle\Service\Menu: ~
+    Idk\LegoBundle\Service\Menu:
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoMenuInterface: '@Idk\LegoBundle\Service\Menu'
-    Idk\LegoBundle\Service\Header: ~
+    Idk\LegoBundle\Service\Header:
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoHeaderInterface: '@Idk\LegoBundle\Service\Header'
-    Idk\LegoBundle\Service\Footer: ~
+    Idk\LegoBundle\Service\Footer:
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
-    Idk\LegoBundle\Service\Tag\ComponentChain:
-        public: true #bootstraping service
+
     Idk\LegoBundle\Service\Tag\WidgetChain:
         arguments: [!tagged lego.widget]
     Idk\LegoBundle\Maker\:
@@ -35,9 +37,7 @@ services:
         arguments: ["@maker.file_manager","@lego.service.meta_entity_manager","@maker.doctrine_entity_helper"]
         tags: [maker.command]
 
-    lego.service.export:
-        class:  '%lego.service.export.class%'
-        arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
+
 
 
     lego.service.meta_entity_manager:
@@ -93,3 +93,10 @@ services:
 
 
 
+    lego.service.export:
+        class:  '%lego.service.export.class%'
+        arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
+        public: true #https://stackoverflow.com/questions/49988904/symfony-how-to-call-private-services-in-bundle-controller
+
+    Idk\LegoBundle\Service\Tag\ComponentChain:
+        public: true #bootstraping service

@@ -8,9 +8,34 @@ services:
         autowire: true
         public: false
 
-    Idk\LegoBundle\Component\:
+    Idk\LegoBundle\Component\Action:
         shared: false
-        resource: '../../Component'
         tags: [lego.component]
+
+    Idk\LegoBundle\Component\Custom:
+        shared: false
+        tags: [lego.component]
+
+    Idk\LegoBundle\Component\Filter:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager']
+        tags: [lego.component]
+
+    Idk\LegoBundle\Component\Form:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager','@form.factory']
+        tags: [lego.component]
+
+    Idk\LegoBundle\Component\Item:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager', '@form.factory']
+        tags: [lego.component]
+
+    Idk\LegoBundle\Component\ListItems:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager']
+        tags: [lego.component]
+
+
 
 

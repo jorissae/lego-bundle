@@ -10,16 +10,16 @@ class UserWidget{
 
     private $em;
     private $security;
-    private $parameters;
+    private $userClass;
 
-    public function __construct(GlobalsParametersProvider $parameters, EntityManagerInterface $em, TokenStorageInterface $security) {
+    public function __construct($userClass, EntityManagerInterface $em, TokenStorageInterface $security) {
         $this->em = $em;
         $this->security = $security;
-        $this->parameters = $parameters;
+        $this->userClass = $userClass;
     }
 
     public function getUsers(){
-        return $this->em->getRepository($this->parameters->getUserClass())->findAll();
+        return $this->em->getRepository($this->userClass)->findAll();
     }
 
     public function getTemplate(){

@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Idk\LegoBundle\Lib\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Component{
 
@@ -168,5 +169,7 @@ abstract class Component{
     protected function trans($str, $vars= []){
         return $this->get('translator')->trans($str, $vars);
     }
+
+
 
 }

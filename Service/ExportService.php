@@ -3,6 +3,7 @@
 namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
@@ -41,6 +42,7 @@ class ExportService
 
     public function createCsvResponse(AbstractConfigurator $configurator){
         $allIterator = $configurator->getAllIterator();
+        $csv = [];
         foreach($this->getExportFields($configurator->getEntityName()) as $field){
             $csv[0][] = $field->getHeader();
         }
@@ -62,6 +64,7 @@ class ExportService
      */
     public function createExcelSheet(AbstractConfigurator $configurator)
     {
+
         $objPHPExcel = new \PHPExcel();
 
         $objWorksheet = $objPHPExcel->getActiveSheet();
@@ -103,17 +106,23 @@ class ExportService
 
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
 
+
         if (ob_get_length()) ob_end_clean();
         return $objWriter;
     }
 
-    public function createResponseForExcel($writer)
+    public function createResponseForExcel(\PHPExcel_Writer_Excel2007 $writer)
     {
+        if(!class_exists('\ZipArchive')){
+            throw new \Exception('ZipArchive not found install it apt-get install php-zip or http://php.net/manual/fr/zip.installation.php');
+        }
         $response = new StreamedResponse(
             function () use ($writer) {
                 $writer->save('php://output');
             }
         );
+
+        //$response = new Response($writer->save('php://output'));
 
         $response->headers->set('Content-Type', 'application/download');
         $filename = 'export.xlsx';

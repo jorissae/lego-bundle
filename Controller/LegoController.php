@@ -223,7 +223,8 @@ abstract class LegoController extends Controller
         if($response){
             return $response;
         }
-        return $this->get("lego.service.export")->getDownloadableResponse($configurator, $request->get('format'));
+        $return =  $this->get("lego.service.export")->getDownloadableResponse($configurator, $request->get('format'));
+        return $return;
     }
 
     protected function doComponentAction(AbstractConfigurator $configurator, Request $request){
