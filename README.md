@@ -74,14 +74,14 @@ security:
             - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/, role: ROLE_USER }
 ```
-4 bis: With fos_user:
+4 bis: With fos_user (or another):
 ```yaml
 idk_lego:
     route_login: fos_user_security_check
 ```  
 5: create user 
 ```  
-php bin/console idk:create:user
+php bin/console idk:user:create
 ```  
 or (fosUser)
 ```  
