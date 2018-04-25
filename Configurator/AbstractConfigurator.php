@@ -41,6 +41,8 @@ abstract class AbstractConfigurator
 
     private $indexTemplate = 'IdkLegoBundle:Default:index.html.twig';
 
+    private $title;
+
     protected $page = 1;
 
     protected $orderBy = '';
@@ -48,6 +50,8 @@ abstract class AbstractConfigurator
     protected $orderDirection = '';
 
     protected $container;
+
+    protected $entityClassName;
 
     private $isBuild = false;
 
@@ -61,10 +65,11 @@ abstract class AbstractConfigurator
 
     private $parent = null;
 
-    public function __construct($container, AbstractConfigurator $parent = null)
+    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null)
     {
         if($parent) $this->setParent($parent);
         $this->container = $container;
+        $this->entityClassName = $entityClassName;
         $this->build();
     }
 
@@ -76,10 +81,12 @@ abstract class AbstractConfigurator
     abstract public function getType($item,$columnName);
 
     public function getEntityName(){
-        if($this::ENTITY_CLASS_NAME == self::ENTITY_CLASS_NAME) {
-            throw new \Exception('Entity class name empty. Put const ENTITY_CLASS_NAME in your configurator');
-        }
-        return $this::ENTITY_CLASS_NAME;
+        return $this->entityClassName ?? $this::ENTITY_CLASS_NAME;
+    }
+
+    public function setEntityClassName($entityClassName){
+        die($entityClassName);
+        $this->entityClassName = $entityClassName;
     }
 
 
@@ -120,7 +127,7 @@ abstract class AbstractConfigurator
     }
 
     public function getTitle() {
-        return $this::TITLE;
+        return $this->title ?? $this::TITLE;
     }
 
     public function getSubTitle() {
@@ -631,6 +638,11 @@ abstract class AbstractConfigurator
         $this->get('session')->set($this->getId(), $componentSessionStorage);
         return $this;
     }
+
+    public function setTitle($title){
+        $this->title = $title;
+    }
+
 
 
 

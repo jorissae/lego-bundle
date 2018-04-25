@@ -38,6 +38,7 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $loader->load('form.yml');
         $loader->load('components.yml');
         $loader->load('widgets.yml');
+        $loader->load('actions.yml');
 
         $configuration = new Configuration();
         $processedConfig =  $this->processConfiguration($configuration, $configs);

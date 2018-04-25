@@ -1,0 +1,5 @@
+lego_index:
+    path:      /lgo/{entity}/{index}
+    defaults:
+        page: 1
+        _controller: lego.action.index

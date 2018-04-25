@@ -1,0 +1,14 @@
+parameters:
+    lego.action.index.class: Idk\LegoBundle\Action\IndexAction
+services:
+
+    _defaults:
+        autowire: true
+        public: false
+
+    lego.action.index:
+        class: '%lego.action.index.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments]
+
+

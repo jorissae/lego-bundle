@@ -2,11 +2,11 @@
 namespace Idk\LegoBundle\Service;
 
 
+use Couchbase\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Annotation\Entity as Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
-
-
+use Idk\LegoBundle\Lib\MetaEntity;
 
 
 class MetaEntityManager implements MetaEntityManagerInterface
@@ -138,6 +138,34 @@ class MetaEntityManager implements MetaEntityManagerInterface
             }
         }
         return $return;
+    }
+
+    public function getMetaDataEntities(): array{
+        $r = new AnnotationReader();
+        $return = [];
+        foreach($this->em->getMetadataFactory()->getAllMetadata() as $metadata){
+            $reflectionClass = new \ReflectionClass($metadata->getName());
+            $annotation = $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
+            if($annotation){
+                $shortName = $annotation->getName() ?? strtolower(substr($metadata->getName() , strrpos($metadata->getName(), '\\') + 1));
+                if(key_exists($shortName, $return)){
+                    throw new \Exception('
+                        The shortname '. $shortName .' of the class '.$metadata->getName().' is already 
+                        use in the class '.$return[$shortName]->getName().'. Use class annotation '.Annotation\Entity::class.':
+                        @Lego\Entity(name="'.$shortName.'2") for exemple');
+                }
+                $return[$shortName] = new MetaEntity($shortName, $metadata, $annotation);
+            }
+        }
+        return $return;
+    }
+
+    public function getMetaDataEntitie($shortName): MetaEntity{
+       return $this->getMetaDataEntities()[$shortName];
+    }
+
+    public function getEntityManager(): EntityManagerInterface{
+        return $this->em;
     }
 
 
