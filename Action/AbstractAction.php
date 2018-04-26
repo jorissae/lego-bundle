@@ -20,6 +20,7 @@ abstract class AbstractAction
     use ControllerTrait;
     protected $mem;
     protected $container;
+    protected $configurator = null;
 
     public function __construct(Container $container, MetaEntityManager $mem){
         $this->mem = $mem;
@@ -32,6 +33,10 @@ abstract class AbstractAction
         return $this($request);
     }
 
+    public function setConfigurator(AbstractConfigurator $configurator){
+        $this->configurator = $configurator;
+    }
+
     public function getEntityManager(){
         return $this->mem->getEntityManager();
     }
@@ -41,6 +46,7 @@ abstract class AbstractAction
     }
 
     public function getConfigurator(Request $request){
+        if($this->configurator) return $this->configurator;
         $metaEntity = $this->mem->getMetaDataEntity($request->get('entity'));
         return  $metaEntity->getConfigurator($this->container);
     }

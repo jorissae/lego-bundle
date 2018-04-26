@@ -68,7 +68,7 @@ abstract class AbstractConfigurator
 
     private $pathParameters = [];
 
-    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = null)
+    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
     {
         if($parent) $this->setParent($parent);
         $this->container = $container;
@@ -77,7 +77,7 @@ abstract class AbstractConfigurator
         $this->build();
     }
 
-    public function setPathParameters($pathParameters){
+    public function setPathParameters(array $pathParameters){
         $this->pathParameters = $pathParameters;
     }
 
@@ -93,7 +93,6 @@ abstract class AbstractConfigurator
     }
 
     public function setEntityClassName($entityClassName){
-        die($entityClassName);
         $this->entityClassName = $entityClassName;
     }
 
@@ -624,7 +623,7 @@ abstract class AbstractConfigurator
             return $this->getPathParameters(['id' => $item->getId()]);
     }
 
-    public function getPathParameters($params = []){
+    public function getPathParameters(array $params = []){
         return array_merge($params, $this->pathParameters);
     }
 

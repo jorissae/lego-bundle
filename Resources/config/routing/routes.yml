@@ -18,7 +18,6 @@ lego_bulk:
     defaults:
         _controller: lego.action.bulk
 
-
 lego_editinplace:
     path:      /lgo/{entity}/eip
     defaults:
@@ -54,3 +53,13 @@ lego_ordercomponents:
     path:      /lgo/{entity}/oc/{suffix_route}
     defaults:
         _controller: lego.action.order_components
+
+lego_ordercomponentsreset:
+    path:      /lgo/{entity}/ocreset/{suffix_route}
+    defaults:
+        _controller: lego.action.order_components_reset
+
+lego_autocompletion:
+    path:      /lgo/{entity}/ac/{suffix_route}
+    defaults:
+        _controller: lego.action.autocompletion

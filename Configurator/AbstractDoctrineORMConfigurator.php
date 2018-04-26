@@ -27,7 +27,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
 
 
-    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = null)
+    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
     {
         parent::__construct($container, $parent, $entityClassName, $pathParameters);
     }

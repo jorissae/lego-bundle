@@ -1,10 +1,25 @@
 <?php
 namespace Idk\LegoBundle\Traits;
 
-use Idk\LegoBundle\Service\MetaEntityManager;
+use Idk\LegoBundle\Service\Tag\ActionChain;
+use Idk\LegoBundle\Action\AutoCompletionAction;
+use Idk\LegoBundle\Action\EditInPlaceAction;
+use Idk\LegoBundle\Action\IndexAction;
+use Idk\LegoBundle\Action\OrderComponentsAction;
+use Idk\LegoBundle\Action\OrderComponentsResetAction;
+use Idk\LegoBundle\Action\ExportAction;
+use Idk\LegoBundle\Action\ShowAction;
+use Idk\LegoBundle\Action\ComponentAction;
+use Idk\LegoBundle\Action\AddAction;
+use Idk\LegoBundle\Action\BulkAction;
+use Idk\LegoBundle\Action\DeleteAction;
+use Idk\LegoBundle\Action\EditAction;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Idk\LegoBundle\Service\MetaEntityManager;
 
 trait Controller
 {
@@ -16,6 +31,10 @@ trait Controller
         return new $class($this->container);
     }
 
+    protected function getResponse(string $action, Request $request): Response{
+        return $this->get(ActionChain::class)->getResponse($action, $this->getConfigurator(), $request);
+    }
+
 
     /**
      * The index action
@@ -25,7 +44,7 @@ trait Controller
      */
     public function indexAction(Request $request)
     {
-        return parent::doIndexAction($this->getConfigurator(), $request);
+        return $this->getResponse(IndexAction::class, $request);
     }
 
     /**
@@ -38,9 +57,9 @@ trait Controller
      *
      * @return array
      */
-    public function showAction(Request $request, $id)
+    public function showAction(Request $request)
     {
-        return parent::doShowAction($this->getConfigurator(), $id, $request);
+        return $this->getResponse(ShowAction::class, $request);
     }
 
     /**
@@ -52,7 +71,7 @@ trait Controller
      */
     public function addAction(Request $request)
     {
-        return parent::doAddAction($this->getConfigurator(), $request);
+        return $this->getResponse(AddAction::class, $request);
     }
 
     /**
@@ -67,7 +86,7 @@ trait Controller
      */
     public function editAction(Request $request, $id)
     {
-        return parent::doEditAction($this->getConfigurator(), $id, $request);
+        return $this->getResponse(EditAction::class, $request);
     }
 
     /**
@@ -80,9 +99,9 @@ trait Controller
      *
      * @return array
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request)
     {
-        return parent::doDeleteAction($this->getConfigurator(), $id, $request);
+        return $this->getResponse(DeleteAction::class, $request);
     }
 
     /**
@@ -96,34 +115,7 @@ trait Controller
      */
     public function exportAction(Request $request)
     {
-        return parent::doExportAction($this->getConfigurator(), $request);
-    }
-
-
-    /**
-     * The export action
-     *
-     * @param string $_format
-     *
-     * @Route("/logs")
-     * @Method({"GET", "POST"})
-     * @return array
-     */
-    public function logsAction(Request $request)
-    {
-        return parent::doLogsAction($this->getConfigurator(), $request);
-    }
-
-    /**
-     * The log action
-     *
-     * @Route("/log/{id}")
-     * @Method({"GET", "POST"})
-     * @return array
-     */
-    public function logAction(Request $request, $id)
-    {
-        return parent::doLogAction($this->getConfigurator(), $id, $request);
+        return $this->getResponse(ExportAction::class, $request);
     }
 
 
@@ -136,7 +128,7 @@ trait Controller
      */
     public function editInPlaceAction(Request $request)
     {
-        return parent::doEditInPlaceAction($this->getConfigurator(), $request);
+        return $this->getResponse(EditInPlaceAction::class, $request);
     }
 
     /**
@@ -148,7 +140,7 @@ trait Controller
  */
     public function orderComponentsAction(Request $request)
     {
-        return parent::doOrderComponents($this->getConfigurator(), $request);
+        return $this->getResponse(OrderComponentsAction::class, $request);
     }
 
     /**
@@ -160,7 +152,7 @@ trait Controller
      */
     public function orderComponentsResetAction(Request $request)
     {
-        return parent::doOrderComponentsReset($this->getConfigurator(), $request);
+        return $this->getResponse(OrderComponentsResetAction::class, $request);
     }
 
     /**
@@ -172,7 +164,7 @@ trait Controller
      */
     public function autoCompletionAction(Request $request)
     {
-        return parent::doAutoCompleteAction($this->getConfigurator(), $request);
+        return $this->getResponse(AutoCompletionAction::class, $request);
     }
 
     /**
@@ -184,7 +176,7 @@ trait Controller
      */
     public function componentAction(Request $request)
     {
-        return parent::doComponentAction($this->getConfigurator(), $request);
+        return $this->getResponse(ComponentAction::class, $request);
     }
 
     /**
@@ -196,7 +188,7 @@ trait Controller
      */
     public function bulkAction(Request $request)
     {
-        return parent::doBulkAction($this->getConfigurator(), $request);
+        return $this->getResponse(BulkAction::class, $request);
     }
 
 }
