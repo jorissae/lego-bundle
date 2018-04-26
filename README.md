@@ -108,6 +108,8 @@ CURRENT v alpha
 - Onglet component [ ]
 - Default LayoutBase [X]
 - Custom Bulk Action [ ]
+- Ressource Action [ ]
+- Menu auto [ ]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
 - Upload File [X]
