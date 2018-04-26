@@ -46,10 +46,6 @@ abstract class LegoController extends Controller
         $this->addFlash('info',$msg);
     }
 
-    protected function addFlash(string $type,string $msg){
-        $this->get('session')->getFlashBag()->add($type, $msg);
-    }
-
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
         $redirect = null;
         $componentResponses = $configurator->bindRequest($request);
@@ -184,7 +180,7 @@ abstract class LegoController extends Controller
         $this ->get('event_dispatcher')->dispatch(
             LegoEvents::onResetOrderComponents,
             new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $order));
-        return $this->redirectToRoute($configurator->getPathRoute($request->get('suffix_route')));
+        return $this->redirectToRoute($configurator->getPathRoute($request->get('suffix_route')), $configurator->getPathParameters());
     }
 
     protected function doAutoCompleteAction(AbstractConfigurator $configurator, Request $request){

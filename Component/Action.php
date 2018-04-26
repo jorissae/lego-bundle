@@ -36,21 +36,21 @@ class Action extends Component{
                 $this->actions[] = $action;
             }else{
                 if($action == self::ADD){
-                    $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add')]);
+                    $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add'), 'params'=>$this->getConfigurator()->getPathParameters()]);
                 }elseif($action == self::BACK){
                     if($request->headers->get('referer')){
                         $action = new ListAction('lego.action.back', ['url'=>$request->headers->get('referer')]);
                     }else{
-                        $action = new ListAction('lego.action.back', ['route'=>$this->getConfigurator()->getPathRoute('index')]);
+                        $action = new ListAction('lego.action.back', ['route'=>$this->getConfigurator()->getPathRoute('index'), 'params'=>$this->getConfigurator()->getPathParameters()]);
                     }
                 }elseif($action == self::LOGS){
-                    $action = new ListAction('lego.action.logs', ['route'=>$this->getConfigurator()->getPathRoute('logs')]);
+                    $action = new ListAction('lego.action.logs', ['route'=>$this->getConfigurator()->getPathRoute('logs'), 'params' => $this->getConfigurator()->getPathParameters()]);
                 }elseif($action == self::EXPORT_CSV) {
-                    $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>['format'=>'csv']]);
+                    $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'csv'])]);
                 }elseif($action == self::EXPORT_XLSX) {
-                    $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>['format'=>'xlsx']]);
+                    $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'xlsx'])]);
                 }elseif($action == self::ORDER_COMPONENTS_RESET) {
-                    $action = new ListAction('lego.action.reset_order_components', ['route' => $this->getConfigurator()->getPathRoute('ordercomponentsreset'), 'params'=>['suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()]]);
+                    $action = new ListAction('lego.action.reset_order_components', ['route' => $this->getConfigurator()->getPathRoute('ordercomponentsreset'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()])]);
                 }
                 $this->actions[] = $action;
             }

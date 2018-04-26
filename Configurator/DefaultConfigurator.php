@@ -21,8 +21,8 @@ class DefaultConfigurator extends AbstractDoctrineORMConfigurator
         $this->addIndexComponent(CPNT\Action::class, ['actions' => [CPNT\Action::ADD]]);
         $this->addIndexComponent(CPNT\Filter::class, []);
         $this->addIndexComponent(CPNT\ListItems::class, [
-        'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
-        'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE]
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE],
+            'bulk_actions' => [CPNT\ListItems::BULK_ACTION_DELETE]
         ]);
 
         $this->addAddComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
@@ -33,10 +33,5 @@ class DefaultConfigurator extends AbstractDoctrineORMConfigurator
 
         $this->addShowComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
         $this->addShowComponent(CPNT\Item::class, []);
-    }
-
-    public function getControllerPath()
-    {
-        return 'app_jeulego';
     }
 }

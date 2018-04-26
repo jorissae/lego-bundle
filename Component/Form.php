@@ -71,7 +71,7 @@ class Form extends Component{
                     $response = new SuccessComponentResponse($this->trans('lego.form.success.add'));
                     $this->resetForm();
                 }
-                $response->setRedirect($this->getConfigurator()->getPathRoute('index'));
+                $response->setRedirect($this->getConfigurator()->getPathRoute('index'), $this->getConfigurator()->getPathParameters());
                 return $response;
             } else {
                 return new ErrorComponentResponse('lego.form.error');

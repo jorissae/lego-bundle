@@ -1,5 +1,56 @@
 lego_index:
-    path:      /lgo/{entity}/{index}
+    path:      /lgo/{entity}
     defaults:
-        page: 1
         _controller: lego.action.index
+
+lego_add:
+    path:      /lgo/{entity}/add
+    defaults:
+        _controller: lego.action.add
+
+lego_component:
+    path:      /lgo/{entity}/component/{cid}/{suffix_route}
+    defaults:
+        _controller: lego.action.component
+
+lego_bulk:
+    path:      /lgo/{entity}/bulk/{cid}/{ida}
+    defaults:
+        _controller: lego.action.bulk
+
+
+lego_editinplace:
+    path:      /lgo/{entity}/eip
+    defaults:
+        _controller: lego.action.editinplace
+
+lego_show:
+    path:      /lgo/{entity}/{id}/show
+    defaults:
+        _controller: lego.action.show
+    requirements:
+        id: \d+
+
+lego_delete:
+    path:      /lgo/{entity}/{id}/delete
+    defaults:
+        _controller: lego.action.delete
+    requirements:
+        id: \d+
+
+lego_edit:
+    path:      /lgo/{entity}/{id}/edit
+    defaults:
+        _controller: lego.action.edit
+    requirements:
+        id: \d+
+
+lego_export:
+    path:      /lgo/{entity}/export.{format}
+    defaults:
+        _controller: lego.action.export
+
+lego_ordercomponents:
+    path:      /lgo/{entity}/oc/{suffix_route}
+    defaults:
+        _controller: lego.action.order_components

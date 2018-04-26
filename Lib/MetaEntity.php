@@ -27,12 +27,12 @@ class MetaEntity
     public function getConfigurator($container){
         $class = $this->annotation->getConfig();
         if($class) {
-            return new $class($container);
+            return new $class($container, null, $this->getName(), ['entity'=>$this->shortname]);
         }else{
-            $c = new DefaultConfigurator($container, null, $this->getName());
+            $c = new DefaultConfigurator($container, null, $this->getName(), ['entity'=>$this->shortname]);
             $c->setTitle($this->annotation->getTitle() ?? 'lego.'.$this->shortname.'.title');
-            return $c;
         }
+        return $c;
     }
 
 }

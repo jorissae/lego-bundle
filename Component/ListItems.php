@@ -120,15 +120,15 @@ class ListItems extends Component{
         if($action == self::ENTITY_ACTION_DELETE){
             $this->entityActions[] = new EntityAction('lego.action.delete', ['icon'=>'remove', 'css_class' => 'btn-danger' ,'modal' => $this->getPartial('modal_delete')]);
         }else if($action == self::ENTITY_ACTION_EDIT){
-            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit')]);
+            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit'), 'params'=>$this->getConfigurator()->getPathParameters()]);
         }else if($action == self::ENTITY_ACTION_SHOW){
-            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show')]);
+            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show'), 'params'=>$this->getConfigurator()->getPathParameters()]);
         }
     }
 
     public function addPredefinedBulkAction($action){
         if($action == self::BULK_ACTION_DELETE){
-            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>['type'=>'delete']]);
+            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>$this->getConfigurator()->getPathParameters(['type'=>'delete'])]);
         }
     }
 

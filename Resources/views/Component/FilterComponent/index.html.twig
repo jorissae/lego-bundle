@@ -1,5 +1,5 @@
 {% if filter.filters|length > 0 %}
-        <form method="POST" action="{{ path(configurator.getPathRoute()) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
+        <form method="POST" action="{{ path(configurator.getPathRoute(), configurator.getPathParameters()) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
 
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -30,7 +30,7 @@
 
                 <div class="box-footer">
                     <button class="btn btn-primary apply_filter" name="filter" value="filter" type="submit">{{ 'lego.action.filter'|trans }}</button>
-                    <a href="{{ path(configurator.getPathRoute(), {reset:1}) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                    <a href="{{ path(configurator.getPathRoute(), configurator.getPathParameters({reset:1})) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
                 </div>
             </div>
 

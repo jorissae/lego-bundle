@@ -160,7 +160,7 @@ class MetaEntityManager implements MetaEntityManagerInterface
         return $return;
     }
 
-    public function getMetaDataEntitie($shortName): MetaEntity{
+    public function getMetaDataEntity($shortName): MetaEntity{
        return $this->getMetaDataEntities()[$shortName];
     }
 

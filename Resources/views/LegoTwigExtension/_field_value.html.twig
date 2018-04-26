@@ -80,9 +80,10 @@
                     <input  class="lego-edit-in-place-input" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ configurator.getValue(item, columnName) }}"/>
             {% endif %}
             {% endif %}
+            {%  set pathEip = configurator.getEditInPlacePath() %}
             <span
                     {#  Attention: appeler avec siblings de edit-in-place-input #}
-                    data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
+                    data-target="{{ path(pathEip.route,pathEip.params) }}"
                     data-item-id="{{ item.id }}" data-column-name="{{ columnName }}"
                     data-class="{{ field.editInPlaceClass }}"
                     data-line="line-{{ item.id }}"

@@ -149,7 +149,7 @@ abstract class Component{
         $params['cid'] = $this->getId();
         $params['suffix_route'] = $this->suffixRoute;
         $configurator = ($this->getConfigurator()->getParent())? $this->getConfigurator()->getParent():$this->getConfigurator();
-        return new Path($configurator->getPathRoute('component'), $params);
+        return new Path($configurator->getPathRoute('component'), $configurator->getPathParameters($params));
     }
 
 

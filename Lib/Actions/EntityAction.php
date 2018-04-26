@@ -128,10 +128,11 @@ class EntityAction
      */
     public function getPath($item)
     {
-        if($this->params){
-            return new Path($this->route, $this->getParams());
-        } elseif($this->route){
-            return new Path($this->route, ['id' => $item->getId()]);
+
+        if($this->route){
+            $params = $this->getParams();
+            $params['id'] = $params['id'] ?? $item->getId();
+            return new Path($this->route, $params);
         }
 
         return null;
