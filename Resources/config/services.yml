@@ -21,7 +21,7 @@ services:
          resource: '../../Controller'
 
     Idk\LegoBundle\Service\Menu:
-        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
+        arguments: ["@lego.service.meta_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoMenuInterface: '@Idk\LegoBundle\Service\Menu'
     Idk\LegoBundle\Service\Header:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]

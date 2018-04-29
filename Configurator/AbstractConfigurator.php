@@ -74,7 +74,12 @@ abstract class AbstractConfigurator
         $this->container = $container;
         $this->entityClassName = $entityClassName;
         $this->pathParameters = $pathParameters;
-        $this->build();
+        if($this->getControllerPath() !== 'lego'){
+           unset($this->pathParameters['entity']); //TODO rename in lego_entity
+        }
+        if($container) { //another methode for no build TODO (need a empty configurateur and a executable configurator ??)
+            $this->build();
+        }
     }
 
     public function setPathParameters(array $pathParameters){

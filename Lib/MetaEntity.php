@@ -24,6 +24,11 @@ class MetaEntity
         return $this->metadata->getName();
     }
 
+    public function getLibelle(){
+        if($this->annotation->getTitle()) return $this->annotation->getTitle();
+        return $this->shortname;
+    }
+
     public function getConfigurator($container){
         $class = $this->annotation->getConfig();
         if($class) {
@@ -33,6 +38,15 @@ class MetaEntity
             $c->setTitle($this->annotation->getTitle() ?? 'lego.'.$this->shortname.'.title');
         }
         return $c;
+    }
+
+    public function getIcon(){
+        return $this->annotation->getIcon();
+    }
+
+    public function getPath(){
+        $c = $this->getConfigurator(null);
+        return new Path($c->getPathRoute('index'), $c->getPathParameters());
     }
 
 }

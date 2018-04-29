@@ -13,6 +13,7 @@ class Entity
         $this->name = $options['name'] ?? null;
         $this->config = $options['config'] ?? null;
         $this->title = $options['title'] ?? null;
+        $this->icon = $options['icon'] ?? 'rocket';
     }
 
     public function getConfig(){
@@ -25,5 +26,9 @@ class Entity
 
     public function getTitle(){
         return $this->title;
+    }
+
+    public function getIcon(){
+        return $this->icon;
     }
 }
