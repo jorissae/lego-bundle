@@ -43,6 +43,7 @@ class LegoTwigExtension extends \Twig_Extension
         return $template->render(array(
             'field'        => $field,
             'configurator'      => $component->getConfigurator(),
+            'component' => $component,
             'item'     => $item,
             'string_value' => $field->getStringValue($component->getConfigurator(), $item),
             'real_value' => $field->getValue($component->getConfigurator(), $item)

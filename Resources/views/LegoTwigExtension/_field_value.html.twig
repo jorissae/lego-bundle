@@ -15,11 +15,15 @@
            data-target="{{ path(configurator.getEditInPlaceUrl()['path']) }}"
            data-item-id="{{ item.id }}"
            data-column-name="{{ columnName }}"
-           data-line="line-{{ item.id }}"
+           data-line="{{ component.gid('line') }}-{{ item.id }}"
            data-reload="{{ field.editInPlaceReload }}"
            data-value="{{ value }}"></i>
     {% else %}
-        <span class="lego-edit-in-place" id="span-{{ columnName }}-{{ item.id }}" data-column-name="{{ columnName }}" data-item-id="{{ item.id }}">
+        <span class="lego-edit-in-place" id="{{ component.gid('span') }}-{{ columnName }}-{{ item.id }}"
+              data-input-id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}"
+              data-span-in-id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}"
+              data-column-name="{{ columnName }}"
+              data-item-id="{{ item.id }}">
             {% if real_value != '' and string_value is not null %}
                 {% if real_value and type == 'date' %}
                     {{ real_value| date('d/m/Y') }}
@@ -34,9 +38,9 @@
                 <em class="fa fa-pencil"></em>
             {% endif %}
         </span>
-        <span id="span-in-{{ columnName }}-{{ item.id }}" style="display:none;">
+        <span id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}" style="display:none;">
             {% if type == 'object' %}
-                <select  id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ string_value }}" class="form-control col-md-12">
+                <select  id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ string_value }}" class="form-control col-md-12">
                     {% for v,l in configurator.listOptionsForCombobox(item,field) %}
                         <option value="{{ v }}" {% if configurator.getValue(item, columnName) and configurator.getValue(item, columnName).id == v %} selected {% endif %}>{{ l }}</option>
                     {% endfor %}
@@ -53,7 +57,7 @@
                 </script>
                 {% endif %}
             {% elseif type == 'datetime' %}
-                <input  class="lego-edit-in-place-input" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y H:i') }}"/>
+                <input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y H:i') }}"/>
                 {% if field.editInPlaceJs %}
                 <script>
                     $(function(){
@@ -65,7 +69,7 @@
                 </script>
                 {% endif %}
             {% elseif type == 'time' %}
-                <input  class="lego-edit-in-place-input" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('H:i') }}"/>
+                <input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('H:i') }}"/>
                 <script>
                     $(function(){
                         $('#input-{{ columnName }}-{{ item.id }}').timepicker({
@@ -75,9 +79,9 @@
                 </script>
             {% else %}
                 {% if '\n' in configurator.getValue(item, columnName) %}
-                    <textarea  class=" form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}">{{ configurator.getValue(item, columnName) }}</textarea>
+                    <textarea  class=" form-control col-md-12" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}">{{ configurator.getValue(item, columnName) }}</textarea>
                 {% else %}
-                    <input  class="lego-edit-in-place-input" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ configurator.getValue(item, columnName) }}"/>
+                    <input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ configurator.getValue(item, columnName) }}"/>
             {% endif %}
             {% endif %}
             {%  set pathEip = configurator.getEditInPlacePath() %}
@@ -85,17 +89,25 @@
                     {#  Attention: appeler avec siblings de edit-in-place-input #}
                     data-target="{{ path(pathEip.route,pathEip.params) }}"
                     data-item-id="{{ item.id }}" data-column-name="{{ columnName }}"
+                    data-span-id="{{ component.gid('span') }}-{{ columnName }}-{{ item.id }}"
+                    data-input-id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}"
+                    data-span-in-id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}"
                     data-class="{{ field.editInPlaceClass }}"
-                    data-line="line-{{ item.id }}"
+                    data-line="{{ component.gid('line') }}-{{ item.id }}"
                     data-reload="{{ field.editInPlaceReload }}"
                     class="lego-edit-in-place-ok">
                     <i style="color:#00a65a;" class="jsa-click fa fa-save" title="{{ 'lego.action.save' | trans }}"></i>
             </span>
-            <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="lego-edit-in-place-close">
+            <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}"
+                  data-span-id="{{ component.gid('span') }}-{{ columnName }}-{{ item.id }}"
+                  data-span-in-id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}"
+                  class="lego-edit-in-place-close">
                 <i style="color:#dd4b39;" class="jsa-click fa fa-close" title="Annuler"></i>
             </span>
             {% if type == 'object' %}
-                <span data-item-id="{{ item.id }}" data-column-name="{{ columnName }}" class="lego-edit-in-place-eraser">
+                <span data-item-id="{{ item.id }}"
+                      data-input-id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}"
+                      data-column-name="{{ columnName }}" class="lego-edit-in-place-eraser">
                 <i class="jsa-click fa fa-eraser" title="Supprimer"></i>
             </span>
             {% endif %}
