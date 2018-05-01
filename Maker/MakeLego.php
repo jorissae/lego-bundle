@@ -13,7 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
-use Symfony\Bundle\MakerBundle\Doctrine\DoctrineEntityHelper;
+use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -32,7 +32,7 @@ final class MakeLego extends AbstractMaker
     private $mem;
     private $entityHelper;
 
-    public function __construct(FileManager $fileManager, MetaEntityManager $mem, DoctrineEntityHelper $entityHelper)
+    public function __construct(FileManager $fileManager, MetaEntityManager $mem, DoctrineHelper $entityHelper)
     {
         $this->fileManager = $fileManager;
         $this->mem = $mem;

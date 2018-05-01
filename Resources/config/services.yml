@@ -34,7 +34,7 @@ services:
         arguments: [!tagged lego.widget]
     Idk\LegoBundle\Maker\:
         resource: '../../Maker'
-        arguments: ["@maker.file_manager","@lego.service.meta_entity_manager","@maker.doctrine_entity_helper"]
+        arguments: ["@maker.file_manager","@lego.service.meta_entity_manager","@maker.doctrine_helper"]
         tags: [maker.command]
 
 
