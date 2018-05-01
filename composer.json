@@ -29,5 +29,11 @@
     "autoload": {
         "psr-0": { "Idk\\LegoBundle": "" }
     },
+    "extra": {
+        "symfony": {
+            "id": "01CA0KS0X2NF3C6CG95VYF14NJ",
+            "allow-contrib": true
+        }
+    },
     "target-dir": "Idk/LegoBundle"
 }
