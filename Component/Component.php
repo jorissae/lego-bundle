@@ -52,7 +52,7 @@ abstract class Component{
     abstract protected function getTemplateParameters();
 
     public function isMovable(){
-        return false;
+        return $this->getOption('movable',false);
     }
 
     //params reporting from query to ajax request

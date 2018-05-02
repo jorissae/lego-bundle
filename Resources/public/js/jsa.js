@@ -98,9 +98,11 @@ $(function(){
     });
 
     $( ".jsa-widget-container" ).sortable({
-        revert: true,
         items: "div.jsa-widget",
         placeholder: "jsa-widget-holder",
+        tolerance: 'pointer',
+        revert: 'invalid',
+        forceHelperSize: true,
         update: function(evt,ui){
             jsa.save_widget($(this));
         }
