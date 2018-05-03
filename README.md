@@ -96,13 +96,16 @@ php bin/console make:lego
 9: bin/console server:run 0.0.0.0:8000
 
 
- ===> For Symfony 3.X
+ ===> For Symfony 4.X
 
 TODO 
 
-CURRENT v alpha
+CURRENT v alpha 0.1.2
 
-- Log history [ ]
+- Log history [ ] other bundle
+- Media [ ] other bundle
+- Mail [ ] other bundle
+- Import [ ] other bundle
 - Pagination [X]
 - Field-route [X]
 - Onglet component [ ]
@@ -125,10 +128,12 @@ CURRENT v alpha
 - Reload line with item action [ ]
 - Move component [X]
 - Dashboard [ ] In class
-- Macro [ ]
+- Macro [/] In class
 - Widget Systeme [ ] In class
 - Check double bindRequest in subComponent [ ]
+- Check execution components orders (filter after list ?)
 - ExportField [X]
+- Flex [X]
 - Doc [ ]
 
 v beta

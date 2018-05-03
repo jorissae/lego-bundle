@@ -32,12 +32,18 @@ services:
 
     Idk\LegoBundle\Service\Tag\WidgetChain:
         arguments: [!tagged lego.widget]
+
+    lego.injector.chain:
+        class: Idk\LegoBundle\Service\Tag\InjectorChain
+        arguments: [!tagged lego.injector]
+
     Idk\LegoBundle\Maker\:
         resource: '../../Maker'
-        arguments: ["@maker.file_manager","@lego.service.meta_entity_manager","@maker.doctrine_helper"]
+        arguments: ["@maker.file_manager","@lego.service.meta_entity_manager","@maker.doctrine_helper", "@lego.injector.chain"]
         tags: [maker.command]
 
-
+    Idk\LegoBundle\Service\LegoInjector:
+        tags: [lego.injector]
 
 
     lego.service.meta_entity_manager:

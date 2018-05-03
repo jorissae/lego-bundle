@@ -2,6 +2,7 @@
 namespace Idk\LegoBundle\Maker;
 use Doctrine\Common\Annotations\Annotation;
 use Idk\LegoBundle\Service\MetaEntityManager;
+use Idk\LegoBundle\Service\Tag\InjectorChain;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\FileManager;
@@ -31,12 +32,14 @@ final class MakeLego extends AbstractMaker
     private $fileManager;
     private $mem;
     private $entityHelper;
+    private $injectorChain;
 
-    public function __construct(FileManager $fileManager, MetaEntityManager $mem, DoctrineHelper $entityHelper)
+    public function __construct(FileManager $fileManager, MetaEntityManager $mem, DoctrineHelper $entityHelper, InjectorChain $injectorChain)
     {
         $this->fileManager = $fileManager;
         $this->mem = $mem;
         $this->entityHelper = $entityHelper;
+        $this->injectorChain = $injectorChain;
     }
     public static function getCommandName(): string
     {
@@ -104,6 +107,7 @@ final class MakeLego extends AbstractMaker
             $this->getSkeletonTemplate('lego/Controller/EntityLegoController.php'),
             [
                 'namespace' => 'App',
+                'traits' => $this->injectorChain->getControllerTraits(),
                 'entity_class' => $input->getArgument('entity-class')
             ]
         );
