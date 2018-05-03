@@ -2,12 +2,13 @@
 
 namespace Idk\LegoBundle\Widget;
 
+use Idk\LegoBundle\Widget\Widget;
 use Idk\LegoBundle\Service\GlobalsParametersProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Service\MetaEntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class EntityWidget{
+class EntityWidget extends Widget {
 
     private $mem;
 

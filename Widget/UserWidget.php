@@ -2,11 +2,12 @@
 
 namespace Idk\LegoBundle\Widget;
 
+use Idk\LegoBundle\Widget\Widget;
 use Idk\LegoBundle\Service\GlobalsParametersProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UserWidget{
+class UserWidget extends Widget {
 
     private $em;
     private $security;

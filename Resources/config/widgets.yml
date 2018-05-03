@@ -14,3 +14,6 @@ services:
         arguments: ["@lego.service.meta_entity_manager"]
         tags: [lego.widget]
 
+    Idk\LegoBundle\Widget\ListWidget:
+        arguments: ["@lego.widget.chain"]
+        tags: [lego.widget]

@@ -29,9 +29,10 @@ services:
     Idk\LegoBundle\Service\Footer:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
-
-    Idk\LegoBundle\Service\Tag\WidgetChain:
+    lego.widget.chain:
+        class: Idk\LegoBundle\Service\Tag\WidgetChain
         arguments: [!tagged lego.widget]
+        #public: true
 
     lego.injector.chain:
         class: Idk\LegoBundle\Service\Tag\InjectorChain
@@ -63,6 +64,12 @@ services:
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension
+        #arguments: ["@service_container"]
+        tags:
+            -  { name: twig.extension }
+
+    lego.twig.widget_extension:
+        class: Idk\LegoBundle\Twig\WidgetTwigExtension
         arguments: ["@service_container"]
         tags:
             -  { name: twig.extension }
