@@ -2,16 +2,22 @@
 namespace Idk\LegoBundle\Service\Tag;
 
 
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class WidgetChain
 {
     private $widgets = [];
+    private $session;
 
-    public function __construct(iterable $widgets)
+    const SESSION_STORAGE = 'lego.widget';
+
+    public function __construct(iterable $widgets, Session $session)
     {
 
         foreach($widgets as $widget){
             $this->widgets[$widget->getId()] = $widget;
         }
+        $this->session = $session;
     }
 
     public function addWidget($widget)
@@ -40,14 +46,31 @@ class WidgetChain
         return 'IdkLegoBundle:Widget:list.html.twig';
     }
 
+    public function saveInSession($order){
+        $this->session->set(self::SESSION_STORAGE, $order);
+    }
+
+    public function getOrder(){
+        return $this->session->get(self::SESSION_STORAGE);
+    }
 
 
     public function getUseWidgets(){
-        $this->getWidgets();
+        $useWidgets = [];
+        foreach($this->getOrder() as $id){
+            $useWidgets[] = $this->widgets[$id];
+        }
+        return $useWidgets;
     }
 
     public function getNoUseWidgets(){
-        return $this->getWidgets();
+        $noUseWidget = [];
+        foreach($this->getWidgets() as $id => $widget){
+            if(!in_array($id,$this->getOrder())){
+                $noUseWidget[] = $widget;
+            }
+        }
+        return $noUseWidget;
     }
 
     public function getCurrentWidgetId(){

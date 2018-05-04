@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Idk\LegoBundle\LegoEvents;
 use Idk\LegoBundle\Events\UpdateOrganizationWidgetsEvent;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 
 final class WidgetSaveAction
@@ -26,6 +27,7 @@ final class WidgetSaveAction
 
     public function __invoke(Request $request): Response
     {
+        $this->widgetChain->saveInSession($request->request->get('order'));
         $this->eventDispatcher->dispatch(
             LegoEvents::onMoveWidgets,
             new UpdateOrganizationWidgetsEvent($request->request->get('order')));

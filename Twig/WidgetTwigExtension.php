@@ -30,7 +30,7 @@ class WidgetTwigExtension extends \Twig_Extension
     {
         //$template = $env->loadTemplate($this->widgetsTemplate);
         $template = $env->loadTemplate($this->wc->getWidgetsTemplate());
-        return $template->render(['widgets'=>$this->wc->getWidgets()]);
+        return $template->render(['widgets'=>$this->wc->getUseWidgets()]);
     }
 
     public function renderWidget(\Twig_Environment $env, $widget)

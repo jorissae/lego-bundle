@@ -33,8 +33,7 @@ services:
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
     lego.widget.chain:
         class: Idk\LegoBundle\Service\Tag\WidgetChain
-        arguments: [!tagged lego.widget]
-        #public: true
+        arguments: [!tagged lego.widget, '@session']
 
     lego.injector.chain:
         class: Idk\LegoBundle\Service\Tag\InjectorChain

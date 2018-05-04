@@ -120,7 +120,7 @@ $(function(){
             success     : function(data) {
                 $("#jsa-widget-in-list-" + widget_id).hide('slide');
                 $( ".jsa-widget-container").append($(data));
-                jsa.save_widget();
+                jsa.save_widget($( ".jsa-widget-container"));
             }
         });
     });
@@ -128,7 +128,7 @@ $(function(){
     $('body').on('click','.jsa-remove-widget',function(evt){
         var widget_id = $(this).attr('data-widget-id');
         $("#jsa-widget-" + widget_id).remove();
-        jsa.save_widget();
+        jsa.save_widget($( ".jsa-widget-container"));
     });
     jsa.init_tabs();
 
