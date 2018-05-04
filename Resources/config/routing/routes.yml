@@ -63,3 +63,18 @@ lego_autocompletion:
     path:      /lgo/{entity}/ac/{suffix_route}
     defaults:
         _controller: lego.action.autocompletion
+
+lego_widget_add:
+    path:  /lgoint/widget/add
+    defaults:
+        _controller: lego.action.widget_add
+lego_widget_get:
+    path:  /lgoint/widget/get/{widget}
+    defaults:
+        _controller: lego.action.widget_get
+
+
+lego_widget_save:
+    path:  /lgoint/widget/save
+    defaults:
+        _controller: lego.action.widget_save

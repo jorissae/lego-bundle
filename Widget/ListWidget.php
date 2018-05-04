@@ -10,7 +10,7 @@ class ListWidget extends Widget{
 
     private $provider;
 
-    public function __construct(WidgetChain $provider){
+    public function __construct($provider){
         $this->provider = $provider;
     }
 

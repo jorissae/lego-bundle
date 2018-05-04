@@ -15,26 +15,16 @@ class LegoTwigExtension extends \Twig_Extension
      */
     protected $environment;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
 
 
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('render_field_value',array($this,'renderFieldValue'), array('is_safe' => array('html'),'needs_environment' => true))
+            new \Twig_SimpleFunction('render_field_value',array($this,'renderFieldValue'), array('is_safe' => array('html'),'needs_environment' => true)),
         ];
     }
+
 
 
     public function renderFieldValue(\Twig_Environment $env, Component $component, Field $field, $item)

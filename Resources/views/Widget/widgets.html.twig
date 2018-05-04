@@ -1,9 +1,11 @@
+<div class="row">
 <div class="col-md-12">
-    <span style="margin-right:15px; margin-bottom:5px;" class="btn btn-primary show_widget pull-right"><i class="fa fa-plus"></i> {{ 'widget.add'|trans }}</span>
+    <span style="margin-right:15px; margin-bottom:5px;" data-width="50%" data-url="{{ path('lego_widget_add') }}" data-title="{{ 'widget.add'|trans }}" class="btn btn-primary jsa-open-popup pull-right"><i class="fa fa-plus"></i> {{ 'widget.add'|trans }}</span>
     <div style="clear:both"></div>
-    <div class="jsa-widget-container" data-save="{{ path('app_widget_save') }}">
+    <div class="jsa-widget-container" data-widget-order-save="{{ path('lego_widget_save') }}">
         {% for widget in widgets %}
             {{ render_widget(widget) }}
         {%  endfor %}
     </div>
+</div>
 </div>

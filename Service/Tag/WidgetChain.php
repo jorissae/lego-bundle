@@ -8,14 +8,19 @@ class WidgetChain
 
     public function __construct(iterable $widgets)
     {
+
         foreach($widgets as $widget){
-            $this->widgets[] = $widget;
+            $this->widgets[$widget->getId()] = $widget;
         }
     }
 
     public function addWidget($widget)
     {
         $this->widgets[] = $widget;
+    }
+
+    public function get(string $id){
+        return $this->widgets[$id];
     }
 
 
@@ -29,6 +34,10 @@ class WidgetChain
 
     public function getWidgetsTemplate(){
         return 'IdkLegoBundle:Widget:widgets.html.twig';
+    }
+
+    public function getWidgetsListTemplate(){
+        return 'IdkLegoBundle:Widget:list.html.twig';
     }
 
 

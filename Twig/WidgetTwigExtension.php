@@ -8,10 +8,14 @@ use Psr\Container\ContainerInterface;
 class WidgetTwigExtension extends \Twig_Extension
 {
 
-    private $manager;
+    private $widgetsTemplate;
+    private $widgetTemplate;
+    private $wc;
 
-    public function __construct(){
-        //$this->manager = $container->get('lego.widget.chain');
+    public function __construct(WidgetChain $wc, string $widgetsTemplate, string $widgetTemplate){
+        $this->widgetsTemplate = $widgetsTemplate;
+        $this->widgetTemplate = $widgetTemplate;
+        $this->wc = $wc;
     }
 
     public function getFunctions()
@@ -24,16 +28,16 @@ class WidgetTwigExtension extends \Twig_Extension
 
     public function renderUseWidgets(\Twig_Environment $env)
     {
-        $template = $env->loadTemplate($this->manager->getWidgetsTemplate());
-        return $template->render(['widgets' => []]);
+        //$template = $env->loadTemplate($this->widgetsTemplate);
+        $template = $env->loadTemplate($this->wc->getWidgetsTemplate());
+        return $template->render(['widgets'=>$this->wc->getWidgets()]);
     }
 
     public function renderWidget(\Twig_Environment $env, $widget)
     {
-        $template = $env->loadTemplate($this->manager->getTemplate());
-        $widget = $this->manager->get($widget);
-        $params = array_merge($widget->getParams(),['widget'=>$widget]);
-        return $template->render($params);
+        //$template = $env->loadTemplate($this->widgetTemplate);
+        $template = $env->loadTemplate($this->wc->getTemplate());
+        return $template->render(['widget'=>$widget]);
     }
 
     public function getName()

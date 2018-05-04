@@ -11,6 +11,9 @@ parameters:
     lego.action.component.class: Idk\LegoBundle\Action\ComponentAction
     lego.action.order_components_reset.class: Idk\LegoBundle\Action\OrderComponentsResetAction
     lego.action.autocompletion.class: Idk\LegoBundle\Action\AutoCompletionAction
+    lego.action.widget_add.class: Idk\LegoBundle\Action\WidgetAddAction
+    lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
+    lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
 
 services:
 
@@ -81,6 +84,22 @@ services:
         arguments: ["@service_container","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments, lego.action]
 
+
     Idk\LegoBundle\Service\Tag\ActionChain:
         arguments: [!tagged lego.action]
         public: true
+
+    lego.action.widget_add:
+        class: '%lego.action.widget_add.class%'
+        arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.widget_save:
+        class: '%lego.action.widget_save.class%'
+        arguments: ["@lego.widget.chain", "@twig", "@event_dispatcher"]
+        tags: [controller.service_arguments]
+
+    lego.action.widget_get:
+        class: '%lego.action.widget_get.class%'
+        arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]

@@ -6,6 +6,8 @@ parameters:
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
     lego.service.gedmo_translatable_field_manager.class: Idk\LegoBundle\Service\GedmoTranslatableFieldManager
     lego.service.password_encoder.class: Idk\LegoBundle\Service\PasswordEncoder
+    lego.widgets.template: 'IdkLegoBundle:Widget:replacer.html.twig'
+    lego.widget.template: 'IdkLegoBundle:Widget:one_replacer.html.twig'
 
 services:
 
@@ -64,15 +66,14 @@ services:
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension
-        #arguments: ["@service_container"]
         tags:
-            -  { name: twig.extension }
+            -  { name: twig.extension  }
 
-    lego.twig.widget_extension:
+    lego.widget.twig.extension:
         class: Idk\LegoBundle\Twig\WidgetTwigExtension
-        arguments: ["@service_container"]
+        arguments: ["@lego.widget.chain","%lego.widgets.template%", "%lego.widget.template%"]
         tags:
-            -  { name: twig.extension }
+            -  { name: twig.extension  }
 
     lego.listener.upload_file:
         class: Idk\LegoBundle\Listener\UploadFileListener
