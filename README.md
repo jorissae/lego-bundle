@@ -112,7 +112,7 @@ CURRENT v alpha 0.1.2
 - Default LayoutBase [X]
 - Custom Bulk Action [ ]
 - Ressource Action [ ]
-- Menu auto [ ]
+- Menu auto [X]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
 - Upload File [X]
@@ -124,12 +124,12 @@ CURRENT v alpha 0.1.2
 - Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
 - Multi same component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [X] //  SF4 maker [X] In class
+- Skeleton [X] //  SF4 maker [X]
 - Reload line with item action [ ]
 - Move component [X]
 - Dashboard [ ] In class
 - Macro [/] In class
-- Widget Systeme [ ] In class
+- Widget Systeme [X]
 - Check double bindRequest in subComponent [ ]
 - Check execution components orders (filter after list ?)
 - ExportField [X]
@@ -159,7 +159,7 @@ freamworks:
 
 Next todo:
 
-Check all type Form, (Sub-)Filter, Group, Custom action, itemAction and bulkAction
+Check all type Form, (Sub-)Filter, Multi-widget xhr-widget, Group, Custom action, itemAction and bulkAction
 
 Optimisation todo:
 
