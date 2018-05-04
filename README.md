@@ -29,7 +29,7 @@ freamworks:
   templating:
       engines: ['twig']
 ```
-3: add compsoer.json
+3: add in composer.json
 ```json
 "repositories": [
         {
@@ -42,7 +42,7 @@ freamworks:
         "prestigejo/legobundle": "dev-master",
     }
 ```
-4: If do not use FOSuser create App\Entity\User and In security.yml 
+4: If do not use FOSuser create App\Entity\User and in security.yml 
 ```yaml
 security:
     providers:
