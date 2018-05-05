@@ -22,10 +22,18 @@ class LegoTwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('render_field_value',array($this,'renderFieldValue'), array('is_safe' => array('html'),'needs_environment' => true)),
+            new \Twig_SimpleFunction('get_class', array($this, 'getClass'))
         ];
     }
 
 
+
+    public function getClass($object)
+    {
+        if(is_object($object)) {
+            return (new \ReflectionClass($object))->getName();
+        }
+    }
 
     public function renderFieldValue(\Twig_Environment $env, Component $component, Field $field, $item)
     {

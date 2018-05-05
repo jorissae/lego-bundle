@@ -1,6 +1,6 @@
 {% set columnName = field.name %}
 {% set path = configurator.getPathByField(item,field) %}
-
+{% set class_obj = '' %}
 {% if field.isEditInPlace(item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
     {% set type = configurator.editInplaceInputType(item,columnName,field.editInPlaceClass) %}
     {% if type == 'boolean'  %}
@@ -40,17 +40,19 @@
         </span>
         <span id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}" style="display:none;">
             {% if type == 'object' %}
+                {% set class_obj = get_class(configurator.getValue(item, columnName)) %}
                 <select  id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ string_value }}" class="form-control col-md-12">
+                    {# TODO load with ajax after click with retur user... during the loading page is crazy !#}
                     {% for v,l in configurator.listOptionsForCombobox(item,field) %}
                         <option value="{{ v }}" {% if configurator.getValue(item, columnName) and configurator.getValue(item, columnName).id == v %} selected {% endif %}>{{ l }}</option>
                     {% endfor %}
                 </select>
             {% elseif type == 'date' %}
-                <input  {% if field.editInPlacePlaceholder %} placeholder="{{ field.editInPlacePlaceholder }}" {% endif %}  class="edit-in-place-input form-control col-md-12" id="input-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y') }}"/>
+                <input  {% if field.editInPlacePlaceholder %} placeholder="{{ field.editInPlacePlaceholder }}" {% endif %}  class="edit-in-place-input form-control col-md-12" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('d/m/Y') }}"/>
                 {% if field.editInPlaceJs %}
                 <script>
                     $(function(){
-                        $('#input-{{ columnName }}-{{ item.id }}').datepicker({
+                        $('#{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}').datepicker({
                             'dateFormat':'dd/mm/yy',
                         });
                     });
@@ -61,7 +63,7 @@
                 {% if field.editInPlaceJs %}
                 <script>
                     $(function(){
-                        $('#input-{{ columnName }}-{{ item.id }}').datetimepicker({
+                        $('#{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}').datetimepicker({
                             'dateFormat':'dd/mm/yy',
                             'timeFormat':'HH:mm',
                         });
@@ -72,7 +74,7 @@
                 <input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}" type="text" value="{{ real_value| date('H:i') }}"/>
                 <script>
                     $(function(){
-                        $('#input-{{ columnName }}-{{ item.id }}').timepicker({
+                        $('#{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}').timepicker({
                             'timeFormat':'HH:mm',
                         });
                     });
@@ -92,7 +94,7 @@
                     data-span-id="{{ component.gid('span') }}-{{ columnName }}-{{ item.id }}"
                     data-input-id="{{ component.gid('input') }}-{{ columnName }}-{{ item.id }}"
                     data-span-in-id="{{ component.gid('span-in') }}-{{ columnName }}-{{ item.id }}"
-                    data-class="{{ field.editInPlaceClass }}"
+                    data-class="{{ class_obj}}"
                     data-line="{{ component.gid('line') }}-{{ item.id }}"
                     data-reload="{{ field.editInPlaceReload }}"
                     class="lego-edit-in-place-ok">

@@ -111,7 +111,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     public function listOptionsForCombobox($object,Field $line){
         $em = $this->getEntityManager();
         $edit = $line->getEditInPlace();
-        $class = (isset($edit['class']))? $edit['class']:$this->getClass()->getAssociationMapping($line->getName())['targetEntity'];
+        $class = (isset($edit['class']))? $edit['class']:$this->getClassMetaData()->getAssociationMapping($line->getName())['targetEntity'];
         $method = (isset($edit['method']))? $edit['method']:'findAll';
         if(isset($edit['object-in-argument']) and $edit['object-in-argument']){
             $list = $em->getRepository($class)->$method($object);
