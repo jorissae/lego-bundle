@@ -78,7 +78,7 @@ class WidgetChain
     }
 
     public function saveWidget($request){
-        $order = $request->request->get('order');
+        $order = $request->request->get('sort');
         if($order == null) $order = [];
     }
 

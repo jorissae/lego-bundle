@@ -14,6 +14,7 @@ parameters:
     lego.action.widget_add.class: Idk\LegoBundle\Action\WidgetAddAction
     lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
     lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
+    lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
 
 services:
 
@@ -66,7 +67,7 @@ services:
 
     lego.action.export:
         class: '%lego.action.export.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@service_container","@lego.service.meta_entity_manager", "@lego.service.export"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.sort_components:
@@ -102,4 +103,9 @@ services:
     lego.action.widget_get:
         class: '%lego.action.widget_get.class%'
         arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.dashboard:
+        class: '%lego.action.dashboard.class%'
+        arguments: ["@twig"]
         tags: [controller.service_arguments]

@@ -64,17 +64,22 @@ lego_autocompletion:
     defaults:
         _controller: lego.action.autocompletion
 
-lego_widget_add:
+idk_lego_widget_add:
     path:  /lgoint/widget/add
     defaults:
         _controller: lego.action.widget_add
-lego_widget_get:
+idk_lego_widget_get:
     path:  /lgoint/widget/get/{widget}
     defaults:
         _controller: lego.action.widget_get
 
 
-lego_widget_save:
+idk_lego_widget_save:
     path:  /lgoint/widget/save
     defaults:
         _controller: lego.action.widget_save
+
+idk_lego_dashboard:
+    path:  /dashboard
+    defaults:
+        _controller: lego.action.dashboard

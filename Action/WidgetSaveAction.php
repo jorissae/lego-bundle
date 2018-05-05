@@ -27,10 +27,10 @@ final class WidgetSaveAction
 
     public function __invoke(Request $request): Response
     {
-        $this->widgetChain->saveInSession($request->request->get('order'));
+        $this->widgetChain->saveInSession($request->request->get('sort'));
         $this->eventDispatcher->dispatch(
             LegoEvents::onMoveWidgets,
-            new UpdateOrganizationWidgetsEvent($request->request->get('order')));
+            new UpdateOrganizationWidgetsEvent($request->request->get('sort')));
         return new JsonResponse(['status'=>'ok']);
     }
 

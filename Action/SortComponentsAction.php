@@ -14,12 +14,12 @@ final class SortComponentsAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
-        $order = $configurator->getConfiguratorSessionStorage('order', []);
-        $order[$request->get('suffix_route')] = $request->request->get('order');
-        $configurator->setConfiguratorSessionStorage('order', $order);
+        $order = $configurator->getConfiguratorSessionStorage('sort', []);
+        $order[$request->get('suffix_route')] = $request->request->get('sort');
+        $configurator->setConfiguratorSessionStorage('sort', $order);
         $this ->get('event_dispatcher')->dispatch(
             LegoEvents::onMoveComponents,
-            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $request->request->get('order')));
+            new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $request->request->get('sort')));
         return new JsonResponse(['status'=>'ok']);
     }
 

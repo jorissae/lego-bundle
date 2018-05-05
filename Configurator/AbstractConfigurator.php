@@ -511,7 +511,7 @@ abstract class AbstractConfigurator
         if (isset($this->components[$routeSuffix])) {
 
             $components = $this->components[$routeSuffix];
-            $order = $this->getConfiguratorSessionStorage('order');
+            $order = $this->getConfiguratorSessionStorage('sort');
             if ($order != null and isset($order[$routeSuffix])) {
                 return $this->sortComponents($components, $order[$routeSuffix]);
             } else {

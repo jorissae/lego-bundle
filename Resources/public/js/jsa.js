@@ -155,10 +155,7 @@ var jsa = {
         $( ".jsa-widget-container").find('div.jsa-widget').each(function(elm){
             order.push($(this).attr('data-widget-id'));
         });
-        console.log(order);
-        console.log(container.attr('data-widget-order-save'));
-        console.log('ok');
-        $.ajax({type: 'post', url: container.attr('data-widget-order-save'), data: {order:order}});
+        $.ajax({type: 'post', url: container.attr('data-widget-sort-save'), data: {sort:order}});
     },
 
     update_elm: function (elm, data){

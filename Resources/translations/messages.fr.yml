@@ -19,9 +19,13 @@ lego.flash.error: Erreur
 lego.flash.warning: Attention
 lego.flash.info: Information
 lego.flash.success: Succès
+lego.widget.no_name: Sans nom
+lego.widget.no_description: Sans déscription
+lego.widget.none: Aucun widget
 lego.action.view_all: Voir tout
 lego.action.see_profil: Voir votre profil
 lego.action.signe_out: Logout
+lego.action.add_widget: Ajouter un widget
 lego.form.login_username: Nom d'utilisateur
 lego.form.login_password: Mot de passe
 lego.form.remember_me: Se souvenir de moi

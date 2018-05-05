@@ -107,7 +107,6 @@ services:
     lego.service.export:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
-        public: true #https://stackoverflow.com/questions/49988904/symfony-how-to-call-private-services-in-bundle-controller
 
     Idk\LegoBundle\Service\Tag\ComponentChain:
         public: true #bootstraping service

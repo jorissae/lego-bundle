@@ -23,7 +23,7 @@ abstract class Widget
 
     public function getName()
     {
-        return 'widget.noname';
+        return 'lego.widget.no_name';
     }
 
     public function getIcon()
@@ -33,7 +33,7 @@ abstract class Widget
 
     public function getDescription()
     {
-        return 'widget.noDescription';
+        return 'lego.widget.no_description';
     }
 
     public function getId()

@@ -35,9 +35,9 @@ class Menu implements LegoMenuInterface
         $return[] = new MenuItem('ADMIN', ['type'=>MenuItem::TYPE_HEADER]);
         $return[] = new MenuItem('Dashboard', [
             'icon' => 'dashboard',
-            'path' => new Path('homepage'),
+            'path' => new Path('idk_lego_dashboard'),
             'labels'=> [new LabelItem(5, ['css_class'=>'bg-red'])],
-            'children' => [new MenuItem('index',['path'=>new Path('homepage'), 'icon'=>'circle-o'])]
+            'children' => [new MenuItem('index',['path'=>new Path('idk_lego_dashboard'), 'icon'=>'circle-o'])]
         ]);
 
         foreach($this->mem->getMetaDataEntities() as $metaDataEntity){

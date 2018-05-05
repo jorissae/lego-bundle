@@ -26,7 +26,7 @@ class Breaker
         $this->fieldName= $fieldName;
         $this->id = md5($this->fieldName . self::$NBINSTANCE);
         $this->enable = (isset($options['enable']))? $options['enable']:false;
-        $this->order = (isset($options['order']))? $options['order']:'ASC';
+        $this->sort = (isset($options['sort']))? $options['sort']:'ASC';
 
 
         $footer = (isset($options['footer']))? $options['footer']:null;

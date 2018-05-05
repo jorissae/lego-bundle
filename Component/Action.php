@@ -15,7 +15,7 @@ class Action extends Component{
     const LOGS = 'logs';
     const EXPORT_CSV = 'export_csv';
     const EXPORT_XLSX = 'export_xlsx';
-    const ORDER_COMPONENTS_RESET = 'sort_components_reset';
+    const SORT_COMPONENTS_RESET = 'sort_components_reset';
 
     protected function init(){
         return;
@@ -49,7 +49,7 @@ class Action extends Component{
                     $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'csv'])]);
                 }elseif($action == self::EXPORT_XLSX) {
                     $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'xlsx'])]);
-                }elseif($action == self::ORDER_COMPONENTS_RESET) {
+                }elseif($action == self::SORT_COMPONENTS_RESET) {
                     $action = new ListAction('lego.action.reset_sort_components', ['route' => $this->getConfigurator()->getPathRoute('sortcomponentsreset'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()])]);
                 }
                 $this->actions[] = $action;

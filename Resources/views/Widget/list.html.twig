@@ -4,7 +4,7 @@
         {%  set widget_show = 1 %}
         <div id="jsa-widget-in-list-{{ widget.id }}" class="box box-success box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-{{ widget.icon }}"></i>&nbsp;{{ widget.name|trans }}</h3> <i class="jsa-add-widget pull-right fa fa-plus" data-widget="{{ widget.id }}" data-url="{{ path('lego_widget_get',{'widget':widget.id}) }}"></i>
+                <h3 class="box-title"><i class="fa fa-{{ widget.icon }}"></i>&nbsp;{{ widget.name|trans }}</h3> <i class="jsa-add-widget pull-right fa fa-plus" data-widget="{{ widget.id }}" data-url="{{ path('idk_lego_widget_get',{'widget':widget.id}) }}"></i>
             </div>
             <div class="box-body">
                 {{ widget.description|trans }}
@@ -15,7 +15,7 @@
 {%  if widget_show == 0 %}
     <div class="box box-success box-solid">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ 'widget.none'|trans }}</h3>
+            <h3 class="box-title">{{ 'lego.widget.none'|trans }}</h3>
         </div>
     </div>
 {%  endif %}

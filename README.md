@@ -62,7 +62,7 @@ security:
             form_login:
                 login_path: idk_lego_security_login
                 check_path: idk_lego_security_check
-                default_target_path: /
+                default_target_path: idk_lego_dashboard
             logout:
                 path: /logout
                 target: /login
@@ -127,7 +127,7 @@ CURRENT v alpha 0.1.2
 - Skeleton [X] //  SF4 maker [X]
 - Reload line with item action [ ]
 - Move component [X]
-- Dashboard [ ] In class
+- Dashboard [X]
 - Macro [/] In class
 - Widget Systeme [X]
 - Check double bindRequest in subComponent [ ]
