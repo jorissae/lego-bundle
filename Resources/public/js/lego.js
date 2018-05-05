@@ -70,23 +70,21 @@ $(function(){
 
     $('body').on('click','.lego-edit-in-place',function(){
         $(this).hide();
-        $('#span-in-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).show();
-        $('#input-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).focus();
+        $('#'+ $(this).attr('data-span-in-id')).show();
+        $('#'+ $(this).attr('data-input-id')).focus();
 
         $("select.select2").select2();
     });
 
     $('body').on('click','.lego-edit-in-place-close',function(){
-        var columnName = $(this).attr('data-column-name');
-        var id = $(this).attr('data-item-id');
-        var span = $('#span-'+ columnName + '-' + id);
-        var span_in = $('#span-in-'+ columnName + '-' + id);
+        var span = $('#' + $(this).attr('data-span-id'));
+        var span_in = $('#'+$(this).attr('data-span-in-id'));
         span.show();
         span_in.hide();
     });
 
     $('body').on('click','.lego-edit-in-place-eraser',function(){
-        $('#input-'+ $(this).attr('data-column-name') + '-'+ $(this).attr('data-item-id')).val(null);
+        $('#'+$(this).attr('data-input-id')).val(null);
         $(this).siblings('.lego-edit-in-place-ok').click();
     });
 
@@ -136,15 +134,15 @@ $(function(){
         var cls = $(this).attr('data-class');
         var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
-        var input = $('#input-'+ columnName + '-' + id);
+        var input = $('#'+ $(this).attr('data-input-id'));
         var val = 0;
         if(input.attr('type') == 'checkbox'){
             val = input.is(':checked')
         }else{
             val = input.val();
         }
-        var span = $('#span-'+ columnName + '-' + id);
-        var span_in = $('#span-in-'+ columnName + '-' + id);
+        var span = $('#'+ $(this).attr('data-span-id'));
+        var span_in = $('#'+ $(this).attr('data-span-in-id'));
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),

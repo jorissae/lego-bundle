@@ -6,6 +6,8 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Component\Component;
+use Idk\LegoBundle\Service\Tag\ComponentChain;
+use Symfony\Component\Asset\Package;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Path;
 
@@ -40,6 +42,8 @@ abstract class AbstractConfigurator
 
     private $indexTemplate = 'IdkLegoBundle:Default:index.html.twig';
 
+    private $title;
+
     protected $page = 1;
 
     protected $orderBy = '';
@@ -47,6 +51,8 @@ abstract class AbstractConfigurator
     protected $orderDirection = '';
 
     protected $container;
+
+    protected $entityClassName;
 
     private $isBuild = false;
 
@@ -60,11 +66,24 @@ abstract class AbstractConfigurator
 
     private $parent = null;
 
-    public function __construct($container, AbstractConfigurator $parent = null)
+    private $pathParameters = [];
+
+    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
     {
         if($parent) $this->setParent($parent);
         $this->container = $container;
-        $this->build();
+        $this->entityClassName = $entityClassName;
+        $this->pathParameters = $pathParameters;
+        if($this->getControllerPath() !== 'lego'){
+           unset($this->pathParameters['entity']); //TODO rename in lego_entity
+        }
+        if($container) { //another methode for no build TODO (need a empty configurateur and a executable configurator ??)
+            $this->build();
+        }
+    }
+
+    public function setPathParameters(array $pathParameters){
+        $this->pathParameters = $pathParameters;
     }
 
     public function getId(){
@@ -75,10 +94,11 @@ abstract class AbstractConfigurator
     abstract public function getType($item,$columnName);
 
     public function getEntityName(){
-        if($this::ENTITY_CLASS_NAME == self::ENTITY_CLASS_NAME) {
-            throw new \Exception('Entity class name empty. Put const ENTITY_CLASS_NAME in your configurator');
-        }
-        return $this::ENTITY_CLASS_NAME;
+        return $this->entityClassName ?? $this::ENTITY_CLASS_NAME;
+    }
+
+    public function setEntityClassName($entityClassName){
+        $this->entityClassName = $entityClassName;
     }
 
 
@@ -119,7 +139,7 @@ abstract class AbstractConfigurator
     }
 
     public function getTitle() {
-        return $this::TITLE;
+        return $this->title ?? $this::TITLE;
     }
 
     public function getSubTitle() {
@@ -153,17 +173,15 @@ abstract class AbstractConfigurator
             if ($path == self::ROUTE_SUFFIX_SHOW) {
                 $route = $this->getPathRoute(self::ROUTE_SUFFIX_SHOW);
                 $params['id'] = $item->getId();
+                $params = $this->getPathParameters($params);
             }
         }
         return ['route' => $route, 'params' => $params];
     }
 
-    public function getEditInPlaceUrl()
+    public function getEditInPlacePath()
     {
-
-        return array(
-            'path' => $this->getPathByConvention(self::ROUTE_SUFFIX_EDIT_IN_PLACE),
-        );
+        return new Path($this->getPathByConvention(self::ROUTE_SUFFIX_EDIT_IN_PLACE), $this->getPathParameters());
     }
 
 
@@ -196,8 +214,7 @@ abstract class AbstractConfigurator
 
     function from_camel_case($str) {
           $str[0] = strtolower($str[0]);
-            $func = create_function('$c', 'return "_" . strtolower($c[1]);');
-            return preg_replace_callback('/([A-Z])/', $func, $str);
+            return preg_replace_callback('/([A-Z])/', function($c){ return "_" . strtolower($c[1]);}, $str);
     }
 
 
@@ -205,8 +222,7 @@ abstract class AbstractConfigurator
           if($capitalise_first_char) {
                   $str[0] = strtoupper($str[0]);
                     }
-            $func = create_function('$c', 'return strtoupper($c[1]);');
-            return preg_replace_callback('/_([a-z])/', $func, $str);
+            return preg_replace_callback('/_([a-z])/', function($c){ return "_" . strtolower($c[1]);}, $str);
     }
 
     public function getValue($item, $columnName)
@@ -292,13 +308,6 @@ abstract class AbstractConfigurator
             return 'object';
         }
     }
-
-
-    public function getExportFields(array $columns = null)
-    {
-        return $this->get('lego.service.meta_entity_manager')->generateExportFields($this->getEntityName(), $columns);
-    }
-
 
     public function getStringValue($item, $columnName)
     {
@@ -502,7 +511,7 @@ abstract class AbstractConfigurator
         if (isset($this->components[$routeSuffix])) {
 
             $components = $this->components[$routeSuffix];
-            $order = $this->getConfiguratorSessionStorage('order');
+            $order = $this->getConfiguratorSessionStorage('sort');
             if ($order != null and isset($order[$routeSuffix])) {
                 return $this->sortComponents($components, $order[$routeSuffix]);
             } else {
@@ -580,7 +589,9 @@ abstract class AbstractConfigurator
             $this->addChild($routeSuffix, $configurator);
             return $component;
         }else{
-            return $reflectionClass->newInstance($options, $this, $routeSuffix);
+            $this->componentsChain = $this->get(ComponentChain::class);
+            return $this->componentsChain->build($className, $options, $this, $routeSuffix);
+            return $this->get($className)->build($options, $this, $routeSuffix);//$reflectionClass->newInstance()->build($options, $this, $routeSuffix);
         }
 
     }
@@ -605,7 +616,7 @@ abstract class AbstractConfigurator
     }
 
     public function getPath($suffix = 'index', $params = []){
-        return new Path( $this->getPathRoute($suffix), $params);
+        return new Path( $this->getPathRoute($suffix), $this->getPathParameters($params));
     }
 
     public function getUrl($suffix, array $params = []){
@@ -614,7 +625,11 @@ abstract class AbstractConfigurator
     }
 
     public function getPathParams($item){
-            return ['id' => $item->getId()];
+            return $this->getPathParameters(['id' => $item->getId()]);
+    }
+
+    public function getPathParameters(array $params = []){
+        return array_merge($params, $this->pathParameters);
     }
 
     public function getConfiguratorSessionStorage($key, $default = null){
@@ -635,6 +650,15 @@ abstract class AbstractConfigurator
         $this->get('session')->set($this->getId(), $componentSessionStorage);
         return $this;
     }
+
+    public function setTitle($title){
+        $this->title = $title;
+    }
+
+    public function getControllerPath(){
+        return 'lego';
+    }
+
 
 
 

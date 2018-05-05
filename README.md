@@ -11,24 +11,108 @@
                                             "Y8bbdP"        
                             -------------------------------------
                                   Light - Easy - Good - Open 
-```                
-IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
+```
+Work directly WITH USER LOGIN :-D
+                
+SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
 
 Build your pages simply by adding configurable components.
 Add a filter, add a list, add a form then go
 
- ===> For Symfony 3.X
+1: composer create-project symfony/website-skeleton empty
+2: In framework.yml:
+```yaml
+freamworks:
+  default_locale: fr
+  translator:
+      fallbacks: ['fr']
+  templating:
+      engines: ['twig']
+```
+3: add in composer.json
+```json
+"repositories": [
+        {
+            "url": "https://github.com/prestigejo/lego-bundle.git",
+            "type": "git"
+        }
+
+    ],
+    "require": {
+        "prestigejo/legobundle": "dev-master",
+    }
+```
+4: If do not use FOSuser create App\Entity\User and in security.yml 
+```yaml
+security:
+    providers:
+        main:
+            entity: { class: App\Entity\User, property: username }
+    encoders:
+        App\Entity\User: { id: lego.security.password_encoder}
+
+    firewalls:
+        ...
+        login:
+            pattern: ^/login$
+            security: false
+        main:
+            pattern: ^/
+            anonymous: ~
+            form_login:
+                login_path: idk_lego_security_login
+                check_path: idk_lego_security_check
+                default_target_path: idk_lego_dashboard
+            logout:
+                path: /logout
+                target: /login
+            remember_me:
+                secret: "secret"
+                lifetime: 2232000
+
+    access_control:
+            - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/, role: ROLE_USER }
+```
+4 bis: With fos_user (or another):
+```yaml
+idk_lego:
+    route_login: fos_user_security_check
+```  
+5: create user 
+```  
+php bin/console idk:user:create
+```  
+or (fosUser)
+```  
+php bin/console fos:user:create 
+```  
+7: Create lego page
+```  
+php bin/console make:lego 
+```  
+8: composer require server
+
+9: bin/console server:run 0.0.0.0:8000
+
+
+ ===> For Symfony 4.X
 
 TODO 
 
-CURRENT v alpha
+CURRENT v alpha 0.1.2
 
-- Log history [ ]
+- Log history [ ] other bundle
+- Media [ ] other bundle
+- Mail [ ] other bundle
+- Import [ ] other bundle
 - Pagination [X]
 - Field-route [X]
 - Onglet component [ ]
 - Default LayoutBase [X]
 - Custom Bulk Action [ ]
+- Ressource Action [ ]
+- Menu auto [X]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
 - Upload File [X]
@@ -36,33 +120,50 @@ CURRENT v alpha
 - Rupteur [X]
 - Group [ ]
 - Form auto [X]
-- Call template (ViewParams)[X]
-- Url object (LegoPath) [X]
+- Call template (ViewParams)[X] all object pass to the view is a ViewParams
+- Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
-- Multi component (CustomComponent or Multi ActionComponent) [ ]
-- Skeleton [X]
+- Multi same component (CustomComponent or Multi ActionComponent) [ ]
+- Skeleton [X] //  SF4 maker [X]
 - Reload line with item action [ ]
 - Move component [X]
-- Dashboard [ ]
-- Macro [ ]
-- Widget Systeme [ ]
+- Dashboard [X]
+- Macro [/] In class
+- Widget Systeme [X]
 - Check double bindRequest in subComponent [ ]
+- Check execution components orders (filter after list ?)
 - ExportField [X]
+- Flex [X]
 - Doc [ ]
 
 v beta
 
-- work without fosuser (optional) [ ]
+- work without fosuser (optional) [X]
 - Gestion ROLE [ ]
 
+Symfony 4
 
-Next (November 2017):
+-require translator
+```yaml
+default_locale: fr
+    translator:
+       fallbacks: ['fr']
+```
 
-Check all type Form, (Sub-)Filter, Group, Custom action, itemAction and bulkAction
+framework.yml:
+```yaml
+freamworks:
+    templating:
+        engines: ['twig']
+```
 
-Optimisation :
+Next todo:
 
-Pager,  Filter, Action, tbody imbrique, Upload file+
+Check all type Form, (Sub-)Filter, Multi-widget xhr-widget, Group, Custom action, itemAction and bulkAction
+
+Optimisation todo:
+
+Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker
 
 
 Your config.yml
@@ -71,9 +172,9 @@ Your config.yml
 idk_lego:
     skin: skin-yellow
     layout: ::lego.html.twig
-    service_menu_class: AppBundle\Service\Menu
-    service_header_class: AppBundle\Service\Header
-    service_footer_class: AppBundle\Service\Footer
+    service_menu_class: App\Service\Menu
+    service_header_class: App\Service\Header
+    service_footer_class: App\Service\Footer
 ```
 
 Exemple Menu

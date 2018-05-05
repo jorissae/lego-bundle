@@ -11,7 +11,7 @@ class MenuItem{
     protected $type;
     protected $libelle;
     protected $icon;
-    protected $route;
+    protected $path;
     protected $labels;
     protected $children;
 
@@ -20,7 +20,7 @@ class MenuItem{
         $this->libelle = $libelle;
         $this->type = (isset($options['type']))? $options['type']:self::TYPE_BODY;
         $this->icon = (isset($options['icon']))? $options['icon']:null;
-        $this->route = (isset($options['route']))? $options['route']:null;
+        $this->path = (isset($options['path']))? $options['path']: null;
         $this->labels = (isset($options['labels']))? $options['labels']:[];
         $this->children = (isset($options['children']))? $options['children']:[];
     }
@@ -76,17 +76,17 @@ class MenuItem{
     /**
      * @return mixed|null
      */
-    public function getRoute()
+    public function getPath()
     {
-        return $this->route;
+        return $this->path;
     }
 
     /**
      * @param mixed|null $route
      */
-    public function setRoute($route)
+    public function setPath($path)
     {
-        $this->route = $route;
+        $this->path = $path;
     }
 
 

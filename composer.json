@@ -1,6 +1,6 @@
 {
     "name": "prestigejo/legobundle",
-    "description": "legobundle bundle for Symfony 3",
+    "description": "legobundle bundle for Symfony 4",
     "keywords": ["Lego","bundle"],
     "type": "symfony-bundle",
     "license": "MIT",
@@ -11,12 +11,29 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "3.*",
-        "twig/twig": "1.*",
-        "phpoffice/phpexcel": "1.8.*"
+        "twig/extensions": "~1.0",
+        "twig/twig": "^2.0",
+        "phpoffice/phpexcel": "1.8.*",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
+        "symfony/templating": "3.*|^4.0",
+        "symfony/translation": "~2.3|~3.0|^4.0",
+        "symfony/maker-bundle": ">=1.4.3",
+        "symfony/asset": "~2.3|~3.0|^4.0",
+        "sensio/framework-extra-bundle": "~2.3|~3.0,>=3.0.2|4.0.x|~5.0",
+        "symfony/validator": "~2.3|~3.0|^4.0",
+        "symfony/form": "~2.3|~3.0|^4.0",
+        "symfony/framework-bundle": "~2.3|~3.0|^4.0"
+
     },
     "autoload": {
         "psr-0": { "Idk\\LegoBundle": "" }
+    },
+    "extra": {
+        "symfony": {
+            "id": "01CA0KS0X2NF3C6CG95VYF14NJ",
+            "allow-contrib": true
+        }
     },
     "target-dir": "Idk/LegoBundle"
 }

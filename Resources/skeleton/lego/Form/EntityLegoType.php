@@ -1,14 +1,18 @@
-<?php
+<?= "<?php" ?>
 
-namespace {{ namespace }}\Form;
+namespace <?= $namespace ?>;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
+<?php foreach($fields as $field){
+if($field->getUseClass()){ echo "use ".$field->getUseClass().";\n"; }
+} ?>
+
 /**
- * The type for {{ entity_class }}
+ * The type for <?= $entity_class ?>
  */
-class {{ entity_class }}LegoType extends AbstractType
+class <?= $entity_class ?>Type extends AbstractType
 {
     /**
      * Builds the form.
@@ -23,9 +27,19 @@ class {{ entity_class }}LegoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    {% for fieldName, data in fields %}
-    $builder->add('{{ fieldName }}',{% if data.formType %} '{{data.formType}}' {% else %} null {% endif %},['label' =>  '{{ data.fieldTitle }}']);
-    {% endfor %}}
+        //$builder->add('name_field',null,[]);
+<?php foreach($fields as $field){ ?>
+<?php
+$options = null;
+foreach($field->getOptions() as $k => $o){
+    $options .= "'".$k."'" ." => '". $o ."',";
+}
+$options = substr($options,0, -1);
+$options = '['.$options.']';
+?>
+        $builder->add('<?= $field->getName().'\', '.(($field->getType())? $field->getShortType():'null').', '.$options ?>);
+<?php } ?>
+    }
 
     /**
      * Returns the name of this type.
@@ -34,6 +48,6 @@ class {{ entity_class }}LegoType extends AbstractType
      */
     public function getName()
     {
-        return 'lego_{{ entity_class|lower }}_form';
+        return '<?= strtolower($entity_class) ?>_form';
     }
 }

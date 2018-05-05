@@ -41,7 +41,9 @@ $(function(){
         $('html,body').animate({scrollTop: $($(this).attr('href')).offset().top}, 'slow');
     });
 
-
+    $('body').on('click', '.jsa-open-popup',function(e){
+        jsa.popup({url : $(this).attr('data-url'),width: $(this).attr('data-width'),'title': $(this).attr('data-title')});
+    });
 
     $('body').on('click','.jsa-open-dialog-form',function(e){
         var elm = $(this);
@@ -98,9 +100,11 @@ $(function(){
     });
 
     $( ".jsa-widget-container" ).sortable({
-        revert: true,
         items: "div.jsa-widget",
-        placeholder: "jsa-widget-holder",
+        //placeholder: "jsa-widget-holder",
+        tolerance: 'pointer',
+        //revert: 'invalid',
+        forceHelperSize: false,
         update: function(evt,ui){
             jsa.save_widget($(this));
         }
@@ -116,15 +120,15 @@ $(function(){
             success     : function(data) {
                 $("#jsa-widget-in-list-" + widget_id).hide('slide');
                 $( ".jsa-widget-container").append($(data));
-                jsa.save_widget();
+                jsa.save_widget($( ".jsa-widget-container"));
             }
         });
     });
 
     $('body').on('click','.jsa-remove-widget',function(evt){
-        var widget_id = $(this).attr('data-widget');
+        var widget_id = $(this).attr('data-widget-id');
         $("#jsa-widget-" + widget_id).remove();
-        jsa.save_widget();
+        jsa.save_widget($( ".jsa-widget-container"));
     });
     jsa.init_tabs();
 
@@ -134,15 +138,24 @@ $(function(){
 
 var jsa = {
 
+    load_jsa_ajax_content: function(){
+        $('.jsa-ajax-content').each(function(){
+            var elm = $(this);
+            $.ajax({
+                url         : elm.attr('data-url'),
+                dataType    : 'html',
+                success     : function(data) {
+                    elm.replaceWith(data);
+                }
+            });
+        });
+    },
     save_widget: function(container){
         var order = []
         $( ".jsa-widget-container").find('div.jsa-widget').each(function(elm){
             order.push($(this).attr('data-widget-id'));
         });
-        console.log(order);
-        console.log(container.attr('data-widget-order-save'));
-        console.log('ok');
-        $.ajax({type: 'post', url: container.attr('data-widget-order-save'), data: {order:order}});
+        $.ajax({type: 'post', url: container.attr('data-widget-sort-save'), data: {sort:order}});
     },
 
     update_elm: function (elm, data){

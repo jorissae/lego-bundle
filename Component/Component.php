@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Idk\LegoBundle\Lib\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Component{
 
@@ -22,19 +23,24 @@ abstract class Component{
 
     protected $listenQueryParameters = [];
 
-    public function __construct(array $options, AbstractConfigurator $configurator, $suffixRoute){
+    public function __construct(){
+    }
+
+    final function build(array $options, AbstractConfigurator $configurator, $suffixRoute){
         $this->options = $options;
         $this->configurator = $configurator;
         $this->suffixRoute = $suffixRoute;
         $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
         $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
         $this->init();
+        return $this;
     }
 
     public function getValId(){
         return $this->valId;
     }
 
+    //les params utiliser en ajax peuve etre utilisé sans ajax
     public function addListenQueryParameter($queryParametersGlobal, $queryParametersComponent){
         $this->listenQueryParameters[$queryParametersComponent] = $queryParametersGlobal;
         return $this;
@@ -46,9 +52,10 @@ abstract class Component{
     abstract protected function getTemplateParameters();
 
     public function isMovable(){
-        return false;
+        return $this->getOption('movable',false);
     }
 
+    //params reporting from query to ajax request
     public function getListenParamsForReload(){
         return [];
     }
@@ -142,7 +149,7 @@ abstract class Component{
         $params['cid'] = $this->getId();
         $params['suffix_route'] = $this->suffixRoute;
         $configurator = ($this->getConfigurator()->getParent())? $this->getConfigurator()->getParent():$this->getConfigurator();
-        return new Path($configurator->getPathRoute('component'), $params);
+        return new Path($configurator->getPathRoute('component'), $configurator->getPathParameters($params));
     }
 
 
@@ -162,5 +169,7 @@ abstract class Component{
     protected function trans($str, $vars= []){
         return $this->get('translator')->trans($str, $vars);
     }
+
+
 
 }

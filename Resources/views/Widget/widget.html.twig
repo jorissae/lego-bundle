@@ -1,0 +1,4 @@
+<div id="jsa-widget-{{ widget.id }}" class="jsa-widget {{ widget.classCss }}" data-widget-id="{{ widget.id }}">
+    {%  set button_remove = '<i class="pull-right jsa-remove-widget fa fa-close" data-widget-id="' ~ widget.id ~ '"></i>' %}
+    {{ include(widget.template,widget.params|merge({'button_remove': button_remove})) }}
+</div>

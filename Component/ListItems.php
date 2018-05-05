@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Actions\BulkAction;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\QueryHelper;
+use Idk\LegoBundle\Service\MetaEntityManager;
 
 class ListItems extends Component{
 
@@ -25,6 +26,11 @@ class ListItems extends Component{
     private $nbEntityPerPage = null;
     private $breakers = [];
     private $sorters = [];
+    private $mem;
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
 
     protected function init(){
         $this->sorters = $this->getOption('sorters', []);
@@ -114,20 +120,20 @@ class ListItems extends Component{
         if($action == self::ENTITY_ACTION_DELETE){
             $this->entityActions[] = new EntityAction('lego.action.delete', ['icon'=>'remove', 'css_class' => 'btn-danger' ,'modal' => $this->getPartial('modal_delete')]);
         }else if($action == self::ENTITY_ACTION_EDIT){
-            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit')]);
+            $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit'), 'params'=>$this->getConfigurator()->getPathParameters()]);
         }else if($action == self::ENTITY_ACTION_SHOW){
-            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show')]);
+            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show'), 'params'=>$this->getConfigurator()->getPathParameters()]);
         }
     }
 
     public function addPredefinedBulkAction($action){
         if($action == self::BULK_ACTION_DELETE){
-            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>['type'=>'delete']]);
+            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>$this->getConfigurator()->getPathParameters(['type'=>'delete'])]);
         }
     }
 
     public function getFields(){
-        return array_merge($this->get('lego.service.meta_entity_manager')->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
+        return array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
     }
 
     public function getEntityActions(){

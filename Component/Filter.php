@@ -4,6 +4,8 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\Lib\Filter\FilterBuilder;
 use Idk\LegoBundle\FilterType\ORM\AbstractORMFilterType;
+use Idk\LegoBundle\Service\MetaEntityManager;
+use Idk\LegoBundle\Service\MetaEntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\Filter\Filter as Fi;
@@ -12,9 +14,14 @@ use Idk\LegoBundle\Lib\Filter\Filter as Fi;
 class Filter extends Component{
 
     private $filterBuilder;
+    private $mem;
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
 
     protected function init(){
-        foreach($this->get('lego.service.meta_entity_manager')->generateFilters($this->getConfigurator()->getEntityName(), null) as $filter){
+        foreach($this->mem->generateFilters($this->getConfigurator()->getEntityName(), null) as $filter){
             /* @var \Idk\LegoBundle\Annotation\Entity\Filter\AbstractFilter $filter */
             $this->getFilterBuilder()->add($filter->newInstanceOfType());
         }

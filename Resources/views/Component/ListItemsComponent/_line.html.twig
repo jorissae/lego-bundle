@@ -1,4 +1,4 @@
-<tr id="line-{{ item.id }}" >
+<tr id="{{ component.gid('line')  }}-{{ item.id }}" >
 {% if component.hasBulkActions %}
     <td>
         <input type="checkbox" name="ids[]" value="{{ item.id }}" class="lego-bulk-checkbox">

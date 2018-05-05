@@ -1,0 +1,111 @@
+parameters:
+    lego.action.index.class: Idk\LegoBundle\Action\IndexAction
+    lego.action.sort_components.class: Idk\LegoBundle\Action\SortComponentsAction
+    lego.action.add.class: Idk\LegoBundle\Action\AddAction
+    lego.action.export.class: Idk\LegoBundle\Action\ExportAction
+    lego.action.show.class: Idk\LegoBundle\Action\ShowAction
+    lego.action.editinplace.class: Idk\LegoBundle\Action\EditInPlaceAction
+    lego.action.edit.class: Idk\LegoBundle\Action\EditAction
+    lego.action.delete.class: Idk\LegoBundle\Action\DeleteAction
+    lego.action.bulk.class: Idk\LegoBundle\Action\BulkAction
+    lego.action.component.class: Idk\LegoBundle\Action\ComponentAction
+    lego.action.sort_components_reset.class: Idk\LegoBundle\Action\SortComponentsResetAction
+    lego.action.autocompletion.class: Idk\LegoBundle\Action\AutoCompletionAction
+    lego.action.widget_add.class: Idk\LegoBundle\Action\WidgetAddAction
+    lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
+    lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
+    lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
+
+services:
+
+    # TODO
+    # replace the service container with a futur service action ressources. the container in service is Bad!
+
+    _defaults:
+        autowire: true
+        public: false
+
+    lego.action.index:
+        class: '%lego.action.index.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.component:
+        class: '%lego.action.component.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.bulk:
+        class: '%lego.action.bulk.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.delete:
+        class: '%lego.action.delete.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.edit:
+        class: '%lego.action.edit.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.editinplace:
+        class: '%lego.action.editinplace.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.show:
+        class: '%lego.action.show.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.add:
+        class: '%lego.action.add.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.export:
+        class: '%lego.action.export.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager", "@lego.service.export"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.sort_components:
+        class: '%lego.action.sort_components.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.sort_components_reset:
+        class: '%lego.action.sort_components_reset.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.autocompletion:
+        class: '%lego.action.autocompletion.class%'
+        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        tags: [controller.service_arguments, lego.action]
+
+
+    Idk\LegoBundle\Service\Tag\ActionChain:
+        arguments: [!tagged lego.action]
+        public: true
+
+    lego.action.widget_add:
+        class: '%lego.action.widget_add.class%'
+        arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.widget_save:
+        class: '%lego.action.widget_save.class%'
+        arguments: ["@lego.widget.chain", "@twig", "@event_dispatcher"]
+        tags: [controller.service_arguments]
+
+    lego.action.widget_get:
+        class: '%lego.action.widget_get.class%'
+        arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.dashboard:
+        class: '%lego.action.dashboard.class%'
+        arguments: ["@twig"]
+        tags: [controller.service_arguments]

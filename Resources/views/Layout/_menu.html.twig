@@ -22,7 +22,7 @@
                     <li class="header">{{ item.libelle }}</li>
                 {%  else %}
                     <li class="treeview">
-                        <a href="{{ path(item.route) }}">
+                        <a href="{{ path(item.path.route, item.path.params) }}">
                             <i class="fa fa-{{ item.icon }}"></i> <span>{{ item.libelle }}</span>
                             <span class="pull-right-container">
                                 {%  if item.children %}<i class="fa fa-angle-left pull-right"></i>{%  endif %}
@@ -36,7 +36,7 @@
                         {%  if item.children %}
                             <ul class="treeview-menu">
                                 {%  for child in item.children %}
-                                    <li><a href="{{ path(child.route) }}"><i class="fa fa-{{ child.icon }}"></i>{{ child.libelle }}</a></li>
+                                    <li><a href="{{ path(child.path.route,child.path.params) }}"><i class="fa fa-{{ child.icon }}"></i>{{ child.libelle }}</a></li>
                                 {%  endfor %}
                             </ul>
                         {% endif %}

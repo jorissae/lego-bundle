@@ -1,0 +1,11 @@
+<div class="row">
+<div class="col-md-12">
+    <span style="margin-right:15px; margin-bottom:5px;" data-width="50%" data-url="{{ path('idk_lego_widget_add') }}" data-title="{{ 'lego.action.add_widget'|trans }}" class="btn btn-primary jsa-open-popup pull-right"><i class="fa fa-plus"></i> {{ 'lego.action.add_widget'|trans }}</span>
+    <div style="clear:both"></div>
+    <div class="jsa-widget-container" data-widget-sort-save="{{ path('idk_lego_widget_save') }}">
+        {% for widget in widgets %}
+            {{ render_widget(widget) }}
+        {%  endfor %}
+    </div>
+</div>
+</div>

@@ -4,8 +4,10 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Idk\LegoBundle\Service\MetaEntityManager;
 
 
 
@@ -13,6 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 class Form extends Component{
 
     private $form;
+    private $mem;
+    private $formFactory;
+
+    public function __construct(MetaEntityManager $mem, FormFactoryInterface $formFactory){
+        $this->mem = $mem;
+        $this->formFactory = $formFactory;
+    }
 
     protected function init(){
 
@@ -32,13 +41,13 @@ class Form extends Component{
 
     public function generateForm($entity){
         if(!$this->getOption('form',null)){
-            $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $entity, []);
-            foreach($this->get('lego.service.meta_entity_manager')->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
+            $formBuilder = $this->formFactory->createBuilder(FormType::class, $entity, []);
+            foreach($this->mem->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
                 $formBuilder->add($field->getName(), $field->getType(), $field->getOptions());
             }
             return $formBuilder->getForm();
         }else {
-            return $this->get('form.factory')->create($this->getOption('form'), $entity);
+            return $this->formFactory->create($this->getOption('form'), $entity);
         }
     }
 
@@ -62,7 +71,7 @@ class Form extends Component{
                     $response = new SuccessComponentResponse($this->trans('lego.form.success.add'));
                     $this->resetForm();
                 }
-                $response->setRedirect($this->getConfigurator()->getPathRoute('index'));
+                $response->setRedirect($this->getConfigurator()->getPathRoute('index'), $this->getConfigurator()->getPathParameters());
                 return $response;
             } else {
                 return new ErrorComponentResponse('lego.form.error');

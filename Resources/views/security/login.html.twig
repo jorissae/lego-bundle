@@ -13,7 +13,7 @@
             {% if error is defined and error %}<div class="alert alert-error">{{ error.message }}</div>{% endif %}
         </p>
 
-        <form id="login-form" class="form-horizontal" action="{{ path('fos_user_security_check') }}" method="post">
+        <form id="login-form" class="form-horizontal" action="{{ path(lego_view.routeLogin) }}" method="post">
             <div class="form-group has-feedback">
                 <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'lego.form.login_username'|trans }}"/>
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="col-xs-4">
-                    {% if csrf_token %}
+                    {% if csrf_token is defined and csrf_token %}
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
                     {% endif %}
                     <input  type="submit" id="_submit" name="_submit" class="btn btn-primary btn-block btn-flat" value="{{ 'lego.form.submit_login'|trans }}"/>

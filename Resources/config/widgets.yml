@@ -1,0 +1,19 @@
+parameters:
+
+services:
+
+    _defaults:
+        autowire: true
+        public: false
+
+    Idk\LegoBundle\Widget\UserWidget:
+        arguments: ["%lego.user.class%","@doctrine.orm.default_entity_manager", "@security.token_storage"]
+        tags: [lego.widget]
+
+    Idk\LegoBundle\Widget\EntityWidget:
+        arguments: ["@lego.service.meta_entity_manager"]
+        tags: [lego.widget]
+
+    #Idk\LegoBundle\Widget\ListWidget:
+    #    arguments: ["bibi"]
+    #    tags: [lego.widget]

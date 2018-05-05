@@ -2,22 +2,23 @@
 namespace Idk\LegoBundle\Service;
 
 
+use Couchbase\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Annotation\Entity as Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Idk\LegoBundle\Lib\MetaEntity;
 
 
-
-
-class MetaEntityManager
+class MetaEntityManager implements MetaEntityManagerInterface
 {
 
     private $em;
 
-    public function __construct($em) {
+    public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
     }
 
-    public function generateFields($className, array $columns = null){
+    public function generateFields($className, array $columns = null, $withoutMethodsFields = false){
         $return = [];
         if(is_array($columns)) {
             foreach ($columns as $column) {
@@ -37,6 +38,19 @@ class MetaEntityManager
             }
         }
 
+        if(!$withoutMethodsFields) {
+            foreach ($reflectionClass->getMethods() as $k => $m) {
+                foreach ($r->getMethodAnnotations($m) as $annotation) {
+                    $name = lcfirst(substr($m->getName(), 3));
+                    if (get_class($annotation) == Annotation\Field::class and ($columns == null or in_array($name, $columns))) {
+                        /* @var Annotation\Field $field */
+                        $field = $annotation;
+                        $field->setName($name);
+                        $return[$name] = $field;
+                    }
+                }
+            }
+        }
         $trashcan = [];
         foreach($return as $k => $field){
             if(!$field) $trashcan[] = $k;
@@ -48,7 +62,7 @@ class MetaEntityManager
     public function generateFormFields($className, array $columns = null){
         $return = [];
 
-        $fields = $this->generateFields($className);
+        $fields = $this->generateFields($className,null, true);
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         $entityForm = $r->getClassAnnotation($reflectionClass, Annotation\EntityForm::class);
@@ -107,6 +121,8 @@ class MetaEntityManager
 
     public function generateFilters($className, array $columns = null){
         $return = [];
+
+        $fields = $this->generateFields($className,null, true);
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         foreach($reflectionClass->getProperties() as $k => $p) {
@@ -116,11 +132,40 @@ class MetaEntityManager
                     /* @var Annotation\Filter\AbstractFilter $filter */
                     $filter = $annotation;
                     $filter->setName($p->getName());
+                    if(isset($fields[$p->getName()])) $filter->setField($fields[$p->getName()]);
                     $return[$p->getName()] = $filter;
                 }
             }
         }
         return $return;
+    }
+
+    public function getMetaDataEntities(): array{
+        $r = new AnnotationReader();
+        $return = [];
+        foreach($this->em->getMetadataFactory()->getAllMetadata() as $metadata){
+            $reflectionClass = new \ReflectionClass($metadata->getName());
+            $annotation = $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
+            if($annotation){
+                $shortName = $annotation->getName() ?? strtolower(substr($metadata->getName() , strrpos($metadata->getName(), '\\') + 1));
+                if(key_exists($shortName, $return)){
+                    throw new \Exception('
+                        The shortname '. $shortName .' of the class '.$metadata->getName().' is already 
+                        use in the class '.$return[$shortName]->getName().'. Use class annotation '.Annotation\Entity::class.':
+                        @Lego\Entity(name="'.$shortName.'2") for exemple');
+                }
+                $return[$shortName] = new MetaEntity($shortName, $metadata, $annotation);
+            }
+        }
+        return $return;
+    }
+
+    public function getMetaDataEntity($shortName): MetaEntity{
+       return $this->getMetaDataEntities()[$shortName];
+    }
+
+    public function getEntityManager(): EntityManagerInterface{
+        return $this->em;
     }
 
 

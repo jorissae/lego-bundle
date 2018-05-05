@@ -25,6 +25,18 @@ class AbstractForm
         return $this->type;
     }
 
+    public function getShortType(){
+        if($this->getUseClass()){
+            return substr(strrchr($this->getUseClass(), '\\'), 1).'::class';
+        }
+        return $this->getType();
+    }
+
+    public function getUseClass(){
+        if(strstr($this->getType(), '\\')) return $this->getType();
+        return null;
+    }
+
     public function getName(){
         return $this->name;
     }

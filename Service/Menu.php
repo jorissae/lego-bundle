@@ -5,16 +5,20 @@ namespace Idk\LegoBundle\Service;
 use Idk\LegoBundle\Lib\LayoutItem\LabelItem;
 use Idk\LegoBundle\Lib\LayoutItem\MenuItem;
 use Symfony\Component\Yaml\Yaml;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Idk\LegoBundle\Lib\Path;
 
-
-class Menu
+class Menu implements LegoMenuInterface
 {
 
+    private $mem;
     private $em;
     private $security;
 
-    public function __construct($em, $security) {
-        $this->em = $em;
+    public function __construct(MetaEntityManager $mem, TokenStorageInterface $security) {
+        $this->em = $mem->getEntityManager();
+        $this->mem = $mem;
         $this->security = $security;
     }
 
@@ -31,10 +35,19 @@ class Menu
         $return[] = new MenuItem('ADMIN', ['type'=>MenuItem::TYPE_HEADER]);
         $return[] = new MenuItem('Dashboard', [
             'icon' => 'dashboard',
-            'route' => 'homepage',
+            'path' => new Path('idk_lego_dashboard'),
             'labels'=> [new LabelItem(5, ['css_class'=>'bg-red'])],
-            'children' => [new MenuItem('index',['route'=>'homepage', 'icon'=>'circle-o'])]
+            'children' => [new MenuItem('index',['path'=>new Path('idk_lego_dashboard'), 'icon'=>'circle-o'])]
         ]);
+
+        foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
+            /* @var \Idk\LegoBundle\Lib\MetaEntity $metaDataEntity */
+            $return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
+                'icon'=> $metaDataEntity->getIcon(),
+                'path' => $metaDataEntity->getPath(),
+            ]);
+        }
+
         return $return;
     }
 

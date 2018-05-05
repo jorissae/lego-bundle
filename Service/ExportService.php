@@ -3,20 +3,27 @@
 namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
 {
     private $renderer;
     private $serviceCsv;
+    private $mem;
 
     const EXT_CSV = 'csv';
     const EXT_EXCEL = 'xlsx';
 
-    public function __construct($renderer, $serviceCsv)
+    public function __construct($renderer, $serviceCsv, MetaEntityManager $mem)
     {
         $this->renderer = $renderer;
         $this->serviceCsv = $serviceCsv;
+        $this->mem = $mem;
+    }
+
+    public function getExportFields($entityName, array $columns = null){
+        return $this->mem->generateExportFields($entityName, $columns);
     }
 
     public function getDownloadableResponse(AbstractConfigurator $configurator, $format)
@@ -35,12 +42,13 @@ class ExportService
 
     public function createCsvResponse(AbstractConfigurator $configurator){
         $allIterator = $configurator->getAllIterator();
-        foreach($configurator->getExportFields() as $field){
+        $csv = [];
+        foreach($this->getExportFields($configurator->getEntityName()) as $field){
             $csv[0][] = $field->getHeader();
         }
         $i=1;
         foreach($allIterator as $entity){
-            foreach($configurator->getExportFields() as $field) {
+            foreach($this->getExportFields($configurator->getEntityName()) as $field) {
                 $csv[$i][] = $configurator->getStringValue($entity, $field->getName());
             }
                 $i++;
@@ -56,6 +64,7 @@ class ExportService
      */
     public function createExcelSheet(AbstractConfigurator $configurator)
     {
+
         $objPHPExcel = new \PHPExcel();
 
         $objWorksheet = $objPHPExcel->getActiveSheet();
@@ -63,7 +72,7 @@ class ExportService
         $number = 1;
 
         $row = [];
-        foreach ($configurator->getExportFields() as $field) {
+        foreach ($this->getExportFields($configurator->getEntityName()) as $field) {
             $row[] = $field->getHeader();
         }
         $objWorksheet->fromArray($row, null, 'A' . $number++);
@@ -72,7 +81,7 @@ class ExportService
         foreach($allIterator as $entity) {
 
             $row = [];
-            foreach ($configurator->getExportFields() as $field) {
+            foreach ($this->getExportFields($configurator->getEntityName()) as $field) {
                 $coordinate = $objWorksheet->getCellByColumnAndRow(count($row), $number)->getCoordinate();
                 $data = $configurator->getStringValue($entity, $field->getName());
                 if (is_object($data)) {
@@ -97,17 +106,23 @@ class ExportService
 
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
 
+
         if (ob_get_length()) ob_end_clean();
         return $objWriter;
     }
 
-    public function createResponseForExcel($writer)
+    public function createResponseForExcel(\PHPExcel_Writer_Excel2007 $writer)
     {
+        if(!class_exists('\ZipArchive')){
+            throw new \Exception('ZipArchive not found install it apt-get install php-zip or http://php.net/manual/fr/zip.installation.php');
+        }
         $response = new StreamedResponse(
             function () use ($writer) {
                 $writer->save('php://output');
             }
         );
+
+        //$response = new Response($writer->save('php://output'));
 
         $response->headers->set('Content-Type', 'application/download');
         $filename = 'export.xlsx';
