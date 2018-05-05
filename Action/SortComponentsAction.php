@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Idk\LegoBundle\Events\UpdateOrganizationComponentsEvent;
 use Idk\LegoBundle\LegoEvents;
 
-final class OrderComponentsAction extends AbstractAction
+final class SortComponentsAction extends AbstractAction
 {
 
     public function __invoke(Request $request): Response

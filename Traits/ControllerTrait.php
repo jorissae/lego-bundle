@@ -5,8 +5,8 @@ use Idk\LegoBundle\Service\Tag\ActionChain;
 use Idk\LegoBundle\Action\AutoCompletionAction;
 use Idk\LegoBundle\Action\EditInPlaceAction;
 use Idk\LegoBundle\Action\IndexAction;
-use Idk\LegoBundle\Action\OrderComponentsAction;
-use Idk\LegoBundle\Action\OrderComponentsResetAction;
+use Idk\LegoBundle\Action\SortComponentsAction;
+use Idk\LegoBundle\Action\SortComponentsResetAction;
 use Idk\LegoBundle\Action\ExportAction;
 use Idk\LegoBundle\Action\ShowAction;
 use Idk\LegoBundle\Action\ComponentAction;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Idk\LegoBundle\Service\MetaEntityManager;
 
-trait Controller
+trait ControllerTrait
 {
     
 
@@ -132,27 +132,27 @@ trait Controller
     }
 
     /**
- * order components
- *
- * @Route("/oc/{suffix_route}")
- * @Method({"GET", "POST"})
- * @return array
- */
-    public function orderComponentsAction(Request $request)
-    {
-        return $this->getResponse(OrderComponentsAction::class, $request);
-    }
-
-    /**
-     * order components
+     * sort components
      *
-     * @Route("/ocreset/{suffix_route}")
+     * @Route("/sc/{suffix_route}")
      * @Method({"GET", "POST"})
      * @return array
      */
-    public function orderComponentsResetAction(Request $request)
+    public function sortComponentsAction(Request $request)
     {
-        return $this->getResponse(OrderComponentsResetAction::class, $request);
+        return $this->getResponse(SortComponentsAction::class, $request);
+    }
+
+    /**
+     * sort components reset
+     *
+     * @Route("/screset/{suffix_route}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function sortComponentsResetAction(Request $request)
+    {
+        return $this->getResponse(SortComponentsResetAction::class, $request);
     }
 
     /**

@@ -54,6 +54,6 @@ lego.filter.content: Contient
 lego.header_choice.breaker: Choix du rupteur
 lego.choice.neither: Aucun
 lego.label.number_of_entities: Nombre d'éléments
-lego.action.reset_order_components: Organisation par défaut
+lego.action.reset_sort_components: Organisation par défaut
 lego.title.form: Formulaire
 lego.delete_entities: "%nb% éléments supprimé"

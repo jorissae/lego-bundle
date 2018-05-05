@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Idk\LegoBundle\Events\UpdateOrganizationComponentsEvent;
 use Idk\LegoBundle\LegoEvents;
 
-final class OrderComponentsResetAction extends AbstractAction
+final class SortComponentsResetAction extends AbstractAction
 {
 
     public function __invoke(Request $request): Response

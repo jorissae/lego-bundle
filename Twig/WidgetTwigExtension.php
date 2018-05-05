@@ -8,14 +8,10 @@ use Psr\Container\ContainerInterface;
 class WidgetTwigExtension extends \Twig_Extension
 {
 
-    private $widgetsTemplate;
-    private $widgetTemplate;
-    private $wc;
+    private $widgetChain;
 
-    public function __construct(WidgetChain $wc, string $widgetsTemplate, string $widgetTemplate){
-        $this->widgetsTemplate = $widgetsTemplate;
-        $this->widgetTemplate = $widgetTemplate;
-        $this->wc = $wc;
+    public function __construct(WidgetChain $widgetChain){
+        $this->widgetChain = $widgetChain;
     }
 
     public function getFunctions()
@@ -28,15 +24,13 @@ class WidgetTwigExtension extends \Twig_Extension
 
     public function renderUseWidgets(\Twig_Environment $env)
     {
-        //$template = $env->loadTemplate($this->widgetsTemplate);
-        $template = $env->loadTemplate($this->wc->getWidgetsTemplate());
-        return $template->render(['widgets'=>$this->wc->getUseWidgets()]);
+        $template = $env->loadTemplate($this->widgetChain->getWidgetsTemplate());
+        return $template->render(['widgets'=>$this->widgetChain->getUseWidgets()]);
     }
 
     public function renderWidget(\Twig_Environment $env, $widget)
     {
-        //$template = $env->loadTemplate($this->widgetTemplate);
-        $template = $env->loadTemplate($this->wc->getTemplate());
+        $template = $env->loadTemplate($this->widgetChain->getTemplate());
         return $template->render(['widget'=>$widget]);
     }
 

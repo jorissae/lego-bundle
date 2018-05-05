@@ -49,15 +49,15 @@ lego_export:
     defaults:
         _controller: lego.action.export
 
-lego_ordercomponents:
-    path:      /lgo/{entity}/oc/{suffix_route}
+lego_sortcomponents:
+    path:      /lgo/{entity}/sc/{suffix_route}
     defaults:
-        _controller: lego.action.order_components
+        _controller: lego.action.sort_components
 
-lego_ordercomponentsreset:
-    path:      /lgo/{entity}/ocreset/{suffix_route}
+lego_sortcomponentsreset:
+    path:      /lgo/{entity}/screset/{suffix_route}
     defaults:
-        _controller: lego.action.order_components_reset
+        _controller: lego.action.sort_components_reset
 
 lego_autocompletion:
     path:      /lgo/{entity}/ac/{suffix_route}

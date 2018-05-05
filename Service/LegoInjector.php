@@ -9,7 +9,7 @@ class LegoInjector implements LegoInjectorInterface
 {
     public function getTraits(){
         return [
-            InjectorChain::CONTROLLER => '\Idk\LegoBundle\Traits\Controller',
+            InjectorChain::CONTROLLER => '\Idk\LegoBundle\Traits\ControllerTrait',
         ];
     }
 

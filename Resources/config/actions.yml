@@ -1,6 +1,6 @@
 parameters:
     lego.action.index.class: Idk\LegoBundle\Action\IndexAction
-    lego.action.order_components.class: Idk\LegoBundle\Action\OrderComponentsAction
+    lego.action.sort_components.class: Idk\LegoBundle\Action\SortComponentsAction
     lego.action.add.class: Idk\LegoBundle\Action\AddAction
     lego.action.export.class: Idk\LegoBundle\Action\ExportAction
     lego.action.show.class: Idk\LegoBundle\Action\ShowAction
@@ -9,7 +9,7 @@ parameters:
     lego.action.delete.class: Idk\LegoBundle\Action\DeleteAction
     lego.action.bulk.class: Idk\LegoBundle\Action\BulkAction
     lego.action.component.class: Idk\LegoBundle\Action\ComponentAction
-    lego.action.order_components_reset.class: Idk\LegoBundle\Action\OrderComponentsResetAction
+    lego.action.sort_components_reset.class: Idk\LegoBundle\Action\SortComponentsResetAction
     lego.action.autocompletion.class: Idk\LegoBundle\Action\AutoCompletionAction
     lego.action.widget_add.class: Idk\LegoBundle\Action\WidgetAddAction
     lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
@@ -18,7 +18,7 @@ parameters:
 services:
 
     # TODO
-    # replace the service container with a futur service action ressources. the conatainer in service is Bad!
+    # replace the service container with a futur service action ressources. the container in service is Bad!
 
     _defaults:
         autowire: true
@@ -69,13 +69,13 @@ services:
         arguments: ["@service_container","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments, lego.action]
 
-    lego.action.order_components:
-        class: '%lego.action.order_components.class%'
+    lego.action.sort_components:
+        class: '%lego.action.sort_components.class%'
         arguments: ["@service_container","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments, lego.action]
 
-    lego.action.order_components_reset:
-        class: '%lego.action.order_components_reset.class%'
+    lego.action.sort_components_reset:
+        class: '%lego.action.sort_components_reset.class%'
         arguments: ["@service_container","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments, lego.action]
 

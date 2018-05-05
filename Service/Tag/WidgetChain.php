@@ -51,7 +51,7 @@ class WidgetChain
     }
 
     public function getOrder(){
-        return $this->session->get(self::SESSION_STORAGE);
+        return $this->session->get(self::SESSION_STORAGE) ?? [];
     }
 
 
