@@ -72,7 +72,9 @@ $(function(){
         $(this).hide();
         $('#'+ $(this).attr('data-span-in-id')).show();
         $('#'+ $(this).attr('data-input-id')).focus();
-
+        if($(this).attr('data-callback') && window[$(this).attr('data-callback')]){
+            window[$(this).attr('data-callback')]();
+        }
         $("select.select2").select2();
     });
 
@@ -91,14 +93,14 @@ $(function(){
     $('body').on('click','.lego-edit-in-place-bool',function(){
         var elm = $(this);
         var id = elm.attr('data-item-id');
-        var columnName = elm.attr('data-column-name');
+        var fieldName = elm.attr('data-field-name');
         var val = (parseInt(elm.attr('data-value')) > 0)? 0:1;
         var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
-            data: { id: id, columnName: columnName,value: val,cls: '',reload: reload },
+            data: { id: id, fieldName: fieldName,value: val,cls: '',reload: reload },
             dataType: "json",
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
@@ -130,7 +132,7 @@ $(function(){
         elm.html('<i class="fa fa-spinner"></i>');
         var id = $(this).attr('data-item-id');
         var callback = $(this).attr('data-callback');
-        var columnName = $(this).attr('data-column-name');
+        var fieldName = $(this).attr('data-field-name');
         var cls = $(this).attr('data-class');
         var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
@@ -146,7 +148,7 @@ $(function(){
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
-            data: { id: id, columnName: columnName,value: val,cls: cls,reload: reload },
+            data: { id: id, fieldName: fieldName,value: val,cls: cls,reload: reload },
             dataType: 'json',
         }).done(function( retour ) {
             if(retour.code == 'NOK'){

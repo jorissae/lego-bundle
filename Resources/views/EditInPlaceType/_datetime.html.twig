@@ -1,0 +1,11 @@
+<input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}" type="text" value="{{ value| date('d/m/Y H:i') }}"/>
+{% if field.editInPlaceJs %}
+    <script>
+        $(function(){
+            $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').datetimepicker({
+                'dateFormat':'dd/mm/yy',
+                'timeFormat':'HH:mm',
+            });
+        });
+    </script>
+{% endif %}

@@ -83,3 +83,8 @@ idk_lego_dashboard:
     path:  /dashboard
     defaults:
         _controller: lego.action.dashboard
+
+idk_lego_entity_choice:
+    path: /entity/choice
+    defaults:
+        _controller: lego.action.entity_choice

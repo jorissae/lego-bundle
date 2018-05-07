@@ -45,6 +45,10 @@ services:
     Idk\LegoBundle\Service\LegoInjector:
         tags: [lego.injector]
 
+    lego.service.edit_in_place.factory:
+        class: Idk\LegoBundle\Service\EditInPlaceFactory
+    Idk\LegoBundle\Service\EditInPlaceFactory: '@lego.service.edit_in_place.factory'
+
 
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'
@@ -63,6 +67,7 @@ services:
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension
+        arguments: ["@lego.service.edit_in_place.factory"]
         tags:
             -  { name: twig.extension  }
 

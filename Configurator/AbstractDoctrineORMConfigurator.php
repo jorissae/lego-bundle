@@ -2,6 +2,7 @@
 
 namespace Idk\LegoBundle\Configurator;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Idk\LegoBundle\Component\Component;
 use Idk\LegoBundle\Lib\Pager;
 
@@ -147,7 +148,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
 
 
-    public function getClassMetaData(){
+    public function getClassMetaData(): ClassMetadata{
         $em = $this->getEntityManager();
         return $em->getClassMetadata($this->getRepositoryName());
     }
@@ -179,12 +180,19 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
     }
 
-    public function getType($item,$columnName){
+    public function getType($item,$fieldName){
 
         if(is_object($item)){
-            $return = $this->getClassMetadata()->getTypeOfColumn($columnName);
-            return $return;
+            return $this->getClassMetadata()->getTypeOfColumn($fieldName);
         }
+    }
+
+    public function getAssociationClass($fieldname){
+        if($this->getClassMetaData()->hasAssociation($fieldname)) {
+            $mapping = $this->getClassMetaData()->getAssociationMapping($fieldname);
+            return $mapping['targetEntity'] ?? null;
+        }
+        return null;
     }
 
 

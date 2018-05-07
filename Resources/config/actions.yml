@@ -15,6 +15,7 @@ parameters:
     lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
     lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
     lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
+    lego.action.entity_choice.class: Idk\LegoBundle\Action\EntityChoiceAction
 
 services:
 
@@ -108,4 +109,9 @@ services:
     lego.action.dashboard:
         class: '%lego.action.dashboard.class%'
         arguments: ["@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.entity_choice:
+        class: '%lego.action.entity_choice.class%'
+        arguments: ["@security.authorization_checker","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments]

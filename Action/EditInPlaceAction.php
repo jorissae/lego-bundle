@@ -15,10 +15,10 @@ final class EditInPlaceAction extends AbstractAction
         $em = $this->getEntityManager();
         $reload = $request->request->get('reload');
         $entity = $em->getRepository($configurator->getRepositoryName())->findOneById($request->request->get('id'));
-        $columnName = $request->request->get('columnName');
+        $fieldName = $request->request->get('fieldName');
         $class = $request->request->get('cls');
-        $type = $configurator->editInplaceInputType($entity,$columnName);
-        $method = 'set'.$configurator->to_camel_case($columnName);
+        $type = $configurator->editInplaceInputType($entity,$fieldName);
+        $method = 'set'.$configurator->to_camel_case($fieldName);
         if ($type == 'object'){
             $value = $em->getRepository($class)->find($request->request->get('value'));
         }elseif($type == 'datetime'){
@@ -51,11 +51,12 @@ final class EditInPlaceAction extends AbstractAction
         $em->persist($entity);
         $em->flush();
         if($type == 'text'){
-            $stringValue = $configurator->getValue($entity,$columnName);
+            $stringValue = $configurator->getValue($entity,$fieldName);
         } else {
-            $stringValue = $configurator->getStringValue($entity,$columnName);
+            $stringValue = $configurator->getStringValue($entity,$fieldName);
         }
         if($reload == 'tr'){
+            //TODO
             $return = array('code'=>'OK','val'=> (string)html_entity_decode($this->getLineResponse($configurator,$entity)));
         }else{
             $return = array('code'=>'OK','val'=>(string)$stringValue,'setter'=>$value);

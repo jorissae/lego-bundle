@@ -337,7 +337,7 @@ abstract class AbstractConfigurator
 
         if ($result instanceof \DateTime) {
             if($type == 'datetime'){
-                return ($result->format('Y') > 0)? $result->format('d/m/Y H:i:s'):null;
+                return ($result->format('Y') > 0)? $result->format('d/m/Y H:i'):null;
             }elseif($type == 'date'){
                 return ($result->format('Y') > 0)? $result->format('d/m/Y'):null;
             }elseif($type == 'time'){
