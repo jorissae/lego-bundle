@@ -21,7 +21,7 @@ services:
          resource: '../../Controller'
 
     Idk\LegoBundle\Service\Menu:
-        arguments: ["@lego.service.meta_entity_manager", "@security.token_storage"]
+        arguments: ["@lego.service.configurator.builder"]
     Idk\LegoBundle\Service\LegoMenuInterface: '@Idk\LegoBundle\Service\Menu'
     Idk\LegoBundle\Service\Header:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
@@ -47,7 +47,12 @@ services:
 
     lego.service.edit_in_place.factory:
         class: Idk\LegoBundle\Service\EditInPlaceFactory
-    Idk\LegoBundle\Service\EditInPlaceFactory: '@lego.service.edit_in_place.factory'
+
+    lego.service.configurator.builder:
+        class: Idk\LegoBundle\Service\ConfiguratorBuilder
+        arguments: ["@session","@lego.service.meta_entity_manager","@security.token_storage", "@security.authorization_checker","@twig", "@translator", "@router", "@lego.service.components"]
+        public: true
+    Idk\LegoBundle\Service\ConfiguratorBuilder: '@lego.service.configurator.builder'
 
 
     lego.service.meta_entity_manager:
@@ -113,5 +118,7 @@ services:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
 
-    Idk\LegoBundle\Service\Tag\ComponentChain:
-        public: true #bootstraping service
+
+    lego.service.components:
+      class:  Idk\LegoBundle\Service\Tag\ComponentChain
+    Idk\LegoBundle\Service\Tag\ComponentChain: '@lego.service.components'

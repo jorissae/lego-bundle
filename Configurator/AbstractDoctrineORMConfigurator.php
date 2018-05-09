@@ -27,13 +27,6 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     private $query = null;
 
 
-
-    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
-    {
-        parent::__construct($container, $parent, $entityClassName, $pathParameters);
-    }
-
-
     /**
      * @param QueryBuilder $queryBuilder
      */
@@ -106,27 +99,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     public function getEntityManager()
     {
-        return $this->get('doctrine.orm.entity_manager');
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getEntityManager();
     }
 
-    public function listOptionsForCombobox($object,Field $line){
-        $em = $this->getEntityManager();
-        $edit = $line->getEditInPlace();
-        $class = (isset($edit['class']))? $edit['class']:$this->getClassMetaData()->getAssociationMapping($line->getName())['targetEntity'];
-        $method = (isset($edit['method']))? $edit['method']:'findAll';
-        if(isset($edit['object-in-argument']) and $edit['object-in-argument']){
-            $list = $em->getRepository($class)->$method($object);
-        } else {
-            $list = $em->getRepository($class)->$method();
-        }
-        $return = array();
-        if($list){
-            foreach($list as $entity){
-                $return[$entity->getId()] = $entity->__toString();
-            }
-        }
-        return $return;
-    }
+
 
     public function getAutocompleteField(){
         $fields = $this->getClassFields();
@@ -181,9 +157,16 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     }
 
     public function getType($item,$fieldName){
-
         if(is_object($item)){
-            return $this->getClassMetadata()->getTypeOfColumn($fieldName);
+            $classMetaData = $this->getEntityManager()->getClassMetaData(get_class($item));
+            foreach(explode('.', $fieldName) as $fieldn){
+                if($classMetaData->hasAssociation($fieldn)) {
+                    $mapping = $classMetaData->getAssociationMapping($fieldn);
+                    $classMetaData = $this->getEntityManager()->getClassMetaData( $mapping['targetEntity']);
+                }else{
+                    return $classMetaData->getTypeOfColumn($fieldn);
+                }
+            }
         }
     }
 

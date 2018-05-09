@@ -13,13 +13,11 @@ class Menu implements LegoMenuInterface
 {
 
     private $mem;
-    private $em;
-    private $security;
+    private $configuratorBuilder;
 
-    public function __construct(MetaEntityManager $mem, TokenStorageInterface $security) {
-        $this->em = $mem->getEntityManager();
-        $this->mem = $mem;
-        $this->security = $security;
+    public function __construct(ConfiguratorBuilder $configuratorBuilder) {
+        $this->mem = $configuratorBuilder->getMetaEntityManager();
+        $this->configuratorBuilder = $configuratorBuilder;
     }
 
     public function search(){
@@ -40,13 +38,13 @@ class Menu implements LegoMenuInterface
             'children' => [new MenuItem('index',['path'=>new Path('idk_lego_dashboard'), 'icon'=>'circle-o'])]
         ]);
 
-        foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
+        /*foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
             /* @var \Idk\LegoBundle\Lib\MetaEntity $metaDataEntity */
-            $return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
+            /*$return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
                 'icon'=> $metaDataEntity->getIcon(),
-                'path' => $metaDataEntity->getPath(),
+                'path' => $metaDataEntity->getPath($this->configuratorBuilder),
             ]);
-        }
+        }*/
 
         return $return;
     }

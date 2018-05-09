@@ -2,6 +2,9 @@
 
 namespace Idk\LegoBundle\EditInPlaceType;
 
+use Idk\LegoBundle\Action\EditInPlaceAction;
+use Symfony\Component\HttpFoundation\Request;
+
 abstract class AbstractEipType{
 
 
@@ -10,6 +13,10 @@ abstract class AbstractEipType{
     }
 
     abstract public function getTemplate();
+
+    public function getValueFromAction(Request $request, EditInPlaceAction $action){
+        return $request->request->get('value');
+    }
 
     public function getWithoutEipLayout(){
         return false;

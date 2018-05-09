@@ -136,6 +136,7 @@ $(function(){
         var cls = $(this).attr('data-class');
         var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
+        var field= ($(this).attr('data-line'))? $(this).attr('data-field'):null;
         var input = $('#'+ $(this).attr('data-input-id'));
         var val = 0;
         if(input.attr('type') == 'checkbox'){
@@ -148,15 +149,17 @@ $(function(){
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
-            data: { id: id, fieldName: fieldName,value: val,cls: cls,reload: reload },
+            data: { id: id, fieldName: fieldName,value: val,cls: cls,reload: reload},
             dataType: 'json',
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
                 elm.html('<i style="color:red" class="fa fa-check-circle"></i> ('+retour.err+')');
                 input.val(retour.val);
             }else{
-                if(reload == 'tr' && line){
-                    $('#'+line).replaceWith(retour.val);
+                if(reload == 'entity' && line) {
+                    $('#' + line).replaceWith(retour.val);
+                }else if(reload == 'field' && field){
+                    $('#' + field).replaceWith(retour.val);
                 }else{
                     elm.html('<i style="color:#00a65a;" class="jsa-click fa fa-save"></i>');
                     input.val(retour.val);

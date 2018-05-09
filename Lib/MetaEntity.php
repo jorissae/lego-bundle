@@ -6,6 +6,7 @@ namespace Idk\LegoBundle\Lib;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Idk\LegoBundle\Annotation\Entity\Entity;
 use Idk\LegoBundle\Configurator\DefaultConfigurator;
+use Idk\LegoBundle\Service\ConfiguratorBuilder;
 
 class MetaEntity
 {
@@ -29,13 +30,12 @@ class MetaEntity
         return $this->shortname;
     }
 
-    public function getConfigurator($container){
+    public function getConfigurator(ConfiguratorBuilder $configuratorBuilder){
         $class = $this->annotation->getConfig();
         if($class) {
-            return new $class($container, null, $this->getName(), ['entity'=>$this->shortname]);
+            return $configuratorBuilder->getConfigurator($class, null, $this->getName(), ['entity'=>$this->shortname]);
         }else{
-            $c = new DefaultConfigurator($container, null, $this->getName(), ['entity'=>$this->shortname]);
-            $c->setTitle($this->annotation->getTitle() ?? 'lego.'.$this->shortname.'.title');
+            return $configuratorBuilder->getDefaultConfigurator($this->shortname, $this->getName(), $this->annotation);
         }
         return $c;
     }
@@ -44,8 +44,8 @@ class MetaEntity
         return $this->annotation->getIcon();
     }
 
-    public function getPath(){
-        $c = $this->getConfigurator(null);
+    public function getPath(ConfiguratorBuilder $configuratorBuilder){
+        $c = $this->getConfigurator($configuratorBuilder);
         return new Path($c->getPathRoute('index'), $c->getPathParameters());
     }
 

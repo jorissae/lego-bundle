@@ -1,7 +1,7 @@
-<input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}" type="text" value="{{ value| date('H:i') }}"/>
+<input  class="lego-edit-in-place-input" id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}" type="text" value="{{ value| date('H:i') }}"/>
 <script>
     $(function(){
-        $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').timepicker({
+        $('#{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}').timepicker({
             'timeFormat':'HH:mm',
         });
     });

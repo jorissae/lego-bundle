@@ -6,6 +6,7 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Idk\LegoBundle\Annotation\Entity\Field;
 use Idk\LegoBundle\Component\Component;
+use Idk\LegoBundle\Service\ConfiguratorBuilder;
 use Idk\LegoBundle\Service\Tag\ComponentChain;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,8 @@ abstract class AbstractConfigurator
 
     protected $em;
 
+    protected $configuratorBuilder;
+
     private $showTemplate = 'IdkLegoBundle:Default:show.html.twig';
 
     private $logTemplate = 'IdkLegoBundle:Default:log.html.twig';
@@ -50,7 +53,6 @@ abstract class AbstractConfigurator
 
     protected $orderDirection = '';
 
-    protected $container;
 
     protected $entityClassName;
 
@@ -68,22 +70,20 @@ abstract class AbstractConfigurator
 
     private $pathParameters = [];
 
-    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
+    public function __construct(ConfiguratorBuilder $builder, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
     {
         if($parent) $this->setParent($parent);
-        $this->container = $container;
+        $this->configuratorBuilder = $builder;
         $this->entityClassName = $entityClassName;
         $this->pathParameters = $pathParameters;
         if($this->getControllerPath() !== 'lego'){
            unset($this->pathParameters['entity']); //TODO rename in lego_entity
         }
-        if($container) { //another methode for no build TODO (need a empty configurateur and a executable configurator ??)
-            $this->build();
-        }
+        $this->build();
     }
 
-    public function setPathParameters(array $pathParameters){
-        $this->pathParameters = $pathParameters;
+    public function getConfiguratorBuilder(): ConfiguratorBuilder{
+        return $this->configuratorBuilder;
     }
 
     public function getId(){
@@ -133,10 +133,6 @@ abstract class AbstractConfigurator
         }
     }
 
-    public function get($id)
-    {
-        return $this->container->get($id);
-    }
 
     public function getTitle() {
         return $this->title ?? $this::TITLE;
@@ -282,32 +278,6 @@ abstract class AbstractConfigurator
     }
 
 
-
-    public function editInplaceInputType($item,$columnName,$class = null){
-        $methodName = 'get' . $this->to_camel_case($columnName);
-        if (is_array($item)) {
-            $item = $item[0];
-        }
-        $type = $this->getType($item,$columnName);
-        $retour = $item->$methodName();
-        if ($type == 'boolean') {
-            return $type;
-        }else if($type == 'datetime'){
-            return $type;
-        }else if($type == 'date') {
-            return $type;
-        }else if($type == 'time') {
-            return $type;
-        } else if($retour instanceof PersistentCollection) {
-            return 'collection';
-        } elseif(is_array($retour)) {
-            return 'array';
-        } elseif($type != null) {
-            return 'text';
-        } else {
-            return 'object';
-        }
-    }
 
     public function getStringValue($item, $columnName)
     {
@@ -465,7 +435,7 @@ abstract class AbstractConfigurator
     }
 
     public function getUser(){
-        return $this->get('security.context')->getToken()->getUser();
+        return $this->configuratorBuilder()->getUser();
     }
 
 
@@ -589,9 +559,7 @@ abstract class AbstractConfigurator
             $this->addChild($routeSuffix, $configurator);
             return $component;
         }else{
-            $this->componentsChain = $this->get(ComponentChain::class);
-            return $this->componentsChain->build($className, $options, $this, $routeSuffix);
-            return $this->get($className)->build($options, $this, $routeSuffix);//$reflectionClass->newInstance()->build($options, $this, $routeSuffix);
+            return $this->configuratorBuilder->getComponentChain()->build($className, $options, $this, $routeSuffix);
         }
 
     }
@@ -604,9 +572,8 @@ abstract class AbstractConfigurator
         $this->children[$routeSuffix][] = $configurator;
     }
 
-    private function generateConfigurator($className = null){
-        $reflectionClass =  new \ReflectionClass($className);
-        return $reflectionClass->newInstance($this->container, $this);
+    private function generateConfigurator($className = null): AbstractConfigurator{
+        return $this->configuratorBuilder->getConfigurator($className, $this);
     }
 
 
@@ -621,7 +588,7 @@ abstract class AbstractConfigurator
 
     public function getUrl($suffix, array $params = []){
         $path = $this->getPath($suffix, $params);
-        return $this->get('router')->generate($path->getRoute(), $path->getParams());
+        return $this->configuratorBuilder->getRouter()->generate($path->getRoute(), $path->getParams());
     }
 
     public function getPathParams($item){
@@ -633,22 +600,11 @@ abstract class AbstractConfigurator
     }
 
     public function getConfiguratorSessionStorage($key, $default = null){
-        if($this->get('session')->has($this->getId())){
-            $componentSessionStorage = $this->get('session')->get($this->getId());
-            return (isset($componentSessionStorage[$key]))? $componentSessionStorage[$key]:$default;
-        }else{
-            return $default;
-        }
+        return $this->configuratorBuilder->getSessionStorage($this->getId(), $key, $default);
     }
 
     public function setConfiguratorSessionStorage($key, $value){
-        if(!$this->get('session')->has($this->getId())){
-            $this->get('session')->set($this->getId(), []);
-        }
-        $componentSessionStorage = $this->get('session')->get($this->getId());
-        $componentSessionStorage[$key] = $value;
-        $this->get('session')->set($this->getId(), $componentSessionStorage);
-        return $this;
+        return $this->configuratorBuilder->setSessionStorage($his->getId(), $key, $value);
     }
 
     public function setTitle($title){
@@ -658,6 +614,8 @@ abstract class AbstractConfigurator
     public function getControllerPath(){
         return 'lego';
     }
+
+
 
 
 

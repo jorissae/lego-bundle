@@ -1,7 +1,8 @@
-<select  id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}" type="text" value="{{ stringValue }}" class="form-control">
+<select  id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}" type="text" value="{{ stringValue }}" class="form-control">
 </select>
-<span id="{{ component.gid('eip-loader') }}-{{ field.name }}-{{ item.id }}" class="fa fa-spinner fa-pulse"></span>
+<span id="{{ component.gid('eip-loader') }}-{{ field.id }}-{{ item.id }}" class="fa fa-spinner fa-pulse"></span>
 <script>
+    {%  set path = component.getPath('editinplaceentitychoice') %}
         var {{ loader }}_ok = false;
         function {{ loader }}(){
             if({{ loader }}_ok === false) {
@@ -10,7 +11,7 @@
                 $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').hide();
                 $.ajax({
                     method: "POST",
-                    url: '{{ path('idk_lego_entity_choice') }}',
+                    url: '{{ path(path.route,path.params) }}',
                     data: {
                         'entity_target': '{{ configurator.getAssociationClass(field.name)|replace({'\\':'/'}) }}',
                         'fieldname': '{{ field.name }}',

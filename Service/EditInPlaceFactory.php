@@ -3,9 +3,11 @@ namespace Idk\LegoBundle\Service;
 
 
 use Idk\LegoBundle\EditInPlaceType\BooleanEipType;
+use Idk\LegoBundle\EditInPlaceType\DateEipType;
 use Idk\LegoBundle\EditInPlaceType\DateTimeEipType;
 use Idk\LegoBundle\EditInPlaceType\EntityEipType;
 use Idk\LegoBundle\EditInPlaceType\StringEipType;
+use Idk\LegoBundle\EditInPlaceType\TimeEipType;
 
 class EditInPlaceFactory
 {
@@ -19,9 +21,9 @@ class EditInPlaceFactory
         }else if($type == 'datetime'){
             $class = new DateTimeEipType();
         }else if($type == 'date') {
-            return $type;
+            $class = new DateEipType();
         }else if($type == 'time') {
-            return $type;
+            $class =  new TimeEipType();
         } else if($value instanceof PersistentCollection) {
             //TODO return 'collection';
             $class=  new StringEipType();

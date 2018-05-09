@@ -1,11 +1,11 @@
 
-{% set loaderCallback = component.gid('loader-callback') ~ '_' ~ field.name ~ '_' ~ item.id  %}
+{% set loaderCallback = component.gid('loader-callback') ~ '_' ~ field.id ~ '_' ~ item.id  %}
 {% if eipType.withoutEipLayout %}
-    {% include eipType.template with {'loader':loaderCallback} %}
+    {% include eipType.template with {'loader':loaderCallback, 'component':component} %}
 {% else %}
-    <span class="lego-edit-in-place" id="{{ component.gid('span') }}-{{ field.name }}-{{ item.id }}"
-          data-input-id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}"
-          data-span-in-id="{{ component.gid('span-in') }}-{{ field.name }}-{{ item.id }}"
+    <span class="lego-edit-in-place" id="{{ component.gid('span') }}-{{ field.id }}-{{ item.id }}"
+          data-input-id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}"
+          data-span-in-id="{{ component.gid('span-in') }}-{{ field.id }}-{{ item.id }}"
           data-field-name="{{ field.name }}"
           {% if eipType.hasCallback %}data-callback="{{ loaderCallback }}"{% endif %}
           data-item-id="{{ item.id }}">
@@ -15,31 +15,32 @@
             <em class="fa fa-pencil"></em>
         {% endif %}
     </span>
-    <span id="{{ component.gid('span-in') }}-{{ field.name }}-{{ item.id }}" style="display:none;">
+    <span id="{{ component.gid('span-in') }}-{{ field.id }}-{{ item.id }}" style="display:none;">
         {% include eipType.template with {'loader':loaderCallback} %}
-        {%  set pathEip = configurator.getEditInPlacePath() %}
+        {%  set pathEip = component.getPath('editinplace') %}
         <span
                 {#  Attention: appeler avec siblings de edit-in-place-input #}
                 data-target="{{ path(pathEip.route,pathEip.params) }}"
                 data-item-id="{{ item.id }}" data-field-name="{{ field.name }}"
-                data-span-id="{{ component.gid('span') }}-{{ field.name }}-{{ item.id }}"
-                data-input-id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}"
-                data-span-in-id="{{ component.gid('span-in') }}-{{ field.name }}-{{ item.id }}"
+                data-span-id="{{ component.gid('span') }}-{{ field.id }}-{{ item.id }}"
+                data-input-id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}"
+                data-span-in-id="{{ component.gid('span-in') }}-{{ field.id }}-{{ item.id }}"
                 data-class="{{ configurator.getAssociationClass(field.name) }}"
                 data-line="{{ component.gid('line') }}-{{ item.id }}"
+                data-field="{{ component.gid('field') }}-{{ item.id }}-{{ field.id }}"
                 data-reload="{{ field.editInPlaceReload }}"
                 class="lego-edit-in-place-ok">
                 <i style="color:#00a65a;" class="jsa-click fa fa-save" title="{{ 'lego.action.save' | trans }}"></i>
         </span>
         <span data-item-id="{{ item.id }}" data-field-name="{{ field.name }}"
-              data-span-id="{{ component.gid('span') }}-{{ field.name }}-{{ item.id }}"
-              data-span-in-id="{{ component.gid('span-in') }}-{{ field.name }}-{{ item.id }}"
+              data-span-id="{{ component.gid('span') }}-{{ field.id }}-{{ item.id }}"
+              data-span-in-id="{{ component.gid('span-in') }}-{{ field.id }}-{{ item.id }}"
               class="lego-edit-in-place-close">
             <i style="color:#dd4b39;" class="jsa-click fa fa-close" title="Annuler"></i>
         </span>
         {% if eipType.canToErase %}
             <span data-item-id="{{ item.id }}"
-                  data-input-id="{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}"
+                  data-input-id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}"
                   data-field-name="{{ field.name }}" class="lego-edit-in-place-eraser">
                     <i class="jsa-click fa fa-eraser" title="Supprimer"></i>
             </span>

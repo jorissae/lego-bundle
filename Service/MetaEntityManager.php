@@ -59,7 +59,7 @@ class MetaEntityManager implements MetaEntityManagerInterface
         return $return;
     }
 
-    public function getField($className, $fieldName): Annotation\Field{
+    public function getFieldFromAnnotation($className, $fieldName): Annotation\Field{
         $fields = $this->generateFields($className, [$fieldName]);
         return $fields[$fieldName];
     }

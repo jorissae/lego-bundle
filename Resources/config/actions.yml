@@ -5,6 +5,7 @@ parameters:
     lego.action.export.class: Idk\LegoBundle\Action\ExportAction
     lego.action.show.class: Idk\LegoBundle\Action\ShowAction
     lego.action.editinplace.class: Idk\LegoBundle\Action\EditInPlaceAction
+    lego.action.editinplace_entity_choice.class: Idk\LegoBundle\Action\EditInPlaceEntityChoiceAction
     lego.action.edit.class: Idk\LegoBundle\Action\EditAction
     lego.action.delete.class: Idk\LegoBundle\Action\DeleteAction
     lego.action.bulk.class: Idk\LegoBundle\Action\BulkAction
@@ -15,7 +16,7 @@ parameters:
     lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
     lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
     lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
-    lego.action.entity_choice.class: Idk\LegoBundle\Action\EntityChoiceAction
+
 
 services:
 
@@ -28,62 +29,67 @@ services:
 
     lego.action.index:
         class: '%lego.action.index.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.component:
         class: '%lego.action.component.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.bulk:
         class: '%lego.action.bulk.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.delete:
         class: '%lego.action.delete.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.edit:
         class: '%lego.action.edit.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.editinplace:
         class: '%lego.action.editinplace.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder", "@form.factory", "@lego.service.edit_in_place.factory"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.show:
         class: '%lego.action.show.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.add:
         class: '%lego.action.add.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.export:
         class: '%lego.action.export.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager", "@lego.service.export"]
+        arguments: ["@lego.service.configurator.builder", "@lego.service.export"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.sort_components:
         class: '%lego.action.sort_components.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.sort_components_reset:
         class: '%lego.action.sort_components_reset.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.autocompletion:
         class: '%lego.action.autocompletion.class%'
-        arguments: ["@service_container","@lego.service.meta_entity_manager"]
+        arguments: ["@lego.service.configurator.builder"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.editinplaceentitychoice:
+        class: '%lego.action.editinplace_entity_choice.class%'
+        arguments: ["@lego.service.configurator.builder", "@security.authorization_checker"]
         tags: [controller.service_arguments, lego.action]
 
 
@@ -109,9 +115,4 @@ services:
     lego.action.dashboard:
         class: '%lego.action.dashboard.class%'
         arguments: ["@twig"]
-        tags: [controller.service_arguments]
-
-    lego.action.entity_choice:
-        class: '%lego.action.entity_choice.class%'
-        arguments: ["@security.authorization_checker","@lego.service.meta_entity_manager"]
         tags: [controller.service_arguments]

@@ -78,6 +78,10 @@ class Field
         return $this->name;
     }
 
+    public function getId(){
+        return str_replace('.','_',$this->getName());
+    }
+
     public function setName($name){
         $this->name = $name;
         $this->header = ($this->header)? $this->header:$this->name;
@@ -173,7 +177,7 @@ class Field
     }
 
     public function getEditInPlaceReload(){
-        return ($this->hasEditInPlaceReload())? $this->edit_in_place['reload']:'td';
+        return ($this->hasEditInPlaceReload())? $this->edit_in_place['reload']:'value';
     }
 
 
@@ -189,6 +193,18 @@ class Field
 
     public function getValue(AbstractConfigurator $configurator,$entity){
         return $configurator->getValue($entity, $this->getName());
+    }
+
+    public function setValue(AbstractConfigurator $configurator,$entity, $value){
+        if(strrpos($this->getName(), '.')){
+            $toPersist = $configurator->getValue($entity, substr($this->getName(), 0, (strrpos($this->getName(), '.'))));
+            $method = 'set'.substr($this->getName(), (strrpos($this->getName(), '.') + 1));
+        }else{
+            $toPersist = $entity;
+            $method = 'set'.$this->getName();
+        }
+        $toPersist->$method($value);
+        return $toPersist;
     }
 
     public function isColor(){
@@ -215,14 +231,14 @@ class Field
 
     public function generateTwigValue(AbstractConfigurator $configurator, $entity){
         $value = $this->getValue($configurator, $entity);
-        $template = $configurator->get('twig')->createTemplate($this->getTwig());
+        $template = $configurator->getConfiguratorBuilder()->getTwig()->createTemplate($this->getTwig());
         $render = $template->render(['view' => $this->getViewParams($configurator, $entity, $value)]);
         return $render;
     }
 
     public function generateTemplateValue(AbstractConfigurator $configurator, $entity){
         $value = $this->getValue($configurator, $entity);
-        return $configurator->get('twig')->render($this->getTemplate(), ['view' => $this->getViewParams($configurator, $entity, $value)]);
+        return $configurator->getConfiguratorBuilder()->render($this->getTemplate(), ['view' => $this->getViewParams($configurator, $entity, $value)]);
     }
 
     public function getViewParams($configurator, $entity, $value){

@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\QueryHelper;
 use Idk\LegoBundle\Service\MetaEntityManager;
 
-class ListItems extends Component{
+class ListItems extends Component implements EditInPlaceInterface {
 
     const ENTITY_ACTION_DELETE = 'entity_action_delete';
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
@@ -134,6 +134,10 @@ class ListItems extends Component{
 
     public function getFields(){
         return array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
+    }
+
+    public function getField(string $fieldName): Field{
+        return $this->getFields()[$fieldName];
     }
 
     public function getEntityActions(){
@@ -287,5 +291,9 @@ class ListItems extends Component{
 
     private function getAllBreakers(){
         return $this->getBreakersChildren($this->getBreakers());
+    }
+
+    public function getEipEntity($item){
+        return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('line'),['component'=>$this,'item'=>$item]);
     }
 }

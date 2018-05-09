@@ -2,12 +2,7 @@
     <div class="box-body">
         <div class="row">
             {%  if entity  %}
-                {% for field in component.fields %}
-                        <dl class="dl-horizontal">
-                            <dt>{{ field.header }}</dt>
-                            <dd>{{ render_field_value(component,field,entity) }}</dd>
-                        </dl>
-                {% endfor %}
+                {% include component.partial('entity') with {'component':component ,'entity':entity} %}
             {%  else %}
                 <div class="col-md-12">
                     {% form_theme form theme %}
