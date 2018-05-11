@@ -38,13 +38,13 @@ class Menu implements LegoMenuInterface
             'children' => [new MenuItem('index',['path'=>new Path('idk_lego_dashboard'), 'icon'=>'circle-o'])]
         ]);
 
-        /*foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
+        foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
             /* @var \Idk\LegoBundle\Lib\MetaEntity $metaDataEntity */
-            /*$return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
+            $return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
                 'icon'=> $metaDataEntity->getIcon(),
                 'path' => $metaDataEntity->getPath($this->configuratorBuilder),
             ]);
-        }*/
+        }
 
         return $return;
     }
