@@ -230,8 +230,10 @@ var jsa = {
     ajax: function(elm){
         var type = (elm.attr('data-type'))? elm.attr('data-type'):'json';
         var callback = (window[elm.attr('data-callback')])? window[elm.attr('data-callback')]:jsa.evt[elm.attr('data-callback')];
+        var contentReloadCallback = (window[elm.attr('data-content-reload-callback')])? window[elm.attr('data-content-reload-callback')]:jsa.evt[elm.attr('data-content-reload-callback')];
         var preCallback = ( window[elm.attr('data-pre-callback')])? window[elm.attr('data-pre-callback')]:jsa.evt[elm.attr('data-pre-callback')];
         var errCallback = (elm.attr('data-err-callback'))? window[elm.attr('data-err-callback')]:null;
+        var contentReload = (elm.attr('data-content-reload'))? elm.attr('data-content-reload'):null;
         if(preCallback){
             preCallback(elm);
         }
@@ -263,6 +265,15 @@ var jsa = {
             dataType    : type,
             success     : function(data) {
                 if (callback) callback(elm, data);
+                if(contentReload && contentReloadCallback) {
+                    $.ajax({
+                        type: 'get',
+                        url: contentReload,
+                        success: function (data) {
+                            contentReloadCallback(elm, data);
+                        }
+                    })
+                }
             },
             error : function(xhr, ajaxOptions, thrownError){
                 if (errCallback) errCallback(elm, xhr, ajaxOptions, thrownError);

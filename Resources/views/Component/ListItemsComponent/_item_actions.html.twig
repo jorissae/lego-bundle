@@ -10,13 +10,15 @@
                     {% include entityAction.template with {'item': item, 'action': entityAction, 'path': path} %}
                 {% else %}
                         {% if entityAction.isXhr %}
+                            {% set pathline = component.path('entityreload',{'id':item.id}) %}
                             <span
-                                data-line="line-{{ item.id }}"
+                                data-line="{{ component.gid('line') }}-{{ item.id }}"
                                 data-confirm="Voulez vous vraiment effectuer cette action ?"
                                 data-donnes="{'index':{{ index }} }"
                                 data-type="html"
-                                data-callback="legoReloadLine"
                                 data-url="{{ path(path.route, path.params) }}"
+                                data-content-reload="{{ path(pathline.route,pathline.params) }}"
+                                data-content-reload-callback="legoReloadLine"
                                 class="jsa-ajax btn btn-primary btn-xs">
                                 {% if entityAction.getIconFor(item) is not null %}<i class="fa fa-{{ entityAction.getIconFor(item) }}"></i>{% endif %}
                                 {{ entityAction.getLabelFor(item) }}

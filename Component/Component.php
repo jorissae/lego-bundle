@@ -133,8 +133,7 @@ abstract class Component{
     }
 
 
-    public function getPath(string $suffix = 'component'){
-        $params = [];
+    public function getPath(string $suffix = 'component', $params = []){
         foreach($this->getListenParamsForReload() as $key){
             if($this->request->get($key)){
                 $params[$key] = $this->request->get($key);

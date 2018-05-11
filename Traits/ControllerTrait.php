@@ -2,6 +2,7 @@
 namespace Idk\LegoBundle\Traits;
 
 use Idk\LegoBundle\Action\EditInPlaceEntityChoiceAction;
+use Idk\LegoBundle\Action\EntityReloadAction;
 use Idk\LegoBundle\Service\Tag\ActionChain;
 use Idk\LegoBundle\Action\AutoCompletionAction;
 use Idk\LegoBundle\Action\EditInPlaceAction;
@@ -129,6 +130,18 @@ trait ControllerTrait
     public function editInPlaceAction(Request $request)
     {
         return $this->getResponse(EditInPlaceAction::class, $request);
+    }
+
+    /**
+     * The edit in place action
+     *
+     * @Route("/entity/reload/{id}/{cid}/{suffix_route}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function entityReloadAction(Request $request)
+    {
+        return $this->getResponse(EntityReloadAction::class, $request);
     }
 
     /**

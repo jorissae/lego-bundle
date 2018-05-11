@@ -15,7 +15,7 @@
                     data-callback="legoDeleteLine"
                     data-dismiss="modal"
                     data-url="{{ path(configurator.getPathRoute('delete'),configurator.getPathParams(item) ) }}"
-                    data-line="line-{{ item.id }}">{{ 'lego.word.yes'|trans }}</a>
+                    data-line="{{ component.gid('line')  }}-{{ item.id }}">{{ 'lego.word.yes'|trans }}</a>
                 <button class="btn" data-dismiss="modal">{{ 'lego.word.no'|trans }}</button>
             </div>
         </div>

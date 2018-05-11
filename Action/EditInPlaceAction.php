@@ -46,7 +46,7 @@ final class EditInPlaceAction extends AbstractFormAction
 
             $configurator->bindRequestCurrentComponents($request, $component);
             $component->xhrBindRequest($request);
-            $return = array('code' => 'OK', 'val' => (string)html_entity_decode($component->getEipEntity($entity)));
+            $return = array('code' => 'OK', 'val' => (string)html_entity_decode($component->renderEntity($entity)));
         }elseif($reload == 'field'){
             $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
             $configurator->bindRequestCurrentComponents($request, $component);

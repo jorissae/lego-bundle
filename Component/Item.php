@@ -76,7 +76,7 @@ class Item extends Component implements EditInPlaceInterface {
         return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
     }
 
-    public function getEipEntity($entity){
+    public function renderEntity($entity){
         return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('entity'),['component'=>$this,'entity'=>$entity]);
     }
 

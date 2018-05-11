@@ -12,9 +12,7 @@
                             -------------------------------------
                                   Light - Easy - Good - Open 
 
-Urgent
-- refacoring getValue et setValue de Field
-- refactoring getType de Configurator
+
 ```
 Work directly WITH USER LOGIN :-D
                 
@@ -114,13 +112,13 @@ CURRENT v alpha 0.1.2
 - Field-route [X]
 - Onglet component [ ]
 - Default LayoutBase [X]
-- Custom Bulk Action [ ]
+- Custom Bulk Action [X]
 - Ressource Action [X]
 - Menu auto [X]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
 - Upload File [X]
-- EntityAction and ListAction auto [ ]
+- EntityAction and ListAction auto [X]
 - Rupteur [X]
 - Group [ ]
 - Form auto [X]
@@ -129,7 +127,7 @@ CURRENT v alpha 0.1.2
 - Header and Menu object [X]
 - Multi same component (CustomComponent or Multi ActionComponent) [ ]
 - Skeleton [X] //  SF4 maker [X]
-- Reload line with item action [ ] (edit in place in class)
+- Reload line with item action [X]
 - Move component [X]
 - Dashboard [X]
 - Macro [/] In class
@@ -167,7 +165,7 @@ Check all type Form, (Sub-)Filter, Multi-widget xhr-widget, Group, Custom action
 
 Optimisation todo:
 
-Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker
+Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
 
 
 Your config.yml

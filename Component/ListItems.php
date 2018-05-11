@@ -293,7 +293,7 @@ class ListItems extends Component implements EditInPlaceInterface {
         return $this->getBreakersChildren($this->getBreakers());
     }
 
-    public function getEipEntity($item){
+    public function renderEntity($item){
         return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('line'),['component'=>$this,'item'=>$item]);
     }
 }

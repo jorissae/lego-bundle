@@ -95,8 +95,9 @@ $(function(){
         var id = elm.attr('data-item-id');
         var fieldName = elm.attr('data-field-name');
         var val = (parseInt(elm.attr('data-value')) > 0)? 0:1;
-        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
-        var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
+        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'value';
+        var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null
+        var field= ($(this).attr('data-line'))? $(this).attr('data-field'):null;
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
@@ -106,9 +107,10 @@ $(function(){
             if(retour.code == 'NOK'){
                 alert('Une erreur est survenue ('+retour.err+')');
             }else{
-                if(reload == 'tr' && line){
-                    $('#'+line).replaceWith(retour.val);
-                    $("select.select2").select2();
+                if(reload == 'entity' && line) {
+                    $('#' + line).replaceWith(retour.val);
+                }else if(reload == 'field' && field){
+                    $('#' + field).replaceWith(retour.val);
                 }else{
                     if(retour.val == 1 || retour.val == "1" || retour.val == "oui" || retour.val == 'true'){
                         elm.removeClass('fa-square-o');
@@ -134,7 +136,7 @@ $(function(){
         var callback = $(this).attr('data-callback');
         var fieldName = $(this).attr('data-field-name');
         var cls = $(this).attr('data-class');
-        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
+        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'value';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
         var field= ($(this).attr('data-line'))? $(this).attr('data-field'):null;
         var input = $('#'+ $(this).attr('data-input-id'));

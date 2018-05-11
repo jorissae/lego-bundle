@@ -16,6 +16,7 @@ parameters:
     lego.action.widget_save.class: Idk\LegoBundle\Action\WidgetSaveAction
     lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
     lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
+    lego.action.entityreload.class: Idk\LegoBundle\Action\EntityReloadAction
 
 
 services:
@@ -55,6 +56,11 @@ services:
     lego.action.editinplace:
         class: '%lego.action.editinplace.class%'
         arguments: ["@lego.service.configurator.builder", "@form.factory", "@lego.service.edit_in_place.factory"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.entityreload:
+        class: '%lego.action.entityreload.class%'
+        arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.show:
