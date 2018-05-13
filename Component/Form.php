@@ -41,9 +41,11 @@ class Form extends Component{
 
     public function generateForm($entity){
         if(!$this->getOption('form',null)){
-            $formBuilder = $this->formFactory->createBuilder(FormType::class, $entity, []);
+            $formBuilder = $this->formFactory->createBuilder(FormType::class, $entity, ['allow_extra_fields'=>true]);
             foreach($this->mem->generateFormFields($this->getConfigurator()->getEntityName()) as $field){
-                $formBuilder->add($field->getName(), $field->getType(), $field->getOptions());
+                if(!in_array($field->getName(), $this->getOption('fields_exclude',[]))) {
+                    $field->addIn($this->formFactory, $formBuilder, $this->mem);
+                }
             }
             return $formBuilder->getForm();
         }else {

@@ -3,6 +3,7 @@
 namespace Idk\LegoBundle\Annotation\Entity\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\FileType as BaseType;
+use Symfony\Component\Form\FormFactoryInterface;
 
 
 /**

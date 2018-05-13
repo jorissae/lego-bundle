@@ -39,6 +39,7 @@ class Menu implements LegoMenuInterface
         ]);
 
         foreach($this->mem->getMetaDataEntities() as $metaDataEntity){
+
             /* @var \Idk\LegoBundle\Lib\MetaEntity $metaDataEntity */
             $return[] = new MenuItem(ucfirst($metaDataEntity->getLibelle()), [
                 'icon'=> $metaDataEntity->getIcon(),

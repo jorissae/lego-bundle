@@ -101,7 +101,8 @@ php bin/console make:lego
  ===> For Symfony 4.X
 
 TODO 
-
+- order menu item
+- order item in itemList (XHR)
 CURRENT v alpha 0.1.2
 
 - Log history [ ] other bundle

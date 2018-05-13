@@ -20,6 +20,12 @@ services:
       tags:
           - { name: form.type, alias: lego_geojson }
 
+  lego.form.manytomanyjoin:
+      class: Idk\LegoBundle\Form\Type\ManyToManyJoinType
+      arguments:    ["@lego.service.meta_entity_manager"]
+      tags:
+          - { name: form.type, alias: lego_many_to_many_join }
+
   lego.form.latlng:
       class: Idk\LegoBundle\Form\Type\LatLngType
       tags:

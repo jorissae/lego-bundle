@@ -22,7 +22,8 @@ class MetaEntityManager implements MetaEntityManagerInterface
         $return = [];
         if(is_array($columns)) {
             foreach ($columns as $column) {
-                $return[$column] = null;
+                $return[$column] = new Annotation\Field();
+                $return[$column]->setName($column);
             }
         }
         $r = new AnnotationReader();
@@ -162,6 +163,7 @@ class MetaEntityManager implements MetaEntityManagerInterface
                 $return[$shortName] = new MetaEntity($shortName, $metadata, $annotation);
             }
         }
+        ksort($return);
         return $return;
     }
 

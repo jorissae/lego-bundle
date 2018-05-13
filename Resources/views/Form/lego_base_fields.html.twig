@@ -2,6 +2,7 @@
 
 
 
+
 {# Rows #}
 {% block form_row %}
 {% spaceless %}
@@ -13,6 +14,82 @@
 {% endspaceless %}
 {% endblock form_row %}
 
+
+
+{% block collection_widget %}
+    {% import _self as formMacros %}
+    {% macro row(form, errors) %}
+        {% spaceless %}
+            <tr class="lego_collection_type">
+                {#<label>Item: __name__</label>#}
+                {% if errors|length > 0 %} class="warning bg-red" {% endif %}
+                {% if form.count %}
+                    {% for field in form.getIterator() %}
+                        <td>{{ form_widget(field) }}</td>
+                    {%  endfor %}
+                {% endif %}
+                {{ form_errors(form) }}
+            </tr>
+        {% endspaceless %}
+    {% endmacro %}
+    <div {{ block('widget_attributes') }} data-prototype="{{ formMacros.row(prototype, errors)|e('html_attr') }}">
+        <table id="table_{{ id }}" class="table">
+            <tbody id="tbody_{{ id }}">
+            <tr>
+                {% for field in prototype.getIterator() %}
+                    <th>{{ form_label(field) }}</th>
+                {%  endfor %}
+            </tr>
+
+            {% for field in form.getIterator() %}
+                {{ formMacros.row(field, errors) }}
+            {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        {% if allow_add %}
+        function addForm{{ id }}($collectionHolder) {
+            var index = $collectionHolder.data('index');
+            var newLine = $($collectionHolder.data('prototype'));
+            //newForm = newForm.replace(/__name__/g, index);
+            //$collectionHolder.data('index', index + 1);
+            {% if allow_delete %}addFormDeleteLink{{ id }}(newLine);{%  endif %}
+            $('#tbody_{{ id }}').append(newLine);
+            $("#tbody_{{ id }} select.select2").select2({'width':'100%'});
+        }
+        {%  endif %}
+        {% if allow_delete %}
+        function addFormDeleteLink{{ id }}(line) {
+            var deleteLink = $('<td><a href="#">delete this item</a></td>');
+            line.append(deleteLink);
+            deleteLink.on('click', function(e) {
+                e.preventDefault();
+                line.remove();
+            });
+        }
+        {%  endif %}
+        jQuery(document).ready(function() {
+            var collection = $('div#{{ id }}');
+            {% if allow_add%}
+            var addLink = $('<span></span>').append($('<a href="#" class="add_link">Add</a>'));
+            collection.append(addLink);
+            addLink.on('click', function(e) {
+                e.preventDefault();
+                addForm{{ id }}(collection);
+            });
+            {%  endif %}
+            {% if allow_delete %}
+            collection.find('tr.lego_collection_type').each(function() {
+                addFormDeleteLink{{ id }}($(this));
+            });
+            {%  endif %}
+
+
+            collection.data('index', collection.find('tr').length);
+        });
+    </script>
+{% endblock %}
 
 {% block form_errors %}
 {% spaceless %}

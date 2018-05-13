@@ -51,7 +51,7 @@ class ConfiguratorBuilder
         return $reflectionClass->newInstance($this, $parent, $entityName, $parameters);
     }
 
-    public function getDefaultConfigurator($name, $shortname, $annotation){
+    public function getDefaultConfigurator($shortname, $name, $annotation){
         $c = new DefaultConfigurator($this, null, $name, ['entity'=>$shortname]);
         $c->setTitle($annotation->getTitle() ?? 'lego.'.$shortname.'.title');
         return $c;
