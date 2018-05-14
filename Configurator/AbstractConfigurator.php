@@ -315,7 +315,7 @@ abstract class AbstractConfigurator
             }
         } else {
             if ($result instanceof PersistentCollection) {
-                $results = "";
+                $results = [];
                 /* @var Object $entry */
                 foreach ($result as $entry) {
                     $results[] = $entry->__toString();
