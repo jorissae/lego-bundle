@@ -39,7 +39,7 @@ class ListItems extends Component implements EditInPlaceInterface {
 
     public function getAllQueryParams()
     {
-        return ['page', 'breaker', 'nbepp'];
+        return ['page', 'breaker', 'nbepp', 'orderBy', 'orderDirection'];
     }
 
     public function getListenParamsForReload()
@@ -61,6 +61,12 @@ class ListItems extends Component implements EditInPlaceInterface {
         }
         if($request->query->has('page')){
             $this->setComponentSessionStorage('page', $request->query->get('page'));
+        }
+        if($request->query->has('orderBy')){
+            $this->setComponentSessionStorage('orderBy', $request->query->get('orderBy'));
+        }
+        if($request->query->has('orderDirection')){
+            $this->setComponentSessionStorage('orderDirection', $request->query->get('orderDirection'));
         }
         $this->bindRequest($request);
     }
@@ -85,6 +91,10 @@ class ListItems extends Component implements EditInPlaceInterface {
             }else{
                 $this->addPredefinedBulkAction($action);
             }
+        }
+        if($this->getComponentSessionStorage('orderBy')){
+            $this->sorters = [];
+            $this->addSorter($this->getComponentSessionStorage('orderBy'), $this->getComponentSessionStorage('orderDirection', 'ASC'));
         }
     }
 
@@ -181,6 +191,16 @@ class ListItems extends Component implements EditInPlaceInterface {
         $this->sorters[] = [$name,$type];
     }
 
+
+    public function sortDirection(string $fieldName){
+        foreach($this->sorters as $sort){
+            if($sort[0] == $fieldName){
+                return (strtoupper($sort[1]) === 'DESC')? 'ASC':'DESC';
+            }
+        }
+        return 'DESC';
+    }
+
     public function getSorters(){
         return $this->sorters;
     }
@@ -197,6 +217,8 @@ class ListItems extends Component implements EditInPlaceInterface {
         }
 
         foreach($this->getSorters() as $sorter){
+            $pathInfo = $queryHelper->getPathInfo($this->getConfigurator(),$this->getConfigurator()->getClassMetaData(),$sorter[0]);
+            if($pathInfo['association']) $sorter[0].= '.id';
             $path = $queryHelper->getPath($queryBuilder, 'b', $sorter[0]);
             $typeSorter = (isset($sorter[1]) and strtoupper($sorter[1]) == 'DESC')? 'DESC':'ASC';
             $queryBuilder->addOrderBy($path['alias'] . $path['column'], $typeSorter);

@@ -255,5 +255,9 @@ class Field
         return $vp;
     }
 
+    public function getSort(){
+        return $this->sort;
+    }
+
 
 }

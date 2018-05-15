@@ -172,7 +172,8 @@ $(function(){
             }
             if(callback) window[callback](retour,elm);
         }).fail(function( error ){
-            lego.error(error);
+            elm.html('<i style="color:red" class="fa fa-check-circle"></i> (Error '+error.status+')');
+            lego.error(error.statusText + '<br/>Look Xhr response');
         });
     });
 

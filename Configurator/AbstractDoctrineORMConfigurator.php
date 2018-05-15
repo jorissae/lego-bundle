@@ -78,6 +78,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
         // Apply sorting
         $dataClass = $this->getClassMetaData();
+        /*
         if (!empty($this->orderBy)) {
             $columnName = $this->orderBy;
             $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
@@ -85,7 +86,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
             $path = $queryHelper->getPath($queryBuilder,'b',$columnName);
             $orderBy = $path['alias'] . $path['column'];
             $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
-        }
+        }*/
 
         return $queryBuilder;
     }

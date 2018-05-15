@@ -25,7 +25,7 @@
                         {% set nbCol = nbCol + 1 %}
                         {% set columnName = field.name %}
                         {% set columnkey = field.header %}
-                        {% set orderDirection = "DESC" %}
+                        {% set orderDirection = component.sortDirection(columnName) %}
                         {% set extraHeaderClass = "" %}
                         {% if ( columnName == configurator.orderBy )%}
                             {% if configurator.orderDirection == "DESC" %}
@@ -37,9 +37,13 @@
                         {% else %}
                             {% set extraHeaderClass = "sorting" %}
                         {% endif %}
-                        <th {% if field.style %} style="{{ field.style }}"  {% endif %} class="{{extraHeaderClass}}" onclick="window.location = '{{ path(configurator.getPathRoute('index'), configurator.getPathParameters({ 'orderBy': columnName, "orderDirection": orderDirection }))}}'">
-                            <span class="pull-right sort-icon"></span>
+                        <th {% if field.style %} style="{{ field.style }}"  {% endif %} class="{{extraHeaderClass}}">
                             {{ columnkey | trans }}
+                            {% if field.sort %}
+                            <a class="jsa-ajax" data-target="{{ component.id }}" data-pre-callback="jPreLoadInSelf" data-callback="jLoadInTarget" href="{{ component.url({ 'orderBy': columnName, "orderDirection": orderDirection }) }}">
+                                {% if orderDirection == 'DESC' %}<i class="fa fa-sort-numeric-asc"></i>{%  else %}<i class="fa fa-sort-numeric-desc"></i>{%  endif  %}
+                            </a>
+                            {%  endif %}
                         </th>
                     {% endfor %}
                     {% if not component.hideEntityActions() %}
