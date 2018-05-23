@@ -34,7 +34,8 @@ final class EditInPlaceAction extends AbstractFormAction
         $class = $request->request->get('cls');
         $type = $this->eipFactory->getEditInPlaceType(
             $component->getConfigurator()->getType($entity, $field->getName()),
-            $field->getValue($component->getConfigurator(),$entity));
+            $field->getValue($component->getConfigurator(),$entity),
+            $field->getName());
 
         $value = $type->getValueFromAction($request, $this);
 

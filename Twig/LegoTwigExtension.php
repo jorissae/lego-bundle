@@ -42,7 +42,10 @@ class LegoTwigExtension extends \Twig_Extension
         $configurator = $component->getConfigurator();
         $type = $configurator->getType($item,$field->getName());
         $value =  $field->getValue($component->getConfigurator(), $item);
-        $editInPlaceType = $this->editInPlaceFactory->getEditInPlaceType($type, $value);
+        $editInPlaceType = null;
+        if($field->isEditInPlace($item)) {
+            $editInPlaceType = $this->editInPlaceFactory->getEditInPlaceType($type, $value, $field->getName());
+        }
         return $template->render(array(
             'field'        => $field,
             'configurator'      => $component->getConfigurator(),
