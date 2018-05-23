@@ -45,6 +45,8 @@ class Field
 
     private $image;
 
+    private $options;
+
     /**
      * @param string $name     The name
      * @param string $header   The header
@@ -53,6 +55,21 @@ class Field
      */
     public function __construct(array $options = [])
     {
+        $this->setOptions($options);
+    }
+
+    public function override(Field $field){
+        $options = array_merge($this->getOptions(),$field->getOptions());
+        $this->setOptions($options);
+        return $this;
+    }
+
+    public function getOptions(){
+        return $this->options;
+    }
+
+    public function setOptions($options){
+        $this->options = $options;
         $this->header = (isset($options['label']))? $options['label']:null;
         $this->sort = (isset($options['sort']))? $options['sort']:false;
         $this->template = (isset($options['tmp']))? $options['tmp']:null;

@@ -18,6 +18,19 @@ class MetaEntityManager implements MetaEntityManagerInterface
         $this->em = $em;
     }
 
+    public function overrideFieldsBy($className, $fields){
+        $columns = [];
+        foreach($fields as $k => $field){
+            /* @var Annotation\Field $field; */
+            $columns[] = $k;
+        }
+        $originalFields = $this->generateFields($className, $columns);
+        foreach($originalFields as $k => $originalField){
+            $fields[$k] = $originalField->override($fields[$k]);
+        }
+        return $fields;
+    }
+
     public function generateFields($className, array $columns = null, $withoutMethodsFields = false){
         $return = [];
         if(is_array($columns)) {

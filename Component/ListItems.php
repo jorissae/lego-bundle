@@ -143,7 +143,9 @@ class ListItems extends Component implements EditInPlaceInterface {
     }
 
     public function getFields(){
-        $fields = array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
+        $fields = array_merge(
+            $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')),
+            $this->mem->overrideFieldsBy($this->getConfigurator()->getEntityName(),$this->fields));
         foreach($this->getOption('fields_exclude', []) as $excludeFieldName){
             unset($fields[$excludeFieldName]);
         }
