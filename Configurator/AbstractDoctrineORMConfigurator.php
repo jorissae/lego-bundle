@@ -171,6 +171,8 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         }
     }
 
+
+
     public function getAssociationClass($fieldname){
         if($this->getClassMetaData()->hasAssociation($fieldname)) {
             $mapping = $this->getClassMetaData()->getAssociationMapping($fieldname);
@@ -178,6 +180,13 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         }
         return null;
     }
-
+/* TODO
+    public function getClassMetaData(): ClassMetadata{
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getClassMetaData($this->getRepository());
+    }
+    public function getAssociationClass($fieldname){
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getAssociationClass($this->getRepository(), $fieldname);
+    }
+*/
 
 }

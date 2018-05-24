@@ -26,9 +26,23 @@ class MetaEntityManager implements MetaEntityManagerInterface
         }
         $originalFields = $this->generateFields($className, $columns);
         foreach($originalFields as $k => $originalField){
-            $fields[$k] = $originalField->override($fields[$k]);
+            if(isset($fields[$k])) {
+                $fields[$k] = $originalField->override($fields[$k]);
+            }
         }
         return $fields;
+    }
+
+    public function getClassMetaData($classname){
+        return $this->em->getClassMetadata($classname);
+    }
+
+    public function getAssociationClass($classname, $fieldname){
+        if($this->getClassMetaData($classname)->hasAssociation($fieldname)) {
+            $mapping = $this->getClassMetaData($classname)->getAssociationMapping($fieldname);
+            return $mapping['targetEntity'] ?? null;
+        }
+        return null;
     }
 
     public function generateFields($className, array $columns = null, $withoutMethodsFields = false){
@@ -48,6 +62,23 @@ class MetaEntityManager implements MetaEntityManagerInterface
                     $field = $annotation;
                     $field->setName($p->getName());
                     $return[$p->getName()] = $field;
+                }
+            }
+        }
+
+        if(is_array($columns)) {
+            foreach ($columns as $column) {
+                $pos = strpos($column, '.');
+                if ($pos > 0) {
+                    $nameField = substr($column, 0, $pos);
+                    $joinColumn = substr($column, $pos + 1);
+                    $classTarget = $this->getAssociationClass($className, $nameField);
+                    if ($classTarget) {
+                        $field = $this->getFieldFromAnnotation($classTarget, $joinColumn);
+                        if ($field) {
+                            $return[$column] = $field;
+                        }
+                    }
                 }
             }
         }
