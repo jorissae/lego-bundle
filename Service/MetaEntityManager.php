@@ -215,6 +215,12 @@ class MetaEntityManager implements MetaEntityManagerInterface
        return $this->getMetaDataEntities()[$shortName];
     }
 
+    public function getMetaDataEntityByClassName($className){
+        $r = new AnnotationReader();
+        $reflectionClass = new \ReflectionClass($className);
+        return  $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
+    }
+
     public function getEntityManager(): EntityManagerInterface{
         return $this->em;
     }

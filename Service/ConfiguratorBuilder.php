@@ -51,6 +51,10 @@ class ConfiguratorBuilder
         return $reflectionClass->newInstance($this, $parent, $entityName, $parameters);
     }
 
+    public function isGranted($attributes, $subject = null){
+        return $this->authorizationChecker->isGranted($attributes, $subject);
+    }
+
     public function getDefaultConfigurator($shortname, $name, $annotation){
         $c = new DefaultConfigurator($this, null, $name, ['entity'=>$shortname]);
         $c->setTitle($annotation->getTitle() ?? 'lego.'.$shortname.'.title');

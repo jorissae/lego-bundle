@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 abstract class AbstractAction
 {
@@ -94,6 +95,20 @@ abstract class AbstractAction
     protected function generateUrl(string $route, array $parameters = array(), int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         return $this->configuratorBuilder->getRouter()->generate($route, $parameters, $referenceType);
+    }
+
+    protected function isGranted($attributes, $subject = null){
+        return $this->configuratorBuilder->isGranted($attributes, $subject);
+    }
+
+    protected function denyAccessUnlessGranted($className, $suffixRoute){
+        $annotation = $this->mem->getMetaDataEntityByClassName($className);
+        foreach($annotation->getRoles($suffixRoute) as $role){
+            if($this->isGranted($role)){
+                return;
+            }
+        }
+        throw new AccessDeniedException('Role "'. $role .'" requis');
     }
 
 }
