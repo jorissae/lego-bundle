@@ -11,6 +11,7 @@ final class IndexAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'index');
         $response = $this->comunicateComponents($configurator, $request);
         if($response) return $response;
         return new Response($this->renderView($configurator->getIndexTemplate(), [ 'configurator' => $configurator ]));

@@ -46,6 +46,8 @@ class LegoTwigExtension extends \Twig_Extension
         if($field->isEditInPlace($item)) {
             $editInPlaceType = $this->editInPlaceFactory->getEditInPlaceType($type, $value, $field->getName());
         }
+        if(!$component->getConfiguratorBuilder()->hasAccess(get_class($item),'edit')) $editInPlaceType = null;
+        if(!$component->getConfiguratorBuilder()->hasAccess(get_class($item),'edit_in_place')) $editInPlaceType = null;
         return $template->render(array(
             'field'        => $field,
             'configurator'      => $component->getConfigurator(),

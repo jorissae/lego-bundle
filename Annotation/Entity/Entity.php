@@ -17,14 +17,15 @@ class Entity
         $this->icon = $options['icon'] ?? 'rocket';
     }
 
-    public function getRoles($suffixRoute){
-        $perms = $this->permissions[$suffixRoute] ?? null;
-        if($perms){
-            if(!is_array($perms)){
-                $perms = [$perms];
-            }
-        }
-        return $perms;
+    public function getRoles($suffixRoute): array{
+        $perms = $this->permissions[$suffixRoute] ?? [];
+        if($perms && !is_array($perms)) $perms = [$perms];
+        return array_merge($perms,$this->getGlobalRoles());
+    }
+
+    public function getGlobalRoles(){
+        $perms = $this->permissions['global'] ?? $this->permissions['globals'] ?? $this->permissions['all'] ?? [];
+        return ($perms && !is_array($perms))?  [$perms]:$perms;
     }
 
     public function getConfig(){
@@ -43,7 +44,4 @@ class Entity
         return $this->icon;
     }
 
-    public function getPermissions(){
-        return $this->permissions;
-    }
 }

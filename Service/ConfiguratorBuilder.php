@@ -108,5 +108,16 @@ class ConfiguratorBuilder
         return $this->session;
     }
 
+    public function hasAccess($className, $suffixRoute){
+        $annotation = $this->mem->getMetaDataEntityByClassName($className);
+        $roles = $annotation->getRoles($suffixRoute);
+        foreach($roles as $role){
+            if($this->isGranted($role)){
+                return true;
+            }
+        }
+        if(\count($roles) === 0) return true;
+        return false;
+    }
 
 }

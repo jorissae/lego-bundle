@@ -11,6 +11,7 @@ final class EditAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit');
         $response = $this->comunicateComponents($configurator, $request, $request->get('id'));
         if($response){
             return $response;
