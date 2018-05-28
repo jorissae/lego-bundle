@@ -20,6 +20,7 @@ final class ExportAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'export');
         $response = $this->comunicateComponents($configurator, $request);
         if($response){
             return $response;

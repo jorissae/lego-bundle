@@ -26,6 +26,8 @@ final class EditInPlaceEntityChoiceAction extends AbstractAction
     {
         $em = $this->mem->getEntityManager();
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit');
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit_in_place');
         $component = $configurator->getComponent($request->get('suffix_route'),$request->get('cid'));
         if($component instanceof EditInPlaceInterface) {
 

@@ -102,13 +102,9 @@ abstract class AbstractAction
     }
 
     protected function denyAccessUnlessGranted($className, $suffixRoute){
-        $annotation = $this->mem->getMetaDataEntityByClassName($className);
-        foreach($annotation->getRoles($suffixRoute) as $role){
-            if($this->isGranted($role)){
-                return;
-            }
+        if(!$this->configuratorBuilder->hasAccess($className, $suffixRoute)) {
+            throw new AccessDeniedException('Access denied');
         }
-        throw new AccessDeniedException('Role "'. $role .'" requis');
     }
 
 }

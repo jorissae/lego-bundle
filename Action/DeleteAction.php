@@ -11,6 +11,7 @@ final class DeleteAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'delete');
         $em = $this->getEntityManager();
         $entity = $configurator->getRepository()->findOneById($request->get('id'));
         if ($entity === null) {

@@ -22,6 +22,8 @@ final class EditInPlaceAction extends AbstractFormAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit');
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit_in_place');
         $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
         $field = $component->getField($request->request->get('fieldName'));
 
