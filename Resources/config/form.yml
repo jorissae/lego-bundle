@@ -12,6 +12,7 @@ services:
 
   lego.form.role:
       class: Idk\LegoBundle\Form\Type\RoleType
+      arguments: ["%security.role_hierarchy.roles%"]
       tags:
           - { name: form.type, alias: lego_role }
 

@@ -542,22 +542,19 @@ $(function(){
 {% endblock %}
 
 {% block role_widget %}
-    {% for key, item in choices %}
-        <div class="checkbox {% if item starts with '*' %}collapse sub_{{key|split('_')|slice(0,-1)|join('_')}}{% endif %}">
-            <label>
-                {% if item starts with '*' %} &nbsp; &nbsp;
-                {% endif %}
-                <input {{ block('widget_attributes') }} type="checkbox" id="{{input_id}}_{{item}}" value="{{key}}" {% if key in value %} checked="checked"{% endif %}>
-                {% if item starts with '*' %}
-                    {{ item }}
-                {% else %}
-                    <b>{{ item }}</b>
-                {% endif %}
-            </label>
-            {% if item starts with '*' %}
-            {% else %}
-                &nbsp;&nbsp;<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>
-            {% endif %}
+    {% for key, item in roles %}
+        <div class="{% if item starts with '*' %}collapse sub_{{key}}{% endif %}">
+            <input id="{{id}}_{{ key }}" {{ block('widget_attributes') }} type="checkbox" value="{{key}}" {% if key in value %} checked="checked"{% endif %}>&nbsp;
+            <label><b>{{ key|replace({'ROLE_':''})|capitalize }}</b></label>
+            &nbsp;&nbsp;<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>
+            <lu class="collapse sub_{{ key }}" style="list-style: none;">
+                {%  for role in item %}
+                    <li style="margin-left:20px;">
+                        <input id="{{id}}_{{ key }}_{{ role }}"{{ block('widget_attributes') }} type="checkbox" value="{{role}}" {% if role in value %} checked="checked"{% endif %}>
+                        <label>{{ role|replace({'ROLE_':''})|capitalize }}</label>
+                    </li>
+                {%  endfor %}
+            </lu>
         </div>
-    {% endfor %}
+    {%  endfor %}
 {% endblock %}
