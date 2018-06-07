@@ -250,6 +250,13 @@ $(function(){
         }
     });
 
+    $('body').on('change', 'input[type=checkbox].cascade', function(evt){
+        var self = $(this);
+        $('input[type=checkbox].' + self.attr('data-cascade')).each(function(){
+            $(this).prop('checked',self.is(':checked'));
+        })
+    })
+
 
 });
 

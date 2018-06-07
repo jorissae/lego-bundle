@@ -2,9 +2,11 @@
 
 namespace Idk\LegoBundle\Form\Type;
 
+use Idk\LegoBundle\Form\Transformer\DistinctArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
 
 
@@ -21,6 +23,11 @@ class RoleType extends AbstractType
     public function getParent()
     {
         return ParentType::class;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer(new DistinctArrayTransformer());
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)

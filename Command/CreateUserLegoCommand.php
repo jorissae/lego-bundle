@@ -11,20 +11,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 final class CreateUserLegoCommand extends ContainerAwareCommand
 {
 
     private $parametersProvider;
     private $em;
-    private $encoder;
+    private $encoderFactory;
 
-    public function __construct(GlobalsParametersProvider $parametersProvider, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
+    public function __construct(GlobalsParametersProvider $parametersProvider, EntityManagerInterface $em, EncoderFactoryInterface $encoderFactory)
     {
         parent::__construct('idk:create:user');
         $this->parametersProvider = $parametersProvider;
-        $this->encoder = $encoder;
+        $this->encoderFactory = $encoderFactory;
         $this->em = $em;
     }
 
@@ -53,11 +55,7 @@ final class CreateUserLegoCommand extends ContainerAwareCommand
         $question = new Question('email  ? ');
         $email = $helper->ask($input, $output, $question);
 
-
-
-        //$user->setPlainPassword($password);
-        $encoded = $this->encoder->encodePassword($user, $password);
-        $user->setPassword($encoded);
+        $user->setPlainPassword($password);
         $user->setUsername($username);
         $user->setName($name);
         $user->setEnable($enabled);

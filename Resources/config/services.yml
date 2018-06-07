@@ -89,6 +89,13 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
+    lego.listener.upload_user_password:
+        class: Idk\LegoBundle\Listener\UploadUserPasswordEncoderListener
+        arguments:    ["@security.encoder_factory"]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
 
     lego.twig.filter:
         class: Idk\LegoBundle\Twig\FilterTwigExtension
