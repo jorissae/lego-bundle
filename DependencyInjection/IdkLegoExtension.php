@@ -34,11 +34,11 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
 
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('form.yml');
-        $loader->load('components.yml');
-        $loader->load('widgets.yml');
-        $loader->load('actions.yml');
+        $loader->load('services.yaml');
+        $loader->load('form.yaml');
+        $loader->load('components.yaml');
+        $loader->load('widgets.yaml');
+        $loader->load('actions.yaml');
 
         $configuration = new Configuration();
         $processedConfig =  $this->processConfiguration($configuration, $configs);

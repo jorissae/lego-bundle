@@ -291,6 +291,48 @@ $(function(){
     </script>
 {% endblock %}
 
+{% block json_human_widget %}
+    <div id="{{ id }}_errors"></div>
+    <div id="{{ id }}_json"></div>
+    <script>
+    var {{ id }}schema = {{  schema|raw }}
+        window.editor{{ id }}startval = null
+    function {{ id }}_load(value, schema){
+        var schema = (schema)? schema:{{  schema|raw }};
+        JSONEditor.defaults.options.theme = 'bootstrap2';
+        if(value){
+            window.editor{{ id }}startval = value;
+        }
+        if(window.editor{{ id }}) {
+            window.editor{{ id }}.destroy()
+        }
+        window.editor{{ id }} = new JSONEditor(document.getElementById("{{ id }}_json"),{
+            schema: schema,
+            disable_collapse: true,
+            disable_properties: true,
+            form_name_root: '{{ full_name }}',
+            disable_edit_json: {{ disable_edit_json }},
+            no_additional_properties: {{ no_additional_properties }},
+            required_by_default: {{ required_by_default }}
+        });
+
+        if(value){
+            window.editor{{ id }}.setValue(value);
+        }else{
+            window.editor{{ id }}.setValue(window.editor{{ id }}startval);
+        }
+        window.editor{{ id }}.on("change",  function() {
+            var errors = window.editor{{ id }}.validate();
+            $('#{{ id }}_errors').html("");
+            if(errors.length) {
+                $('#{{ id }}_errors').html("Erreur schema");
+            }
+        });
+    };
+    {{ id }}_load({{ value|json_encode()|raw }},{{ id }}schema);
+    </script>
+{% endblock %}
+
 {% block json_widget %}
     <div id="{{ id }}_json" style="width: 100%; height: 400px; float:left;"></div>
     <textarea style="display:none;" {{ block('widget_attributes') }}></textarea>
@@ -334,6 +376,55 @@ $(function(){
     });
     </script>
 {% endblock %}
+
+{% block lego_note_widget %}
+    <input type="number" style="display:none;" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
+    <span id="{{ id }}_container">
+    </span>
+    <span>&nbsp;&nbsp;<strong><span id="{{ id }}_display_note"></span> / {{ max }}</strong></span>
+    <script>
+    $(function () {
+        var {{ id }}oldhover = null;
+        function {{ id }}draw(cnote){
+            $('#{{ id }}_container').html("");
+            for (var note = {{ min }}; note <= {{ max }}; note++) {
+                if(note == {{ min }}){
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="width:20px; height:20px;" class="fa lego-note"></i>&nbsp;'));
+                }else if (note <= cnote) {
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star lego-note"></i>'));
+                } else {
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star-o lego-note"></i>'));
+                }
+            }
+        }
+
+        function {{ id }}update(note){
+            $('#{{ id }}').val(note);
+            $('#{{ id }}_display_note').html(note);
+        }
+        {{ id }}draw({{ value }});
+        {{ id }}update({{ value }});
+        $('body').on('mouseover','.lego-note',function(e){
+            if($(this).attr('data-note') != {{ id }}oldhover) {
+                {{ id }}oldhover = $(this).attr('data-note');
+                $('#{{ id }}_display_note').html($(this).attr('data-note'));
+                {{ id }}draw($(this).attr('data-note'));
+            }
+        });
+        $('body').on('mouseout','.lego-note',function(e){
+            {{ id }}oldhover = null;
+            $('#{{ id }}_display_note').html($('#{{ id }}').val());
+            if($(this).attr('data-note') != $('#{{ id }}').val()){
+                {{ id }}draw($('#{{ id }}').val());
+            }
+        });
+        $('body').on('click','.lego-note',function(e){
+            {{ id }}update($(this).attr('data-note'));
+            {{ id }}draw($(this).attr('data-note'));
+        });
+    });
+    </script>
+{%  endblock  %}
 
 {% block entity_widget %}
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple -%}
