@@ -68,7 +68,7 @@ services:
 
     Idk\LegoBundle\Service\GlobalsParametersProvider:
         class: Idk\LegoBundle\Service\GlobalsParametersProvider
-        arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%", "%lego.route.login%", "%lego.route.logout%", "%lego.user.class%"]
+        arguments: ['@parameter_bag']
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension

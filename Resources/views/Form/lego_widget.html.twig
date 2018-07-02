@@ -362,6 +362,21 @@ $(function(){
     </script>
 {% endblock %}
 
+{% block jsonarea_widget %}
+    <textarea {{ block('widget_attributes') }}>{{  value|raw }}</textarea>
+    <script>
+
+    var editor = CodeMirror.fromTextArea(document.getElementById("{{  id }}"), {
+        lineNumbers: true,
+        mode:  {"name":"javascript", "json": true},
+        smartIndent: true,
+        statementIndent: 4,
+        indentUnit: 4
+
+    });
+</script>
+{%  endblock %}
+
 {% block lego_number_widget %}
     N
     <input type="number" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
