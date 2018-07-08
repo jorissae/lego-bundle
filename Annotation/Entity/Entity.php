@@ -11,9 +11,21 @@ class Entity
     public function __construct(array $options = [])
     {
         $this->name = $options['name'] ?? null;
+        $this->permissions = $options['permissions'] ?? [];
         $this->config = $options['config'] ?? null;
         $this->title = $options['title'] ?? null;
         $this->icon = $options['icon'] ?? 'rocket';
+    }
+
+    public function getRoles($suffixRoute): array{
+        $perms = $this->permissions[$suffixRoute] ?? [];
+        if($perms && !is_array($perms)) $perms = [$perms];
+        return array_merge($perms,$this->getGlobalRoles());
+    }
+
+    public function getGlobalRoles(){
+        $perms = $this->permissions['global'] ?? $this->permissions['globals'] ?? $this->permissions['all'] ?? [];
+        return ($perms && !is_array($perms))?  [$perms]:$perms;
     }
 
     public function getConfig(){
@@ -31,4 +43,5 @@ class Entity
     public function getIcon(){
         return $this->icon;
     }
+
 }

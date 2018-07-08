@@ -18,11 +18,39 @@ class MetaEntityManager implements MetaEntityManagerInterface
         $this->em = $em;
     }
 
+    public function overrideFieldsBy($className, $fields){
+        $columns = [];
+        foreach($fields as $k => $field){
+            /* @var Annotation\Field $field; */
+            $columns[] = $k;
+        }
+        $originalFields = $this->generateFields($className, $columns);
+        foreach($originalFields as $k => $originalField){
+            if(isset($fields[$k])) {
+                $fields[$k] = $originalField->override($fields[$k]);
+            }
+        }
+        return $fields;
+    }
+
+    public function getClassMetaData($classname){
+        return $this->em->getClassMetadata($classname);
+    }
+
+    public function getAssociationClass($classname, $fieldname){
+        if($this->getClassMetaData($classname)->hasAssociation($fieldname)) {
+            $mapping = $this->getClassMetaData($classname)->getAssociationMapping($fieldname);
+            return $mapping['targetEntity'] ?? null;
+        }
+        return null;
+    }
+
     public function generateFields($className, array $columns = null, $withoutMethodsFields = false){
         $return = [];
         if(is_array($columns)) {
             foreach ($columns as $column) {
-                $return[$column] = null;
+                $return[$column] = new Annotation\Field();
+                $return[$column]->setName($column);
             }
         }
         $r = new AnnotationReader();
@@ -34,6 +62,23 @@ class MetaEntityManager implements MetaEntityManagerInterface
                     $field = $annotation;
                     $field->setName($p->getName());
                     $return[$p->getName()] = $field;
+                }
+            }
+        }
+
+        if(is_array($columns)) {
+            foreach ($columns as $column) {
+                $pos = strpos($column, '.');
+                if ($pos > 0) {
+                    $nameField = substr($column, 0, $pos);
+                    $joinColumn = substr($column, $pos + 1);
+                    $classTarget = $this->getAssociationClass($className, $nameField);
+                    if ($classTarget) {
+                        $field = $this->getFieldFromAnnotation($classTarget, $joinColumn);
+                        if ($field) {
+                            $return[$column] = $field;
+                        }
+                    }
                 }
             }
         }
@@ -57,6 +102,11 @@ class MetaEntityManager implements MetaEntityManagerInterface
         }
         foreach($trashcan as $key) unset($return[$key]);
         return $return;
+    }
+
+    public function getFieldFromAnnotation($className, $fieldName): Annotation\Field{
+        $fields = $this->generateFields($className, [$fieldName]);
+        return $fields[$fieldName];
     }
 
     public function generateFormFields($className, array $columns = null){
@@ -157,11 +207,18 @@ class MetaEntityManager implements MetaEntityManagerInterface
                 $return[$shortName] = new MetaEntity($shortName, $metadata, $annotation);
             }
         }
+        ksort($return);
         return $return;
     }
 
     public function getMetaDataEntity($shortName): MetaEntity{
        return $this->getMetaDataEntities()[$shortName];
+    }
+
+    public function getMetaDataEntityByClassName($className){
+        $r = new AnnotationReader();
+        $reflectionClass = new \ReflectionClass($className);
+        return  $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
     }
 
     public function getEntityManager(): EntityManagerInterface{

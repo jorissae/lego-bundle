@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\QueryHelper;
 use Idk\LegoBundle\Service\MetaEntityManager;
 
-class ListItems extends Component{
+class ListItems extends Component implements EditInPlaceInterface {
 
     const ENTITY_ACTION_DELETE = 'entity_action_delete';
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
@@ -39,7 +39,7 @@ class ListItems extends Component{
 
     public function getAllQueryParams()
     {
-        return ['page', 'breaker', 'nbepp'];
+        return ['page', 'breaker', 'nbepp', 'orderBy', 'orderDirection'];
     }
 
     public function getListenParamsForReload()
@@ -61,6 +61,12 @@ class ListItems extends Component{
         }
         if($request->query->has('page')){
             $this->setComponentSessionStorage('page', $request->query->get('page'));
+        }
+        if($request->query->has('orderBy')){
+            $this->setComponentSessionStorage('orderBy', $request->query->get('orderBy'));
+        }
+        if($request->query->has('orderDirection')){
+            $this->setComponentSessionStorage('orderDirection', $request->query->get('orderDirection'));
         }
         $this->bindRequest($request);
     }
@@ -85,6 +91,10 @@ class ListItems extends Component{
             }else{
                 $this->addPredefinedBulkAction($action);
             }
+        }
+        if($this->getComponentSessionStorage('orderBy')){
+            $this->sorters = [];
+            $this->addSorter($this->getComponentSessionStorage('orderBy'), $this->getComponentSessionStorage('orderDirection', 'ASC'));
         }
     }
 
@@ -133,7 +143,17 @@ class ListItems extends Component{
     }
 
     public function getFields(){
-        return array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
+        $fields = array_merge(
+            $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')),
+            $this->mem->overrideFieldsBy($this->getConfigurator()->getEntityName(),$this->fields));
+        foreach($this->getOption('fields_exclude', []) as $excludeFieldName){
+            unset($fields[$excludeFieldName]);
+        }
+        return $fields;
+    }
+
+    public function getField(string $fieldName): Field{
+        return $this->getFields()[$fieldName];
     }
 
     public function getEntityActions(){
@@ -173,6 +193,16 @@ class ListItems extends Component{
         $this->sorters[] = [$name,$type];
     }
 
+
+    public function sortDirection(string $fieldName){
+        foreach($this->sorters as $sort){
+            if($sort[0] == $fieldName){
+                return (strtoupper($sort[1]) === 'DESC')? 'ASC':'DESC';
+            }
+        }
+        return 'DESC';
+    }
+
     public function getSorters(){
         return $this->sorters;
     }
@@ -189,6 +219,8 @@ class ListItems extends Component{
         }
 
         foreach($this->getSorters() as $sorter){
+            $pathInfo = $queryHelper->getPathInfo($this->getConfigurator(),$this->getConfigurator()->getClassMetaData(),$sorter[0]);
+            if($pathInfo['association']) $sorter[0].= '.id';
             $path = $queryHelper->getPath($queryBuilder, 'b', $sorter[0]);
             $typeSorter = (isset($sorter[1]) and strtoupper($sorter[1]) == 'DESC')? 'DESC':'ASC';
             $queryBuilder->addOrderBy($path['alias'] . $path['column'], $typeSorter);
@@ -287,5 +319,9 @@ class ListItems extends Component{
 
     private function getAllBreakers(){
         return $this->getBreakersChildren($this->getBreakers());
+    }
+
+    public function renderEntity($item){
+        return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('line'),['component'=>$this,'item'=>$item]);
     }
 }

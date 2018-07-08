@@ -263,6 +263,48 @@ $(function(){
     </script>
 {% endblock %}
 
+{% block json_human_widget %}
+    <div id="{{ id }}_errors"></div>
+    <div id="{{ id }}_json"></div>
+    <script>
+    var {{ id }}schema = {{  schema|raw }}
+        window.editor{{ id }}startval = null
+    function {{ id }}_load(value, schema){
+        var schema = (schema)? schema:{{  schema|raw }};
+        JSONEditor.defaults.options.theme = 'bootstrap2';
+        if(value){
+            window.editor{{ id }}startval = value;
+        }
+        if(window.editor{{ id }}) {
+            window.editor{{ id }}.destroy()
+        }
+        window.editor{{ id }} = new JSONEditor(document.getElementById("{{ id }}_json"),{
+            schema: schema,
+            disable_collapse: true,
+            disable_properties: true,
+            form_name_root: '{{ full_name }}',
+            disable_edit_json: {{ disable_edit_json }},
+            no_additional_properties: {{ no_additional_properties }},
+            required_by_default: {{ required_by_default }}
+        });
+
+        if(value){
+            window.editor{{ id }}.setValue(value);
+        }else{
+            window.editor{{ id }}.setValue(window.editor{{ id }}startval);
+        }
+        window.editor{{ id }}.on("change",  function() {
+            var errors = window.editor{{ id }}.validate();
+            $('#{{ id }}_errors').html("");
+            if(errors.length) {
+                $('#{{ id }}_errors').html("Erreur schema");
+            }
+        });
+    };
+    {{ id }}_load({{ value|json_encode()|raw }},{{ id }}schema);
+    </script>
+{% endblock %}
+
 {% block json_widget %}
     <div id="{{ id }}_json" style="width: 100%; height: 400px; float:left;"></div>
     <textarea style="display:none;" {{ block('widget_attributes') }}></textarea>
@@ -292,6 +334,21 @@ $(function(){
     </script>
 {% endblock %}
 
+{% block jsonarea_widget %}
+    <textarea {{ block('widget_attributes') }}>{{  value|raw }}</textarea>
+    <script>
+
+    var editor = CodeMirror.fromTextArea(document.getElementById("{{  id }}"), {
+        lineNumbers: true,
+        mode:  {"name":"javascript", "json": true},
+        smartIndent: true,
+        statementIndent: 4,
+        indentUnit: 4
+
+    });
+</script>
+{%  endblock %}
+
 {% block lego_number_widget %}
     N
     <input type="number" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
@@ -306,6 +363,55 @@ $(function(){
     });
     </script>
 {% endblock %}
+
+{% block lego_note_widget %}
+    <input type="number" style="display:none;" value="{{ value }}" id="{{id}}" {{ block('widget_attributes') }}/>
+    <span id="{{ id }}_container">
+    </span>
+    <span>&nbsp;&nbsp;<strong><span id="{{ id }}_display_note"></span> / {{ max }}</strong></span>
+    <script>
+    $(function () {
+        var {{ id }}oldhover = null;
+        function {{ id }}draw(cnote){
+            $('#{{ id }}_container').html("");
+            for (var note = {{ min }}; note <= {{ max }}; note++) {
+                if(note == {{ min }}){
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="width:20px; height:20px;" class="fa lego-note"></i>&nbsp;'));
+                }else if (note <= cnote) {
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star lego-note"></i>'));
+                } else {
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star-o lego-note"></i>'));
+                }
+            }
+        }
+
+        function {{ id }}update(note){
+            $('#{{ id }}').val(note);
+            $('#{{ id }}_display_note').html(note);
+        }
+        {{ id }}draw({{ value }});
+        {{ id }}update({{ value }});
+        $('body').on('mouseover','.lego-note',function(e){
+            if($(this).attr('data-note') != {{ id }}oldhover) {
+                {{ id }}oldhover = $(this).attr('data-note');
+                $('#{{ id }}_display_note').html($(this).attr('data-note'));
+                {{ id }}draw($(this).attr('data-note'));
+            }
+        });
+        $('body').on('mouseout','.lego-note',function(e){
+            {{ id }}oldhover = null;
+            $('#{{ id }}_display_note').html($('#{{ id }}').val());
+            if($(this).attr('data-note') != $('#{{ id }}').val()){
+                {{ id }}draw($('#{{ id }}').val());
+            }
+        });
+        $('body').on('click','.lego-note',function(e){
+            {{ id }}update($(this).attr('data-note'));
+            {{ id }}draw($(this).attr('data-note'));
+        });
+    });
+    </script>
+{%  endblock  %}
 
 {% block entity_widget %}
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple -%}
@@ -438,23 +544,95 @@ $(function(){
 
 {% endblock %}
 
+{% block lego_many_to_many_join_widget %}
+    {% import _self as formMacros %}
+    {% macro row(form, errors) %}
+    {% spaceless %}
+         <tr class="lego_collection_type">
+        {#<label>Item: __name__</label>#}
+        {% if errors|length > 0 %} class="warning bg-red" {% endif %}
+        {% if form.count %}
+            {% for field in form.getIterator() %}
+                <td>{{ form_widget(field) }}</td>
+            {%  endfor %}
+        {% endif %}
+        {{ form_errors(form) }}
+         </tr>
+        {% endspaceless %}
+    {% endmacro %}
+    <div {{ block('widget_attributes') }} data-prototype="{{ formMacros.row(prototype, errors)|e('html_attr') }}">
+        <table id="table_{{ id }}" class="table">
+            <tbody id="tbody_{{ id }}">
+                <tr>
+                    {% for field in prototype.getIterator() %}
+                        <th>{{ form_label(field) }}</th>
+                    {%  endfor %}
+                </tr>
+
+                {% for field in form.getIterator() %}
+                    {{ formMacros.row(field, errors) }}
+                {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        {% if allow_add %}
+        function addForm{{ id }}($collectionHolder) {
+            var index = $collectionHolder.data('index');
+            var newLine = $($collectionHolder.data('prototype'));
+            //newForm = newForm.replace(/__name__/g, index);
+            //$collectionHolder.data('index', index + 1);
+            {% if allow_delete %}addFormDeleteLink{{ id }}(newLine);{%  endif %}
+            $('#tbody_{{ id }}').append(newLine);
+            $("#tbody_{{ id }} select.select2").select2({'width':'100%'});
+        }
+        {%  endif %}
+        {% if allow_delete %}
+        function addFormDeleteLink{{ id }}(line) {
+            var deleteLink = $('<td><a href="#">delete this item</a></td>');
+            line.append(deleteLink);
+            deleteLink.on('click', function(e) {
+                e.preventDefault();
+                line.remove();
+            });
+        }
+        {%  endif %}
+        jQuery(document).ready(function() {
+            var collection = $('div#{{ id }}');
+            {% if allow_add%}
+            var addLink = $('<span></span>').append($('<a href="#" class="add_link">Add</a>'));
+            collection.append(addLink);
+            addLink.on('click', function(e) {
+                e.preventDefault();
+                addForm{{ id }}(collection);
+            });
+            {%  endif %}
+            {% if allow_delete %}
+            collection.find('tr.lego_collection_type').each(function() {
+                addFormDeleteLink{{ id }}($(this));
+            });
+            {%  endif %}
+
+
+            collection.data('index', collection.find('tr').length);
+        });
+    </script>
+{% endblock %}
+
 {% block role_widget %}
-    {% for key, item in choices %}
-        <div class="checkbox {% if item starts with '*' %}collapse sub_{{key|split('_')|slice(0,-1)|join('_')}}{% endif %}">
-            <label>
-                {% if item starts with '*' %} &nbsp; &nbsp;
-                {% endif %}
-                <input {{ block('widget_attributes') }} type="checkbox" id="{{input_id}}_{{item}}" value="{{key}}" {% if key in value %} checked="checked"{% endif %}>
-                {% if item starts with '*' %}
-                    {{ item }}
-                {% else %}
-                    <b>{{ item }}</b>
-                {% endif %}
-            </label>
-            {% if item starts with '*' %}
-            {% else %}
-                &nbsp;&nbsp;<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>
-            {% endif %}
+    {% for key, item in roles %}
+        <div class="{% if item starts with '*' %}collapse sub_{{key}}{% endif %}">
+            <input id="{{id}}_{{ key }}" class="cascade cascade_{{ key }}" data-cascade="cascade_{{ key }}" {{ block('widget_attributes') }} type="checkbox" value="{{key}}" {% if key in value %} checked="checked"{% endif %}>&nbsp;
+            <label><b>{{ key|replace({'ROLE_':''})|capitalize }}</b></label>
+            &nbsp;&nbsp;<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>
+            <lu class="collapse sub_{{ key }}" style="list-style: none;">
+                {%  for role in item %}
+                    <li style="margin-left:20px;">
+                        <input class="cascade cascade_{{ role }}" data-cascade="cascade_{{ key }}" id="{{id}}_{{ key }}_{{ role }}"{{ block('widget_attributes') }} type="checkbox" value="{{role}}" {% if role in value %} checked="checked"{% endif %}>
+                        <label>{{ role|replace({'ROLE_':''})|capitalize }}</label>
+                    </li>
+                {%  endfor %}
+            </lu>
         </div>
-    {% endfor %}
+    {%  endfor %}
 {% endblock %}

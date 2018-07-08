@@ -1,6 +1,8 @@
 <?php
 namespace Idk\LegoBundle\Traits;
 
+use Idk\LegoBundle\Action\EditInPlaceEntityChoiceAction;
+use Idk\LegoBundle\Action\EntityReloadAction;
 use Idk\LegoBundle\Service\Tag\ActionChain;
 use Idk\LegoBundle\Action\AutoCompletionAction;
 use Idk\LegoBundle\Action\EditInPlaceAction;
@@ -27,8 +29,7 @@ trait ControllerTrait
 
 
     protected function getConfigurator(){
-        $class = self::LEGO_CONFIGURATOR;
-        return new $class($this->container);
+        return $this->container->get('lego.service.configurator.builder')->getConfigurator(self::LEGO_CONFIGURATOR);
     }
 
     protected function getResponse(string $action, Request $request): Response{
@@ -129,6 +130,30 @@ trait ControllerTrait
     public function editInPlaceAction(Request $request)
     {
         return $this->getResponse(EditInPlaceAction::class, $request);
+    }
+
+    /**
+     * The edit in place action
+     *
+     * @Route("/entity/reload/{id}/{cid}/{suffix_route}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function entityReloadAction(Request $request)
+    {
+        return $this->getResponse(EntityReloadAction::class, $request);
+    }
+
+    /**
+     * The edit in place action
+     *
+     * @Route("/eip/choice/{cid}/{suffix_route}")
+     * @Method({"GET", "POST"})
+     * @return array
+     */
+    public function editInPlaceEntityChoiceAction(Request $request)
+    {
+        return $this->getResponse(EditInPlaceEntityChoiceAction::class, $request);
     }
 
     /**

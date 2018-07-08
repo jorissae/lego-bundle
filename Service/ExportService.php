@@ -3,8 +3,11 @@
 namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExportService
 {
@@ -65,7 +68,7 @@ class ExportService
     public function createExcelSheet(AbstractConfigurator $configurator)
     {
 
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new Spreadsheet();
 
         $objWorksheet = $objPHPExcel->getActiveSheet();
 
@@ -94,7 +97,7 @@ class ExportService
                 if($field->is('string')){
                     $objWorksheet->getStyle($coordinate)
                         ->getNumberFormat()
-                        ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+                        ->setFormatCode(NumberFormat::FORMAT_TEXT);
                 }
                 $row[] = $data;
 
@@ -104,14 +107,14 @@ class ExportService
 
         }
 
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter = new Xlsx($objPHPExcel);
 
 
         if (ob_get_length()) ob_end_clean();
         return $objWriter;
     }
 
-    public function createResponseForExcel(\PHPExcel_Writer_Excel2007 $writer)
+    public function createResponseForExcel(Xlsx $writer)
     {
         if(!class_exists('\ZipArchive')){
             throw new \Exception('ZipArchive not found install it apt-get install php-zip or http://php.net/manual/fr/zip.installation.php');

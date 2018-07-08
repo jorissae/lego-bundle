@@ -21,7 +21,7 @@ services:
          resource: '../../Controller'
 
     Idk\LegoBundle\Service\Menu:
-        arguments: ["@lego.service.meta_entity_manager", "@security.token_storage"]
+        arguments: ["@lego.service.configurator.builder"]
     Idk\LegoBundle\Service\LegoMenuInterface: '@Idk\LegoBundle\Service\Menu'
     Idk\LegoBundle\Service\Header:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
@@ -45,6 +45,15 @@ services:
     Idk\LegoBundle\Service\LegoInjector:
         tags: [lego.injector]
 
+    lego.service.edit_in_place.factory:
+        class: Idk\LegoBundle\Service\EditInPlaceFactory
+
+    lego.service.configurator.builder:
+        class: Idk\LegoBundle\Service\ConfiguratorBuilder
+        arguments: ["@session","@lego.service.meta_entity_manager","@security.token_storage", "@security.authorization_checker","@twig", "@translator", "@router", "@lego.service.components"]
+        public: true
+    Idk\LegoBundle\Service\ConfiguratorBuilder: '@lego.service.configurator.builder'
+
 
     lego.service.meta_entity_manager:
         class:  '%lego.service.meta_entity_manager.class%'
@@ -59,10 +68,11 @@ services:
 
     Idk\LegoBundle\Service\GlobalsParametersProvider:
         class: Idk\LegoBundle\Service\GlobalsParametersProvider
-        arguments: ["%lego.skin%","%lego.layout%", "%lego.layout_login%", "%lego.route.login%", "%lego.route.logout%", "%lego.user.class%"]
+        arguments: ['@parameter_bag']
 
     lego.twig.extension:
         class: Idk\LegoBundle\Twig\LegoTwigExtension
+        arguments: ["@lego.service.edit_in_place.factory"]
         tags:
             -  { name: twig.extension  }
 
@@ -75,6 +85,13 @@ services:
     lego.listener.upload_file:
         class: Idk\LegoBundle\Listener\UploadFileListener
         arguments:    ["%kernel.project_dir%"]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
+    lego.listener.upload_user_password:
+        class: Idk\LegoBundle\Listener\UploadUserPasswordEncoderListener
+        arguments:    ["@security.encoder_factory"]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
@@ -108,5 +125,7 @@ services:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
 
-    Idk\LegoBundle\Service\Tag\ComponentChain:
-        public: true #bootstraping service
+
+    lego.service.components:
+      class:  Idk\LegoBundle\Service\Tag\ComponentChain
+    Idk\LegoBundle\Service\Tag\ComponentChain: '@lego.service.components'

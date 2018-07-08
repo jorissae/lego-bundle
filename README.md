@@ -11,6 +11,8 @@
                                             "Y8bbdP"        
                             -------------------------------------
                                   Light - Easy - Good - Open 
+
+
 ```
 Work directly WITH USER LOGIN :-D
                 
@@ -99,7 +101,8 @@ php bin/console make:lego
  ===> For Symfony 4.X
 
 TODO 
-
+- order menu item
+- order item in itemList (XHR)
 CURRENT v alpha 0.1.2
 
 - Log history [ ] other bundle
@@ -110,13 +113,13 @@ CURRENT v alpha 0.1.2
 - Field-route [X]
 - Onglet component [ ]
 - Default LayoutBase [X]
-- Custom Bulk Action [ ]
-- Ressource Action [ ]
+- Custom Bulk Action [X]
+- Ressource Action [X]
 - Menu auto [X]
 - Right Bar [ ]
 - Sub-Filter and Xhr filter [ ]
 - Upload File [X]
-- EntityAction and ListAction auto [ ]
+- EntityAction and ListAction auto [X]
 - Rupteur [X]
 - Group [ ]
 - Form auto [X]
@@ -125,7 +128,7 @@ CURRENT v alpha 0.1.2
 - Header and Menu object [X]
 - Multi same component (CustomComponent or Multi ActionComponent) [ ]
 - Skeleton [X] //  SF4 maker [X]
-- Reload line with item action [ ]
+- Reload line with item action [X]
 - Move component [X]
 - Dashboard [X]
 - Macro [/] In class
@@ -135,6 +138,7 @@ CURRENT v alpha 0.1.2
 - ExportField [X]
 - Flex [X]
 - Doc [ ]
+- Roles [X]
 
 v beta
 
@@ -159,12 +163,15 @@ freamworks:
 
 Next todo:
 
-Check all type Form, (Sub-)Filter, Multi-widget xhr-widget, Group, Custom action, itemAction and bulkAction
+Opti pager, Opti menu, custom routeprefix and double config, querybuilder filter list ,connect or not, Check all type Form and branch dateTimeform, (Sub-)Filter, Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
 
 Optimisation todo:
 
-Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker
+Pager, Use voter ,Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
 
+Bug todo:
+
+- sort component is sort execution component !
 
 Your config.yml
 

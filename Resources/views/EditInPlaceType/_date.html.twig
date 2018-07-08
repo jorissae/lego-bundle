@@ -1,0 +1,10 @@
+<input  {% if field.editInPlacePlaceholder %} placeholder="{{ field.editInPlacePlaceholder }}" {% endif %}  class="edit-in-place-input form-control col-md-12" id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}" type="text" value="{{ value| date('d/m/Y') }}"/>
+{% if field.editInPlaceJs %}
+    <script>
+        $(function(){
+            $('#{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}').datepicker({
+                'dateFormat':'dd/mm/yy',
+            });
+        });
+    </script>
+{% endif %}

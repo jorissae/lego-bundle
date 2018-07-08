@@ -72,7 +72,9 @@ $(function(){
         $(this).hide();
         $('#'+ $(this).attr('data-span-in-id')).show();
         $('#'+ $(this).attr('data-input-id')).focus();
-
+        if($(this).attr('data-callback') && window[$(this).attr('data-callback')]){
+            window[$(this).attr('data-callback')]();
+        }
         $("select.select2").select2();
     });
 
@@ -91,22 +93,24 @@ $(function(){
     $('body').on('click','.lego-edit-in-place-bool',function(){
         var elm = $(this);
         var id = elm.attr('data-item-id');
-        var columnName = elm.attr('data-column-name');
+        var fieldName = elm.attr('data-field-name');
         var val = (parseInt(elm.attr('data-value')) > 0)? 0:1;
-        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
-        var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
+        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'value';
+        var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null
+        var field= ($(this).attr('data-line'))? $(this).attr('data-field'):null;
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
-            data: { id: id, columnName: columnName,value: val,cls: '',reload: reload },
+            data: { id: id, fieldName: fieldName,value: val,cls: '',reload: reload },
             dataType: "json",
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
                 alert('Une erreur est survenue ('+retour.err+')');
             }else{
-                if(reload == 'tr' && line){
-                    $('#'+line).replaceWith(retour.val);
-                    $("select.select2").select2();
+                if(reload == 'entity' && line) {
+                    $('#' + line).replaceWith(retour.val);
+                }else if(reload == 'field' && field){
+                    $('#' + field).replaceWith(retour.val);
                 }else{
                     if(retour.val == 1 || retour.val == "1" || retour.val == "oui" || retour.val == 'true'){
                         elm.removeClass('fa-square-o');
@@ -130,10 +134,11 @@ $(function(){
         elm.html('<i class="fa fa-spinner"></i>');
         var id = $(this).attr('data-item-id');
         var callback = $(this).attr('data-callback');
-        var columnName = $(this).attr('data-column-name');
+        var fieldName = $(this).attr('data-field-name');
         var cls = $(this).attr('data-class');
-        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'td';
+        var reload = ($(this).attr('data-reload'))? $(this).attr('data-reload'):'value';
         var line = ($(this).attr('data-line'))? $(this).attr('data-line'):null;
+        var field= ($(this).attr('data-line'))? $(this).attr('data-field'):null;
         var input = $('#'+ $(this).attr('data-input-id'));
         var val = 0;
         if(input.attr('type') == 'checkbox'){
@@ -146,15 +151,17 @@ $(function(){
         $.ajax({
             method: "POST",
             url: $(this).attr('data-target'),
-            data: { id: id, columnName: columnName,value: val,cls: cls,reload: reload },
+            data: { id: id, fieldName: fieldName,value: val,cls: cls,reload: reload},
             dataType: 'json',
         }).done(function( retour ) {
             if(retour.code == 'NOK'){
                 elm.html('<i style="color:red" class="fa fa-check-circle"></i> ('+retour.err+')');
                 input.val(retour.val);
             }else{
-                if(reload == 'tr' && line){
-                    $('#'+line).replaceWith(retour.val);
+                if(reload == 'entity' && line) {
+                    $('#' + line).replaceWith(retour.val);
+                }else if(reload == 'field' && field){
+                    $('#' + field).replaceWith(retour.val);
                 }else{
                     elm.html('<i style="color:#00a65a;" class="jsa-click fa fa-save"></i>');
                     input.val(retour.val);
@@ -165,7 +172,8 @@ $(function(){
             }
             if(callback) window[callback](retour,elm);
         }).fail(function( error ){
-            lego.error(error);
+            elm.html('<i style="color:red" class="fa fa-check-circle"></i> (Error '+error.status+')');
+            lego.error(error.statusText + '<br/>Look Xhr response');
         });
     });
 
@@ -241,6 +249,13 @@ $(function(){
             breaker.show();
         }
     });
+
+    $('body').on('change', 'input[type=checkbox].cascade', function(evt){
+        var self = $(this);
+        $('input[type=checkbox].' + self.attr('data-cascade')).each(function(){
+            $(this).prop('checked',self.is(':checked'));
+        })
+    })
 
 
 });

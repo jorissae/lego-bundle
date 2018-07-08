@@ -13,15 +13,25 @@ lego_component:
     defaults:
         _controller: lego.action.component
 
+lego_entity_reload:
+    path:      /lgo/{entity}/entity/reload/{id}/{cid}/{suffix_route}
+    defaults:
+        _controller: lego.action.entityreload
+
 lego_bulk:
     path:      /lgo/{entity}/bulk/{cid}/{ida}
     defaults:
         _controller: lego.action.bulk
 
 lego_editinplace:
-    path:      /lgo/{entity}/eip
+    path:      /lgo/{entity}/eip/{cid}/{suffix_route}
     defaults:
         _controller: lego.action.editinplace
+
+lego_editinplaceentitychoice:
+    path: /lgo/{entity}/eip/choice/{cid}/{suffix_route}
+    defaults:
+        _controller: lego.action.editinplaceentitychoice
 
 lego_show:
     path:      /lgo/{entity}/{id}/show

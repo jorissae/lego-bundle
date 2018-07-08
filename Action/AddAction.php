@@ -11,6 +11,7 @@ final class AddAction extends AbstractAction
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'add');
         $response = $this->comunicateComponents($configurator, $request);
         if($response){
             return $response;

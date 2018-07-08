@@ -69,9 +69,10 @@ class LegoUserModel implements UserInterface, EquatableInterface
      */
     protected $salt;
 
+    protected $plainpassword = null;
+
     public function __construct() {
         $this->roles = array("ROLE_USER");
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
     public function getRoles() {
@@ -176,7 +177,12 @@ class LegoUserModel implements UserInterface, EquatableInterface
     }
 
     public function setPlainPassword($password){
-        $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost'=>13,'salt'=>$this->salt]);
+        $this->password = null;
+        $this->plainpassword = $password;
+    }
+
+    public function getPlainPassword(){
+        return $this->plainpassword;
     }
 
     public function isEqualTo(UserInterface $user)

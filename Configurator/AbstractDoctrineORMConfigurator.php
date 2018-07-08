@@ -2,6 +2,7 @@
 
 namespace Idk\LegoBundle\Configurator;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Idk\LegoBundle\Component\Component;
 use Idk\LegoBundle\Lib\Pager;
 
@@ -24,13 +25,6 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      * @var Query
      */
     private $query = null;
-
-
-
-    public function __construct($container, AbstractConfigurator $parent = null, $entityClassName = null, $pathParameters = [])
-    {
-        parent::__construct($container, $parent, $entityClassName, $pathParameters);
-    }
 
 
     /**
@@ -84,6 +78,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
         // Apply sorting
         $dataClass = $this->getClassMetaData();
+        /*
         if (!empty($this->orderBy)) {
             $columnName = $this->orderBy;
             $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
@@ -91,7 +86,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
             $path = $queryHelper->getPath($queryBuilder,'b',$columnName);
             $orderBy = $path['alias'] . $path['column'];
             $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
-        }
+        }*/
 
         return $queryBuilder;
     }
@@ -105,27 +100,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
      */
     public function getEntityManager()
     {
-        return $this->get('doctrine.orm.entity_manager');
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getEntityManager();
     }
 
-    public function listOptionsForCombobox($object,Field $line){
-        $em = $this->getEntityManager();
-        $edit = $line->getEditInPlace();
-        $class = (isset($edit['class']))? $edit['class']:$this->getClass()->getAssociationMapping($line->getName())['targetEntity'];
-        $method = (isset($edit['method']))? $edit['method']:'findAll';
-        if(isset($edit['object-in-argument']) and $edit['object-in-argument']){
-            $list = $em->getRepository($class)->$method($object);
-        } else {
-            $list = $em->getRepository($class)->$method();
-        }
-        $return = array();
-        if($list){
-            foreach($list as $entity){
-                $return[$entity->getId()] = $entity->__toString();
-            }
-        }
-        return $return;
-    }
+
 
     public function getAutocompleteField(){
         $fields = $this->getClassFields();
@@ -147,7 +125,7 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
 
 
-    public function getClassMetaData(){
+    public function getClassMetaData(): ClassMetadata{
         $em = $this->getEntityManager();
         return $em->getClassMetadata($this->getRepositoryName());
     }
@@ -179,13 +157,36 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
     }
 
-    public function getType($item,$columnName){
-
+    public function getType($item,$fieldName){
         if(is_object($item)){
-            $return = $this->getClassMetadata()->getTypeOfColumn($columnName);
-            return $return;
+            $classMetaData = $this->getEntityManager()->getClassMetaData(get_class($item));
+            foreach(explode('.', $fieldName) as $fieldn){
+                if($classMetaData->hasAssociation($fieldn)) {
+                    $mapping = $classMetaData->getAssociationMapping($fieldn);
+                    $classMetaData = $this->getEntityManager()->getClassMetaData( $mapping['targetEntity']);
+                }else{
+                    return $classMetaData->getTypeOfColumn($fieldn);
+                }
+            }
         }
     }
 
+
+
+    public function getAssociationClass($fieldname){
+        if($this->getClassMetaData()->hasAssociation($fieldname)) {
+            $mapping = $this->getClassMetaData()->getAssociationMapping($fieldname);
+            return $mapping['targetEntity'] ?? null;
+        }
+        return null;
+    }
+/* TODO
+    public function getClassMetaData(): ClassMetadata{
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getClassMetaData($this->getRepository());
+    }
+    public function getAssociationClass($fieldname){
+        return $this->getConfiguratorBuilder()->getMetaEntityManager()->getAssociationClass($this->getRepository(), $fieldname);
+    }
+*/
 
 }

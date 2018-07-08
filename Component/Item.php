@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class Item extends Component{
+class Item extends Component implements EditInPlaceInterface {
 
     private $fields = [];
     private $entityId = null;
@@ -38,7 +38,15 @@ class Item extends Component{
     }
 
     public function getFields(){
-        return array_merge($this->fields, $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
+        $fields = array_merge($this->fields, $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
+        foreach($this->getOption('fields_exclude', []) as $excludeFieldName){
+            unset($fields[$excludeFieldName]);
+        }
+        return $fields;
+    }
+
+    public function getField(string $fieldName): Field{
+        return $this->getFields()[$fieldName];
     }
 
     public function getTemplate($name = 'index'){
@@ -70,6 +78,10 @@ class Item extends Component{
             $entity = null;
         }
         return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
+    }
+
+    public function renderEntity($entity){
+        return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('entity'),['component'=>$this,'entity'=>$entity]);
     }
 
 

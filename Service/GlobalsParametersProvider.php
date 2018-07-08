@@ -1,26 +1,15 @@
 <?php
 namespace Idk\LegoBundle\Service;
 
-
-
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GlobalsParametersProvider
 {
 
-    private $skin;
-    private $layout;
-    private $layoutLogin;
-    private $routeLogin;
-    private $routeLogout;
-    private $userClass;
+    private $params;
 
-    public function __construct($skin, $layout, $layoutLogin, $routeLogin, $routeLogout, $userClass) {
-        $this->skin = $skin;
-        $this->layout = $layout;
-        $this->layoutLogin = $layoutLogin;
-        $this->routeLogin = $routeLogin;
-        $this->routeLogout = $routeLogout;
-        $this->userClass = $userClass;
+    public function __construct(ParameterBagInterface $params) {
+        $this->params = $params;
     }
 
     /**
@@ -28,7 +17,7 @@ class GlobalsParametersProvider
      */
     public function getSkin()
     {
-        return $this->skin;
+        return $this->params->get('lego.skin');
     }
 
     /**
@@ -36,7 +25,7 @@ class GlobalsParametersProvider
      */
     public function getLayout()
     {
-        return $this->layout;
+        return $this->params->get('lego.layout');
     }
 
     /**
@@ -44,15 +33,15 @@ class GlobalsParametersProvider
      */
     public function getLayoutLogin()
     {
-        return $this->layoutLogin;
+        return $this->params->get('lego.layout_login');
     }
 
     public function getRouteLogin(){
-        return $this->routeLogin;
+        return $this->params->get('lego.route.login');
     }
 
     public function getRouteLogout(){
-        return $this->routeLogout;
+        return $this->params->get('lego.route.logout');
     }
 
     /**
@@ -60,15 +49,7 @@ class GlobalsParametersProvider
      */
     public function getUserClass()
     {
-        return $this->userClass;
-    }
-
-    /**
-     * @param mixed $userClass
-     */
-    public function setUserClass($userClass): void
-    {
-        $this->userClass = $userClass;
+        return $this->params->get('lego.user.class');
     }
 
 

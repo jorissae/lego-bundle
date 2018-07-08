@@ -12,6 +12,7 @@ services:
 
   lego.form.role:
       class: Idk\LegoBundle\Form\Type\RoleType
+      arguments: ["%security.role_hierarchy.roles%"]
       tags:
           - { name: form.type, alias: lego_role }
 
@@ -19,6 +20,12 @@ services:
       class: Idk\LegoBundle\Form\Type\GeoJsonType
       tags:
           - { name: form.type, alias: lego_geojson }
+
+  lego.form.manytomanyjoin:
+      class: Idk\LegoBundle\Form\Type\ManyToManyJoinType
+      arguments:    ["@lego.service.meta_entity_manager"]
+      tags:
+          - { name: form.type, alias: lego_many_to_many_join }
 
   lego.form.latlng:
       class: Idk\LegoBundle\Form\Type\LatLngType
@@ -84,6 +91,7 @@ services:
       tags:
           - { name: form.type, alias: lego_range }
 
+  #@TODO
   lego.form.gedmo_translatable:
       class: Idk\LegoBundle\Form\Type\GedmoTranslatableType
       arguments: ['fr', ['en','de','fr'], '@lego.service.gedmo_translatable_field_manager', '@translator']

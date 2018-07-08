@@ -2,7 +2,9 @@
 namespace Idk\LegoBundle\Annotation\Entity\Form;
 
 use Idk\LegoBundle\Annotation\Entity\Field;
-
+use Idk\LegoBundle\Service\MetaEntityManager;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 /**
  * @Annotation
  */
@@ -19,6 +21,10 @@ class AbstractForm
         $this->label = isset($options['label'])? $options['label']:null;
         unset($options['type']);
         $this->options = $options;
+    }
+
+    public function addIn(FormFactoryInterface $formFactory, FormBuilderInterface &$formBuilder, MetaEntityManager $mem){
+        $formBuilder->add($this->getName(), $this->getType(), $this->getOptions());
     }
 
     public function getType(){

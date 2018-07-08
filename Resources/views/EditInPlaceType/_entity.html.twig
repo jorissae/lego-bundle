@@ -1,0 +1,36 @@
+<select  id="{{ component.gid('input') }}-{{ field.id }}-{{ item.id }}" type="text" value="{{ stringValue }}" class="form-control">
+</select>
+<span id="{{ component.gid('eip-loader') }}-{{ field.id }}-{{ item.id }}" class="fa fa-spinner fa-pulse"></span>
+<script>
+    {%  set path = component.getPath('editinplaceentitychoice') %}
+        var {{ loader }}_ok = false;
+        function {{ loader }}(){
+            if({{ loader }}_ok === false) {
+                {{ loader }}_ok = true;
+                $('#{{ component.gid('eip-loader') }}-{{ field.name }}-{{ item.id }}').show();
+                $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').hide();
+                $.ajax({
+                    method: "POST",
+                    url: '{{ path(path.route,path.params) }}',
+                    data: {
+                        'entity_target': '{{ configurator.getAssociationClass(field.name)|replace({'\\':'/'}) }}',
+                        'fieldname': '{{ field.name }}',
+                        'entity_source': '{{ get_class(item)|replace({'\\':'/'}) }}',
+                        'entity_source_id': {{ item.id }} },
+                    dataType: "json",
+                }).success(function (data) {
+                    {%  if value %}
+                    let id = {{ value.id }};
+                    {%  else %}
+                    let id = null;
+                    {%  endif %}
+                    for (var v in data) {
+                        $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').append(new Option(data[v],v, null, (id == v)));
+                    }
+                    $('#{{ component.gid('eip-loader') }}-{{ field.name }}-{{ item.id }}').hide();
+                    $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').select2({'width':'100%'});
+                    $('#{{ component.gid('input') }}-{{ field.name }}-{{ item.id }}').show();
+                });
+            }
+        }
+</script>

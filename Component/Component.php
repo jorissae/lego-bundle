@@ -36,6 +36,10 @@ abstract class Component{
         return $this;
     }
 
+    public function getSuffixRoute(){
+        return $this->suffixRoute;
+    }
+
     public function getValId(){
         return $this->valId;
     }
@@ -108,12 +112,12 @@ abstract class Component{
         return $this->getTemplate('_'.$name);
     }
 
-    public function get($name){
-        return $this->configurator->get($name);
+    public function getConfigurator(): AbstractConfigurator{
+        return $this->configurator;
     }
 
-    public function getConfigurator(){
-        return $this->configurator;
+    public function getConfiguratorBuilder(){
+        return $this->getConfigurator()->getConfiguratorBuilder();
     }
 
     public function getTemplateAllParameters(){
@@ -121,26 +125,15 @@ abstract class Component{
     }
 
     public function getComponentSessionStorage($key, $default = null){
-        if($this->get('session')->has($this->getId())){
-            $componentSessionStorage = $this->get('session')->get($this->getId());
-            return (isset($componentSessionStorage[$key]))? $componentSessionStorage[$key]:$default;
-        }else{
-            return $default;
-        }
+        return $this->getConfiguratorBuilder()->getSessionStorage($this->getId(), $key, $default);
     }
 
     public function setComponentSessionStorage($key, $value){
-        if(!$this->get('session')->has($this->getId())){
-            $this->get('session')->set($this->getId(), []);
-        }
-        $componentSessionStorage = $this->get('session')->get($this->getId());
-        $componentSessionStorage[$key] = $value;
-        $this->get('session')->set($this->getId(), $componentSessionStorage);
-        return $this;
+        return $this->getConfiguratorBuilder()->setSessionStorage($this->getId(), $key, $value);
     }
 
-    public function getPath(){
-        $params = [];
+
+    public function getPath(string $suffix = 'component', $params = []){
         foreach($this->getListenParamsForReload() as $key){
             if($this->request->get($key)){
                 $params[$key] = $this->request->get($key);
@@ -149,13 +142,13 @@ abstract class Component{
         $params['cid'] = $this->getId();
         $params['suffix_route'] = $this->suffixRoute;
         $configurator = ($this->getConfigurator()->getParent())? $this->getConfigurator()->getParent():$this->getConfigurator();
-        return new Path($configurator->getPathRoute('component'), $configurator->getPathParameters($params));
+        return new Path($configurator->getPathRoute($suffix), $configurator->getPathParameters($params));
     }
 
 
     public function getUrl(array $params = []){
         $path = $this->getPath();
-        return $this->get('router')->generate($path->getRoute(), $path->getParams($params));
+        return $this->getConfiguratorBuilder()->getRouter()->generate($path->getRoute(), $path->getParams($params));
     }
 
     public function getId(){
@@ -163,12 +156,13 @@ abstract class Component{
     }
 
     public function gid($id){
-        return md5($this->id.$id);
+        return 'gid_'.md5($this->id.$id);
     }
 
     protected function trans($str, $vars= []){
-        return $this->get('translator')->trans($str, $vars);
+        return $this->getConfiguratorBuilder()->trans($str, $vars);
     }
+
 
 
 

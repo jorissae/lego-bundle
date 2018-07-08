@@ -2,63 +2,63 @@
 declare(strict_types=1);
 namespace Idk\LegoBundle\Action;
 
+use Idk\LegoBundle\Service\ConfiguratorBuilder;
+use Idk\LegoBundle\Service\EditInPlaceFactory;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class EditInPlaceAction extends AbstractAction
+final class EditInPlaceAction extends AbstractFormAction
 {
+
+    private $eipFactory;
+
+    public function __construct(ConfiguratorBuilder $builder, FormFactoryInterface $formFactory, EditInPlaceFactory $eipFactory){
+        parent::__construct($builder,$formFactory);
+        $this->eipFactory = $eipFactory;
+    }
 
     public function __invoke(Request $request): Response
     {
         $configurator = $this->getConfigurator($request);
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit');
+        $this->denyAccessUnlessGranted($configurator->getEntityName(), 'edit_in_place');
+        $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
+        $field = $component->getField($request->request->get('fieldName'));
+
+
         $this->createFormBuilder();
         $em = $this->getEntityManager();
         $reload = $request->request->get('reload');
-        $entity = $em->getRepository($configurator->getRepositoryName())->findOneById($request->request->get('id'));
-        $columnName = $request->request->get('columnName');
+        $entity = $em->getRepository($component->getConfigurator()->getRepositoryName())->findOneById($request->request->get('id'));
+        $fieldName = $field->getName();
         $class = $request->request->get('cls');
-        $type = $configurator->editInplaceInputType($entity,$columnName);
-        $method = 'set'.$configurator->to_camel_case($columnName);
-        if ($type == 'object'){
-            $value = $em->getRepository($class)->find($request->request->get('value'));
-        }elseif($type == 'datetime'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('d/m/Y H:i',$request->request->get('value'));
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'date'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('d/m/Y',$value);
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'time'){
-            $value = $request->request->get('value');
-            if($value != ''){
-                $value = \DateTime::createFromFormat('H:i',$request->request->get('value'));
-            } else {
-                $value = null;
-            }
-        }elseif($type == 'boolean'){
-            $value = ($request->request->get('value') == '1');
-        } else{
-            $value = $request->request->get('value');
-        }
-        $entity->$method($value);
-        $em->persist($entity);
+        $type = $this->eipFactory->getEditInPlaceType(
+            $component->getConfigurator()->getType($entity, $field->getName()),
+            $field->getValue($component->getConfigurator(),$entity),
+            $field->getName());
+
+        $value = $type->getValueFromAction($request, $this);
+
+        $persist = $field->setValue($component->getConfigurator(), $entity, $value);
+        $em->persist($persist);
         $em->flush();
-        if($type == 'text'){
-            $stringValue = $configurator->getValue($entity,$columnName);
-        } else {
-            $stringValue = $configurator->getStringValue($entity,$columnName);
-        }
-        if($reload == 'tr'){
-            $return = array('code'=>'OK','val'=> (string)html_entity_decode($this->getLineResponse($configurator,$entity)));
+        $stringValue = $configurator->getStringValue($entity,$fieldName);
+        if($reload == 'entity') {
+
+            $configurator->bindRequestCurrentComponents($request, $component);
+            $component->xhrBindRequest($request);
+            $return = array('code' => 'OK', 'val' => (string)html_entity_decode($component->renderEntity($entity)));
+        }elseif($reload == 'field'){
+            $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
+            $configurator->bindRequestCurrentComponents($request, $component);
+            $component->xhrBindRequest($request);
+            $template = $this->configuratorBuilder->getTwig()->createTemplate('{{ render_field_value(component, field, item) }}');
+            $html = $template->render(['component'=>$component,'item'=>$entity, 'field'=> $component->getField($fieldName)]);
+            $return = array('code' => 'OK', 'val' => (string)html_entity_decode($html));
         }else{
-            $return = array('code'=>'OK','val'=>(string)$stringValue,'setter'=>$value);
+            $return = array('code'=>'OK','val'=>(string)$stringValue);
         }
         return new Response(json_encode($return));
     }
