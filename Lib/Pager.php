@@ -25,7 +25,8 @@ class Pager{
             $this->nbElements = null;
             $this->nbPage = null;
         }else {
-            $this->nbElements = count($queryBuilder->getQuery()->getResult());
+            //@Todo check
+            $this->nbElements = \count($queryBuilder->select('count(*) as nb')->getQuery()->getSingleResult()['nb']);
             $this->nbPage = ceil($this->nbElements / $this->nbPerPage);
         }
     }

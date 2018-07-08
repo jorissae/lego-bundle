@@ -91,6 +91,7 @@ services:
       tags:
           - { name: form.type, alias: lego_range }
 
+  #@TODO
   lego.form.gedmo_translatable:
       class: Idk\LegoBundle\Form\Type\GedmoTranslatableType
       arguments: ['fr', ['en','de','fr'], '@lego.service.gedmo_translatable_field_manager', '@translator']

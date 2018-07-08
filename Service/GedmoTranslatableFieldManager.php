@@ -8,7 +8,7 @@ use Doctrine\ORM\Query as Query;
 use Gedmo\Translatable\TranslatableListener as TranslatableListener;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation as AbstractPersonalTranslation;
 
-
+//@Todo
 class GedmoTranslatableFieldManager
 {
     CONST GEDMO_TRANSLATION = 'Gedmo\\Translatable\\Entity\\Translation';
