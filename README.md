@@ -138,6 +138,7 @@ CURRENT v alpha 0.1.2
 - ExportField [X]
 - Flex [X]
 - Doc [ ]
+- Roles [X]
 
 v beta
 
@@ -162,12 +163,15 @@ freamworks:
 
 Next todo:
 
-Check all type Form, (Sub-)Filter, Multi-widget xhr-widget, Group, Custom action, itemAction and bulkAction
+Opti pager, Opti menu, custom routeprefix and double config, querybuilder filter list ,connect or not, Check all type Form and branch dateTimeform, (Sub-)Filter, Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
 
 Optimisation todo:
 
-Pager, Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
+Pager, Use voter ,Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
 
+Bug todo:
+
+- sort component is sort execution component !
 
 Your config.yml
 
