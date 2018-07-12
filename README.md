@@ -16,7 +16,9 @@
 ```
 Work directly WITH USER LOGIN :-D
                 
-SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use it in production)
+SF 4.1 and more
+
+IDK LEGO BUNDLE V 0.1 alpha (do not use it in production)
 
 You want an very customable without to see internal code, Stay here !
 There is nothing you can't to do.
