@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class JsonType extends AbstractType
+class JsonAreaType extends AbstractType
 {
 
     public function getParent()
@@ -28,7 +28,7 @@ class JsonType extends AbstractType
 
     public function getName()
     {
-        return 'lego_jsonarea';
+        return 'lego_json_area';
     }
 
 

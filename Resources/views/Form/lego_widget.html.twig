@@ -349,7 +349,7 @@ $(function(){
         $('#{{  id }}').change(function(){
             editor.set(JSON.parse($('#{{ id }}').val()));
         });
-        var editor = new JSONEditor(container, options);
+        var editor = new SJSONEditor(container, options);
 
         // set json
         {%  if value  %}
@@ -362,7 +362,7 @@ $(function(){
     </script>
 {% endblock %}
 
-{% block jsonarea_widget %}
+{% block json_area_widget %}
     <textarea {{ block('widget_attributes') }}>{{  value|raw }}</textarea>
     <script>
 
