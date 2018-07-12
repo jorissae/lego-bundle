@@ -167,7 +167,7 @@ Opti pager, Opti menu, custom routeprefix and double config, querybuilder filter
 
 Optimisation todo:
 
-Pager, Use voter ,Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
+Pager, Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
 
 Bug todo:
 
