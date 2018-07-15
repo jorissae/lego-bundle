@@ -32,10 +32,7 @@ class JsonHumanType extends AbstractType {
     public function configureOptions(OptionsResolver $resolver){
         $resolver->setDefaults([
             "schema"=> [
-                "type" => "object",
-                "properties" => [
-                    "name" => ["type"=>"string"]
-                ]
+                "type" => "object"
             ],
             "disable_edit_json" => true,
             "no_additional_properties" => false,

@@ -16,7 +16,9 @@
 ```
 Work directly WITH USER LOGIN :-D
                 
-SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use it for the moment)
+SF 4.1 and more
+
+IDK LEGO BUNDLE V 0.1 alpha (do not use it in production)
 
 You want an very customable without to see internal code, Stay here !
 There is nothing you can't to do.
@@ -170,7 +172,7 @@ Opti menu, custom routeprefix and double config, querybuilder filter list ,conne
 
 Optimisation todo:
 
-Pager, Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
+ Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
 
 Bug todo:
 

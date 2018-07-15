@@ -12,6 +12,8 @@ namespace Idk\LegoBundle\Lib;
 
 
 
+use Doctrine\ORM\QueryBuilder;
+
 class Pager{
 
     const NBPERPAGE = 20;
@@ -23,7 +25,7 @@ class Pager{
     private $nbElements;
     private $nbPerPage;
 
-    public function __construct($queryBuilder ,$page = 1,$nbPerPage = null, $unlimited = false){
+    public function __construct(QueryBuilder $queryBuilder ,$page = 1,$nbPerPage = null, $unlimited = false){
         $this->nbPerPage = ($nbPerPage)? $nbPerPage:self::NBPERPAGE;
         $this->queryBuilder = clone $queryBuilder;
         $this->page = $page;
@@ -34,8 +36,8 @@ class Pager{
             $this->nbElements = null;
             $this->nbPage = null;
         }else {
-            //@Todo check
-            $this->nbElements = $queryBuilder->select('count(*) as nb')->getQuery()->getSingleResult()['nb'];
+            $rootAlias = $queryBuilder->getRootAliases()[0];
+            $this->nbElements = $queryBuilder->select('count('.$rootAlias.') as nb')->getQuery()->getSingleResult()['nb'];
             $this->nbPage = ceil($this->nbElements / $this->nbPerPage);
         }
     }
