@@ -332,4 +332,8 @@ class ListItems extends Component implements EditInPlaceInterface {
     public function renderEntity($item){
         return $this->getConfiguratorBuilder()->getTwig()->render($this->getPartial('line'),['component'=>$this,'item'=>$item]);
     }
+
+    public function isTree(){
+        return $this->getOption('tree', false);
+    }
 }

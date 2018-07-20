@@ -86,6 +86,14 @@ class TreeManager{
         }
     }
 
+    public function getChildren(LegoTreeInterface $node){
+        return $this->getQueryBuilder($node)->where('n.left > :lft AND n.right < :rgt AND n.level = :lvl')->setParameters([
+            'lft'=>$node->getLeft(),
+            'rgt'=>$node->getRight(),
+            'lvl'=>$node->getLevel() + 1
+        ])->orderBy('n.left','ASC')->getQuery()->getResult();
+    }
+
     private function getQueryBuilder(LegoTreeInterface $node, $alias = 'n'): QueryBuilder{
         return $this->em->getRepository(get_class($node))->createQueryBuilder($alias);
     }

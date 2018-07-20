@@ -7,23 +7,23 @@
     <div class="box-body"  id="{{ component.gid('body') }}">
 
         <div class="table_overflow_fix table-responsive">
-            <table>
+            <table id="{{ component.gid('table') }}">
                 {% for item in component.entities %}
-                    <tr data-node="{{ item.id }}" data-parent="{% if item.parent %}{{ item.parent.id }}{%  endif %}" class="{% if item.level > 0 %}hidden{%  endif %}">
-                        <td>{% if item.right - item.left != 1 %}<span onclick="openNode({{ item.id }})">></span>{%  endif %}</td>
-                        <td>{%  for i in  0..item.level %}&nbsp;&nbsp;{% endfor %}{{ item.libelle }}</td>
-                        <td>
-                            <a href="">UP</a>
-                            <a href="">DOWN</a>
-                            <a href="">DELETE</a>
-                        </td>
+                    <tr data-node="{{ item.id }}" data-tt-id="{{ item.id }}" data-tt-parent-id="{% if item.parent %}{{ item.parent.id }}{%  endif %}" data-parent="{% if item.parent %}{{ item.parent.id }}{%  endif %}">
+
+                        {% for field in component.fields%}
+                            <td>
+                                {{ render_field_value(component, field, item) }}
+                            </td>
+                        {% endfor %}
                     </tr>
 
                 {% endfor %}
             </table>
         </div>
         <script>
-            function openNode(idNode){
+            $("#{{ component.gid('table') }}").treetable({ expandable: true });
+            /*function openNode(idNode){
                 console.log('ok');
                 if($(this).hasClass('open')){
                     $(this).removeClass('open');
@@ -34,7 +34,7 @@
                     $('tr[data-parent=' + idNode + ']').removeClass('hidden');
                     $('tr[data-parent=' + idNode + ']').show();
                 }
-            }
+            }*/
         </script>
 
     </div>

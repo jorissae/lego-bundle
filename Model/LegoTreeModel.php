@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping\MappedSuperclass;
  *
  * @MappedSuperclass
  */
-class LegoTreeModel implements LegoTreeInterface
+abstract class LegoTreeModel implements LegoTreeInterface
 {
     /**
      * Identifiant.
@@ -28,13 +28,7 @@ class LegoTreeModel implements LegoTreeInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    /**
-     * Name.
-     *
-     * @var string
-     * @ORM\Column(type="string", nullable=false, name="tree_name")
-     */
-    protected $name;
+
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false, name="tree_lvl", options={"unsigned":true})
@@ -58,23 +52,7 @@ class LegoTreeModel implements LegoTreeInterface
     {
         return $this->id;
     }
-    /**
-     * @param string $name
-     *
-     * @return Tree
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+
     /**
      * @param int $level
      *
@@ -126,4 +104,5 @@ class LegoTreeModel implements LegoTreeInterface
     {
         return $this->right;
     }
+
 }

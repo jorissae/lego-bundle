@@ -11,7 +11,7 @@
     <div class="box-body"  id="{{ component.gid('body') }}">
 
         <div class="table_overflow_fix table-responsive">
-            <table class="table table-striped table-hover table-bordered table-sortable responsive">
+            <table id="{{ component.gid('table') }}" class="table table-striped table-hover table-bordered table-sortable responsive">
                 <thead>
                 <tr>
                     {% set nbCol = 0 %}
@@ -64,6 +64,9 @@
                     {%  endif %}
                 </tbody>
             </table>
+            {% if component.isTree %}
+                <script>$("#{{ component.gid('table') }}").treetable({ expandable: true });</script>
+            {% endif %}
 
             {% include component.partial('bulk_actions') with {'component':component } %}
 

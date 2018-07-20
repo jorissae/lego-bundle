@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\Listener;
 
+use Idk\LegoBundle\Model\LegoTreeInterface;
 use Idk\LegoBundle\Service\TreeManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -21,15 +22,28 @@ class UpdateTreeListener
 {
     private $tm;
 
-    /*public function __construct(TreeManager $tm)
+    public function __construct(TreeManager $tm)
     {
         $this->tm = $tm;
-    }*/
+    }
 
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        die('persist');
+        if($entity instanceof LegoTreeInterface) {
+            if ($entity->getParent()) {
+                $this->tm->setEntityManager($args->getEntityManager());
+                $children = $this->tm->getChildren($entity->getParent());
+                $last = $children[count($children) - 1];
+                $entity->setLeft($last->getRight() + 1);
+                $entity->setRight($last->getRight() + 2);
+                //$this->tm->addNode($entity);
+            } else {
+                $entity->setLeft(0);
+                $entity->setRight(1);
+                $entity->setLevel(0);
+            }
+        }
     }
 
     public function preUpdate(PreUpdateEventArgs $args)

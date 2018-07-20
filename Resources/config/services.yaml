@@ -90,19 +90,19 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
-    lego.listener.update_tree:
-        class: Idk\LegoBundle\Listener\UpdateTreeListener
-        #arguments:    ["@lego.service.tree"]
+    #lego.listener.update_tree:
+    #    class: Idk\LegoBundle\Listener\UpdateTreeListener
+    #    arguments:    ["@lego.service.tree"]
+    #    tags:
+    #        - { name: doctrine.event_listener, event: prePersist }
+    #        - { name: doctrine.event_listener, event: preUpdate }
+
+    lego.listener.update_user_password:
+        class: Idk\LegoBundle\Listener\UpdateUserPasswordEncoderListener
+        arguments:    ["@security.encoder_factory"]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
-
-    #lego.listener.update_user_password:
-    #    class: Idk\LegoBundle\Listener\UpdateUserPasswordEncoderListener
-    #    arguments:    ["@security.encoder_factory"]
-    #    tags:
-    #        - { name: doctrine.event_listener, event: prePersist }
-    #       f - { name: doctrine.event_listener, event: preUpdate }
 
 
     lego.twig.filter:

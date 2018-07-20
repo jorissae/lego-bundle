@@ -17,10 +17,8 @@ interface LegoTreeInterface
     public function getLevel();
     public function setLeft($left);
     public function getLeft();
-    public function setName($name);
-    public function getName();
     public function setRight($right);
     public function getRight();
-    public function getParent():LegoTreeInterface;
+    public function getParent():?LegoTreeInterface;
     public function setParent(LegoTreeInterface $node);
 }

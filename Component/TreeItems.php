@@ -23,6 +23,12 @@ use Idk\LegoBundle\Service\MetaEntityManager;
 class TreeItems extends Component{
 
 
+    private $fields = [];
+
+    public function __construct(MetaEntityManager $mem){
+        $this->mem = $mem;
+    }
+
     protected function init(){
 
     }
@@ -38,6 +44,20 @@ class TreeItems extends Component{
 
     public function getTemplateParameters(){
         return ['component' => $this];
+    }
+
+    public function getFields(){
+        $fields = array_merge(
+            $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')),
+            $this->mem->overrideFieldsBy($this->getConfigurator()->getEntityName(),$this->fields));
+        foreach($this->getOption('fields_exclude', []) as $excludeFieldName){
+            unset($fields[$excludeFieldName]);
+        }
+        return $fields;
+    }
+
+    public function getField(string $fieldName): Field{
+        return $this->getFields()[$fieldName];
     }
 
     public function getEntities(){
