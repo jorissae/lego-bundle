@@ -6,6 +6,7 @@ parameters:
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager
     lego.service.gedmo_translatable_field_manager.class: Idk\LegoBundle\Service\GedmoTranslatableFieldManager
     lego.service.password_encoder.class: Idk\LegoBundle\Service\PasswordEncoder
+    lego.service.tree.class: Idk\LegoBundle\Service\TreeManager
 
 services:
 
@@ -89,12 +90,19 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
-    lego.listener.upload_user_password:
-        class: Idk\LegoBundle\Listener\UploadUserPasswordEncoderListener
-        arguments:    ["@security.encoder_factory"]
+    lego.listener.update_tree:
+        class: Idk\LegoBundle\Listener\UpdateTreeListener
+        #arguments:    ["@lego.service.tree"]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
+
+    #lego.listener.update_user_password:
+    #    class: Idk\LegoBundle\Listener\UpdateUserPasswordEncoderListener
+    #    arguments:    ["@security.encoder_factory"]
+    #    tags:
+    #        - { name: doctrine.event_listener, event: prePersist }
+    #       f - { name: doctrine.event_listener, event: preUpdate }
 
 
     lego.twig.filter:
@@ -124,6 +132,12 @@ services:
     lego.service.export:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
+
+    lego.service.tree:
+        class: '%lego.service.tree.class%'
+        #arguments: ["@doctrine.orm.entity_manager"]
+    Idk\LegoBundle\Service\TreeManager: '@lego.service.tree'
+
 
 
     lego.service.components:

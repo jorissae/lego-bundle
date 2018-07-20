@@ -16,7 +16,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-class UploadUserPasswordEncoderListener
+class UpdateUserPasswordEncoderListener
 {
     private $encoderFactory;
 
@@ -39,6 +39,7 @@ class UploadUserPasswordEncoderListener
 
     private function uploadPassword($user)
     {
+        //@TODO
         if($user instanceof LegoUserModel){
             if($user->getPlainPassword() && $user->getPassword() === null) {
                 $encoder = $this->encoderFactory->getEncoder($user);

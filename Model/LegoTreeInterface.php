@@ -21,4 +21,6 @@ interface LegoTreeInterface
     public function getName();
     public function setRight($right);
     public function getRight();
+    public function getParent():LegoTreeInterface;
+    public function setParent(LegoTreeInterface $node);
 }
