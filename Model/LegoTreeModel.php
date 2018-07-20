@@ -8,7 +8,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Idk\LegoBundle\Model implements LegoTreeInterface::;
+namespace Idk\LegoBundle\Model;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping\MappedSuperclass;
  *
  * @MappedSuperclass
  */
-class LegoTreeModel
+class LegoTreeModel implements LegoTreeInterface
 {
     /**
      * Identifiant.
@@ -39,18 +39,18 @@ class LegoTreeModel
      * @var int
      * @ORM\Column(type="integer", nullable=false, name="tree_lvl", options={"unsigned":true})
      */
-    private $level;
+    protected $level;
     /**
      * Le
      * @var int
-     * @ORM\Column(type="integer", nullable=false, name="tree_lb", options={"unsigned":true})
+     * @ORM\Column(type="integer", nullable=false, name="tree_left", options={"unsigned":true})
      */
-    private $left;
+    protected $left;
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=false, name="tree_lr", options={"unsigned":true})
+     * @ORM\Column(type="integer", nullable=false, name="tree_right", options={"unsigned":true})
      */
-    private $right;
+    protected $right;
     /**
      * @return int
      */

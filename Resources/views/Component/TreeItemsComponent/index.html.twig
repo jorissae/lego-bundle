@@ -7,26 +7,35 @@
     <div class="box-body"  id="{{ component.gid('body') }}">
 
         <div class="table_overflow_fix table-responsive">
-            <table class="table table-striped table-hover table-bordered table-sortable responsive">
-                <thead>
-                <tr>
-                    <td>Prototype component Tree</td>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr><td>
-                    {% for item in component.entities %}
-                        {%  for 0..item.level %}&nbsp&nbsp{% endfor %}{{ item.libelle }}
-                        <a href="">UP</a>
-                        <a href="">DOWN</a>
-                        <a href="">DELETE</a>
-                    {% endfor %}
-                    </td></tr>
-                </tbody>
+            <table>
+                {% for item in component.entities %}
+                    <tr data-node="{{ item.id }}" data-parent="{% if item.parent %}{{ item.parent.id }}{%  endif %}" class="{% if item.level > 0 %}hidden{%  endif %}">
+                        <td>{% if item.right - item.left != 1 %}<span onclick="openNode({{ item.id }})">></span>{%  endif %}</td>
+                        <td>{%  for i in  0..item.level %}&nbsp;&nbsp;{% endfor %}{{ item.libelle }}</td>
+                        <td>
+                            <a href="">UP</a>
+                            <a href="">DOWN</a>
+                            <a href="">DELETE</a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
             </table>
-
         </div>
-
+        <script>
+            function openNode(idNode){
+                console.log('ok');
+                if($(this).hasClass('open')){
+                    $(this).removeClass('open');
+                    $('tr[data-parent=' + idNode + ']').addClass('hidden');
+                    $('tr[data-parent=' + idNode + ']').hide();
+                }else {
+                    $(this).addClass('open');
+                    $('tr[data-parent=' + idNode + ']').removeClass('hidden');
+                    $('tr[data-parent=' + idNode + ']').show();
+                }
+            }
+        </script>
 
     </div>
 </div>
