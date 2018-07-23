@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Component{
 
+
     private $options;
 
     private $configurator;
@@ -31,6 +32,8 @@ abstract class Component{
 
     protected $listenQueryParameters = [];
 
+    protected $listCanCatchQuery = [];
+
     public function __construct(){
     }
 
@@ -38,8 +41,13 @@ abstract class Component{
         $this->options = $options;
         $this->configurator = $configurator;
         $this->suffixRoute = $suffixRoute;
-        $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
-        $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
+        if(isset($options['cid'])){
+            $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator).'-'.$options['cid']);
+            $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator).'-'.$options['cid'];
+        }else{
+            $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
+            $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
+        }
         $this->init();
         return $this;
     }
@@ -56,6 +64,10 @@ abstract class Component{
     public function addListenQueryParameter($queryParametersGlobal, $queryParametersComponent){
         $this->listenQueryParameters[$queryParametersComponent] = $queryParametersGlobal;
         return $this;
+    }
+
+    public function addCanCatchQuery(self $component){
+       $this->listCanCatchQuery[] = $component->getId();
     }
 
     abstract protected function init();
@@ -130,6 +142,10 @@ abstract class Component{
 
     public function getTemplateAllParameters(){
         return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
+    }
+
+    public function canCatchQuery(self $component){
+        return in_array($component->getId(), $this->listCanCatchQuery);
     }
 
     public function getComponentSessionStorage($key, $default = null){

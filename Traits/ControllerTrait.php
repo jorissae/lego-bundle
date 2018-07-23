@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\Traits;
 
+use Idk\LegoBundle\Action\DefaultAction;
 use Idk\LegoBundle\Action\EditInPlaceEntityChoiceAction;
 use Idk\LegoBundle\Action\EntityReloadAction;
 use Idk\LegoBundle\Service\Tag\ActionChain;
@@ -223,6 +224,17 @@ trait ControllerTrait
     public function bulkAction(Request $request)
     {
         return $this->getResponse(BulkAction::class, $request);
+    }
+
+    /**
+     * The index action
+     *
+     * @Route("/{suffix_route}")
+     * @Method({"GET", "POST"})
+     */
+    public function defaultAction(Request $request)
+    {
+        return $this->getResponse(DefaultAction::class, $request);
     }
 
 }

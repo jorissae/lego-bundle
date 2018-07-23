@@ -97,10 +97,10 @@ abstract class AbstractConfigurator
     }
 
     public function getId(){
-        return md5(get_class($this));
+        return md5(get_class($this).'-'.$this->getEntityName());
     }
 
-    abstract function getPager();
+    //abstract function getPager();
     abstract public function getType($item,$columnName);
 
     public function getEntityName(){
@@ -491,6 +491,9 @@ abstract class AbstractConfigurator
         if (isset($this->components[$routeSuffix])) {
 
             $components = $this->components[$routeSuffix];
+           /* foreach($components as $c){
+                echo get_class($c).'--';
+            }*/
             $order = $this->getConfiguratorSessionStorage('sort');
             if ($order != null and isset($order[$routeSuffix])) {
                 return $this->sortComponents($components, $order[$routeSuffix]);
@@ -561,6 +564,10 @@ abstract class AbstractConfigurator
             $this->components[$routeSuffix] = [];
         }
         $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName);
+        if(isset($this->components[$routeSuffix][$component->getId()])){
+            $options['cid'] = count($this->components[$routeSuffix]);
+            $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName);
+        }
         $this->components[$routeSuffix][$component->getId()] = $component;
         return $component;
     }
@@ -569,6 +576,9 @@ abstract class AbstractConfigurator
     {
         if($entityClassName){
             $configurator = $this->configuratorBuilder->generateConfigurator($entityClassName, $nameConfigurator, $this);
+            if($this->getChild($routeSuffix,$configurator->getId())){
+                $configurator = $this->getChild($routeSuffix, $configurator->getId());
+            }
             $component = $configurator->addComponent($componentClassName,$options, $routeSuffix);
             $this->addChild($routeSuffix, $configurator);
             return $component;
@@ -578,12 +588,21 @@ abstract class AbstractConfigurator
 
     }
 
-    private function addChild($routeSuffix, AbstractConfigurator $configurator){
-        //2* le mem configurateur ?? TODO dedoublon
-        if(!isset($this->children[$routeSuffix])){
-            $this->children[$routeSuffix] = [];
+    private function getChild($routeSuffix, $configuratorId): ?AbstractConfigurator{
+        if(!isset($this->children[$routeSuffix])) return null;
+        foreach($this->children[$routeSuffix] as $child){
+            if($child->getId() == $configuratorId) return $child;
         }
-        $this->children[$routeSuffix][] = $configurator;
+        return null;
+    }
+
+    private function addChild($routeSuffix, AbstractConfigurator $configurator){
+        if($this->getChild($routeSuffix, $configurator->getId()) === null) {
+            if (!isset($this->children[$routeSuffix])) {
+                $this->children[$routeSuffix] = [];
+            }
+            $this->children[$routeSuffix][] = $configurator;
+        }
     }
 
 

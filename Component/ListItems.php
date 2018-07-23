@@ -19,6 +19,7 @@ use Idk\LegoBundle\Lib\Actions\BulkAction;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\QueryHelper;
 use Idk\LegoBundle\Service\MetaEntityManager;
+use Idk\LegoBundle\Lib\Pager;
 
 class ListItems extends Component implements EditInPlaceInterface {
 
@@ -26,6 +27,10 @@ class ListItems extends Component implements EditInPlaceInterface {
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
     const ENTITY_ACTION_SHOW = 'entity_action.show';
     const BULK_ACTION_DELETE = 'bulk_action_delete';
+
+    static public function ENTITY_ACTION_SCREEN($label, $suffixRoute){
+        return [$label, $suffixRoute];
+    }
 
     private $fields = [];
     private $entityActions = [];
@@ -111,7 +116,8 @@ class ListItems extends Component implements EditInPlaceInterface {
     }
 
     public function getPager(){
-        return  $this->getConfigurator()->getPager($this->page,$this->nbEntityPerPage, $this->getOption('page_unlimited', false));
+        $qb = $this->getConfigurator()->initQueryBuilderForComponent($this);
+        return new Pager($qb, $this->page,$this->nbEntityPerPage, $this->getOption('page_unlimited', false));
     }
 
     protected function requiredOptions(){
@@ -145,6 +151,8 @@ class ListItems extends Component implements EditInPlaceInterface {
             $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit'), 'params'=>$this->getConfigurator()->getPathParameters()]);
         }else if($action == self::ENTITY_ACTION_SHOW){
             $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show'), 'params'=>$this->getConfigurator()->getPathParameters()]);
+        }else if(is_array($action)){
+            $this->entityActions[] = new EntityAction($action[0], ['icon'=>'link' ,'css_class' => 'btn-default' ,'route' => $this->getConfigurator()->getPathRoute('default'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$action[1]])]);
         }
     }
 
@@ -221,7 +229,6 @@ class ListItems extends Component implements EditInPlaceInterface {
 
     public function catchQueryBuilder(QueryBuilder $queryBuilder)
     {
-
         $queryHelper = new QueryHelper();
         foreach($this->getAllBreakers() as $breaker){
             if($breaker->isEnable()) {
@@ -251,6 +258,9 @@ class ListItems extends Component implements EditInPlaceInterface {
                 }
                 $queryBuilder->setParameter($alias, $this->request->get('id'));
             }
+        }
+        if($this->getOption('dql')){
+            $queryBuilder->andWhere($this->getOption('dql'));
         }
     }
 

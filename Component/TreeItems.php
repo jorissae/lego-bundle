@@ -35,9 +35,10 @@ class TreeItems extends ListItems {
     public function isTree(){
         return true;
     }
-
+    
     public function getPager(){
-        return  $this->getConfigurator()->getPager(Pager::ALL);
+        $qb = $this->getConfigurator()->initQueryBuilderForComponent($this);
+        return new Pager($qb, Pager::ALL);
     }
 
 }
