@@ -158,7 +158,9 @@ class FilterBuilder
         if(count($this->currentParameters) == 0){
             $this->currentParameters = $defaultValue ;
         } 
-        if($request->hasSession()) $request->getSession()->set($filterBuilderName, $this->currentParameters);
+        if($request->hasSession()){
+            $request->getSession()->set($filterBuilderName, $this->currentParameters);
+        }
 
         if (isset($filterColumnNames)) {
             $filterColumnNames = array_unique($filterColumnNames);

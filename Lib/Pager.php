@@ -18,6 +18,7 @@ class Pager{
 
     const NBPERPAGE = 20;
     const NBBTN = 5;
+    const ALL = 0;
 
     private $queryBuilder;
     private $page;
@@ -29,8 +30,10 @@ class Pager{
         $this->nbPerPage = ($nbPerPage)? $nbPerPage:self::NBPERPAGE;
         $this->queryBuilder = clone $queryBuilder;
         $this->page = $page;
-        $this->queryBuilder->setFirstResult(($this->page-1) * $this->nbPerPage);
-        $this->queryBuilder->setMaxResults($this->nbPerPage);
+        if($this->page != self::ALL) {
+            $this->queryBuilder->setFirstResult(($this->page - 1) * $this->nbPerPage);
+            $this->queryBuilder->setMaxResults($this->nbPerPage);
+        }
         $this->unlimited = $unlimited;
         if($unlimited){
             $this->nbElements = null;

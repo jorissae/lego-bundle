@@ -7,108 +7,117 @@
  *  file that was distributed with this source code.
  */
 
-$(function(){
+$(function () {
 
     $('a[data-confirm]').on('click', function () {
         return confirm($(this).attr('data-confirm'));
     });
 
-    $('body').on('click','.jsa-shower',function(e){
+    $('body').on('click', '.jsa-shower', function (e) {
         e.preventDefault();
         $('.jsa-showable').hide();
-        $('#'+$(this).attr('data-show')).show();
+        $('#' + $(this).attr('data-show')).show();
     });
 
 
-    $('body').on('click','.jsa-send-form-ajax',function(e){
+    $('body').on('click', '.jsa-send-form-ajax', function (e) {
         e.preventDefault();
-        jsa.ajaxForm($('#'+$(this).attr('data-form')),window[$(this).attr('data-callback')],$(this).attr('data-type'),$(this),$(this).attr('data-action'));
+        jsa.ajaxForm($('#' + $(this).attr('data-form')), window[$(this).attr('data-callback')], $(this).attr('data-type'), $(this), $(this).attr('data-action'));
     });
 
-    $('body').on('change','select.jsa-ajax',function(e){
+    $('body').on('change', 'select.jsa-ajax', function (e) {
         e.preventDefault();
         jsa.ajax($(this));
     });
 
-    $('body').on('click','a.jsa-ajax, span.jsa-ajax, img.jsa-ajax, div.jsa-ajax, button.jsa-ajax',function(e){
+    $('body').on('click', 'a.jsa-ajax, span.jsa-ajax, img.jsa-ajax, div.jsa-ajax, button.jsa-ajax', function (e) {
         e.preventDefault();
         var elm = $(this);
-        if(elm.attr('data-confirmation')){
-            bootbox.confirm(elm.attr('data-confirmation'),function(result){if(result) jsa.ajax(elm);});
-        }else{
+        if (elm.attr('data-confirmation')) {
+            bootbox.confirm(elm.attr('data-confirmation'), function (result) {
+                if (result) jsa.ajax(elm);
+            });
+        } else {
             jsa.ajax(elm);
         }
     });
 
-    $('body').on('click','.jsa-submit',function(e) {
+    $('body').on('click', '.jsa-submit', function (e) {
         e.preventDefault();
-        var form = $('#'+$(this).attr('data-form'));
+        var form = $('#' + $(this).attr('data-form'));
         form.submit();
     });
 
-    $('body').on('click','.jsa-scroll',function(e) {
+    $('body').on('click', '.jsa-scroll', function (e) {
         $('html,body').animate({scrollTop: $($(this).attr('href')).offset().top}, 'slow');
     });
 
-    $('body').on('click', '.jsa-open-popup',function(e){
-        jsa.popup({url : $(this).attr('data-url'),width: $(this).attr('data-width'),'title': $(this).attr('data-title')});
+    $('body').on('click', '.jsa-open-popup', function (e) {
+        jsa.popup({
+            url: $(this).attr('data-url'),
+            width: $(this).attr('data-width'),
+            'title': $(this).attr('data-title')
+        });
     });
 
-    $('body').on('click','.jsa-open-dialog-form',function(e){
+    $('body').on('click', '.jsa-open-dialog-form', function (e) {
         var elm = $(this);
-        var callback = (window[elm.attr('data-callback')])? window[elm.attr('data-callback')]:jsa_evt[elm.attr('data-callback')];
-        var type = (elm.attr('data-type'))? elm.attr('data-type'):'json';
-        var action = (elm.attr('data-action'))? elm.attr('data-action'):null;
-        action = (elm.attr('href'))? elm.attr('href'):action;
-        var dialog = $('#'+elm.attr('data-target')).dialog({
-            title: ($(this).attr('data-title'))? $(this).attr('data-title'):'Formulaire',
+        var callback = (window[elm.attr('data-callback')]) ? window[elm.attr('data-callback')] : jsa_evt[elm.attr('data-callback')];
+        var type = (elm.attr('data-type')) ? elm.attr('data-type') : 'json';
+        var action = (elm.attr('data-action')) ? elm.attr('data-action') : null;
+        action = (elm.attr('href')) ? elm.attr('href') : action;
+        var dialog = $('#' + elm.attr('data-target')).dialog({
+            title: ($(this).attr('data-title')) ? $(this).attr('data-title') : 'Formulaire',
             autoOpen: true,
-            height: (elm.attr('data-height'))? elm.attr('data-height'):200,
-            width: (elm.attr('data-width'))? elm.attr('data-width'):350,
+            height: (elm.attr('data-height')) ? elm.attr('data-height') : 200,
+            width: (elm.attr('data-width')) ? elm.attr('data-width') : 350,
             modal: true,
             buttons: {
-                Ok: function(){
-                    if(callback){
+                Ok: function () {
+                    if (callback) {
                         jsa.ajaxForm(dialog.find("form"), callback, type, elm, action);
-                        dialog.dialog( "close" );
-                    }else{
+                        dialog.dialog("close");
+                    } else {
                         dialog.find("form").submit();
                     }
                 },
-                Cancel: function() {
-                    dialog.dialog( "close" );
+                Cancel: function () {
+                    dialog.dialog("close");
                 }
             }
         });
-        dialog.find("form").attr('action',$(this).attr('href'));
+        dialog.find("form").attr('action', $(this).attr('href'));
         e.preventDefault();
     });
 
-    $('body').on('click','.jsa-form-img',function(e){
+    $('body').on('click', '.jsa-form-img', function (e) {
         var elm = $(this);
         var group = $(elm.attr('data-group'));
-        var target = $('#'+elm.attr('data-target'));
+        var target = $('#' + elm.attr('data-target'));
         group.css('border', '0px solid black');
         elm.css('border', '2px solid black');
         target.val(elm.attr('data-value'));
     });
 
-    $('body').on('click','.jsa-popup',function(e){
+    $('body').on('click', '.jsa-popup', function (e) {
         var elm = $(this);
         var target = elm.attr('data-popup-id');
-        if(target){
-            $('<div>'+ $('#'+target).html()+'</div>').dialog({title: elm.attr('title'),'width':550});
-        }else {
+        if (target) {
+            $('<div>' + $('#' + target).html() + '</div>').dialog({title: elm.attr('title'), 'width': 550});
+        } else {
             $.ajax({
                 url: elm.attr('data-url'),
                 success: function (data) {
-                    $('<div>' + data.html + '</div>').dialog({title: data.title, 'width': (data.width)? data.width:'auto'});
+                    $('<div>' + data.html + '</div>').dialog({
+                        title: data.title,
+                        'width': (data.width) ? data.width : 'auto'
+                    });
                 }
             });
         }
     });
 
-    if($().flip) {
+    if ($().flip) {
         $('.jsa-flip').flip({trigger: 'manual', front: '.jsa-flip-front', back: '.jsa-flip-back'});
         $('body').on('click', '.jsa-flip-trigger', function (e) {
             var elm = $('#' + $(this).attr('data-flip'));
@@ -116,127 +125,138 @@ $(function(){
         });
     }
 
-    $( ".jsa-widget-container" ).sortable({
+    $(".jsa-widget-container").sortable({
         items: "div.jsa-widget",
         //placeholder: "jsa-widget-holder",
         tolerance: 'pointer',
         //revert: 'invalid',
         forceHelperSize: false,
-        update: function(evt,ui){
+        update: function (evt, ui) {
             jsa.save_widget($(this));
         }
     });
 
-    $('body').on('click','.jsa-add-widget',function(evt){
+    $('body').on('click', '.jsa-add-widget', function (evt) {
         var widget_id = $(this).attr('data-widget');
         var container = $(this);
         $.ajax({
-            type        : 'post',
-            url         : $(this).attr('data-url'),
-            dataType    : 'html',
-            success     : function(data) {
+            type: 'post',
+            url: $(this).attr('data-url'),
+            dataType: 'html',
+            success: function (data) {
                 $("#jsa-widget-in-list-" + widget_id).hide('slide');
-                $( ".jsa-widget-container").append($(data));
-                jsa.save_widget($( ".jsa-widget-container"));
-                if($().flip) {
+                $(".jsa-widget-container").append($(data));
+                jsa.save_widget($(".jsa-widget-container"));
+                if ($().flip) {
                     $('.jsa-flip').flip({trigger: 'manual', front: '.jsa-flip-front', back: '.jsa-flip-back'});
                 }
             }
         });
     });
 
-    $('body').on('click','.jsa-remove-widget',function(evt){
+    $('body').on('click', '.jsa-remove-widget', function (evt) {
         var widget_id = $(this).attr('data-widget-id');
         var id = "#jsa-widget-" + widget_id;
-        $(id).slideUp("slow", function() {
+        $(id).slideUp("slow", function () {
             $(id).remove();
-            jsa.save_widget($( ".jsa-widget-container"));
+            jsa.save_widget($(".jsa-widget-container"));
         });
 
     });
     jsa.init_tabs();
 
 
-
 });
 
 var jsa = {
 
-    load_jsa_ajax_content: function(){
-        $('.jsa-ajax-content').each(function(){
+    load_jsa_ajax_content: function () {
+        $('.jsa-ajax-content').each(function () {
             var elm = $(this);
             $.ajax({
-                url         : elm.attr('data-url'),
-                dataType    : 'html',
-                success     : function(data) {
+                url: elm.attr('data-url'),
+                dataType: 'html',
+                success: function (data) {
                     elm.replaceWith(data);
                 }
             });
         });
     },
-    save_widget: function(container){
+    save_widget: function (container) {
         var order = []
-        $( ".jsa-widget-container").find('div.jsa-widget').each(function(elm){
+        $(".jsa-widget-container").find('div.jsa-widget').each(function (elm) {
             order.push($(this).attr('data-widget-id'));
         });
-        $.ajax({type: 'post', url: container.attr('data-widget-sort-save'), data: {sort:order}});
+        $.ajax({type: 'post', url: container.attr('data-widget-sort-save'), data: {sort: order}});
     },
 
-    update_elm: function (elm, data){
-        if(data.attrs){
-            for(var attr in data.attrs){
-                elm.attr(attr,data.attrs[attr]);
+    update_elm: function (elm, data) {
+        if (data.attrs) {
+            for (var attr in data.attrs) {
+                elm.attr(attr, data.attrs[attr]);
             }
         }
-        if(data.html){
+        if (data.html) {
             elm.html(data.html);
         }
-        if(data.val){
+        if (data.val) {
             elm.val(data.val);
         }
     },
 
-    dialog: function(title,msg){
-        $('<div>'+msg+'</div>').dialog({title:title});
+    dialog: function (title, msg) {
+        $('<div>' + msg + '</div>').dialog({title: title});
     },
 
-    popup: function(options){
+    popup: function (options) {
         var self = this;
-        if(!options.width) options.width = 'auto';
-        if(options.url){
+        if (!options.width) options.width = 'auto';
+        if (options.url) {
             $.ajax({
-                url         : options.url,
-                dataType    : 'html',
-                success     : function(data) {
-                    $('<div class="jsa-popup-elm">'+data+'</div>').dialog(options);
+                url: options.url,
+                dataType: 'html',
+                success: function (data) {
+                    $('<div class="jsa-popup-elm">' + data + '</div>').dialog(options);
                 }
             });
-        }else if(options.id){
+        } else if (options.id) {
             $('#' + options.id).dialog(options);
         }
     },
 
-    init_tabs: function(){
-        $( ".jsa-tabs, .jsa-tabs-v" ).tabs({
-            beforeLoad: function( event, ui ) {
-                ui.jqXHR.fail(function() {
-                    ui.panel.html( "une erreur est survenue" );
+    init_tabs: function () {
+        $(".jsa-tabs, .jsa-tabs-v").tabs({
+            beforeLoad: function (event, ui) {
+                ui.jqXHR.fail(function () {
+                    ui.panel.html("une erreur est survenue");
                 });
             }
         });
 
-        $( ".jsa-tabs-v" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-        $( ".jsa-tabs-v li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+        $(".jsa-tabs-v").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+        $(".jsa-tabs-v li").removeClass("ui-corner-top").addClass("ui-corner-left");
     },
 
     ajaxForm: function( $form, callback, type , elm, action){
         var type = (type)? type:'json';
+        var data = null;
         var formdata = (window.FormData) ? new FormData($form[0]) : null;
-        var preCallback = (elm.attr('data-pre-callback'))? window[elm.attr('data-pre-callback')]:null;
+        var preCallback = ( window[elm.attr('data-pre-callback')]) ? window[elm.attr('data-pre-callback')] : jsa.evt[elm.attr('data-pre-callback')];
+        var callback = (window[elm.attr('data-callback')]) ? window[elm.attr('data-callback')] : jsa.evt[elm.attr('data-callback')];
         if(preCallback){
             preCallback(elm);
         }
-        var data = (formdata !== null) ? formdata : $form.serialize();
+        if(formdata !== null){
+            data = formdata;
+            if(elm.attr('name')) {
+                data.append(elm.attr('name'), (elm.attr('value'))? elm.attr('value'):null)
+            }
+        }else{
+            data = $form.serialize();
+            if(elm.attr('name')) {
+                data = elm.attr('name') + '=' + ((elm.attr('value')) ? elm.attr('value') : null) + '&' + data;
+            }
+        }
         var action = (action)? action:$form.attr( 'action' );
         $.ajax({
             type        : $form.attr( 'method' ),
@@ -251,20 +271,20 @@ var jsa = {
         });
     },
 
-    ajax: function(elm){
-        var type = (elm.attr('data-type'))? elm.attr('data-type'):'json';
-        var callback = (window[elm.attr('data-callback')])? window[elm.attr('data-callback')]:jsa.evt[elm.attr('data-callback')];
-        var contentReloadCallback = (window[elm.attr('data-content-reload-callback')])? window[elm.attr('data-content-reload-callback')]:jsa.evt[elm.attr('data-content-reload-callback')];
-        var preCallback = ( window[elm.attr('data-pre-callback')])? window[elm.attr('data-pre-callback')]:jsa.evt[elm.attr('data-pre-callback')];
-        var errCallback = (elm.attr('data-err-callback'))? window[elm.attr('data-err-callback')]:null;
-        var contentReload = (elm.attr('data-content-reload'))? elm.attr('data-content-reload'):null;
-        if(preCallback){
+    ajax: function (elm) {
+        var type = (elm.attr('data-type')) ? elm.attr('data-type') : 'json';
+        var callback = (window[elm.attr('data-callback')]) ? window[elm.attr('data-callback')] : jsa.evt[elm.attr('data-callback')];
+        var contentReloadCallback = (window[elm.attr('data-content-reload-callback')]) ? window[elm.attr('data-content-reload-callback')] : jsa.evt[elm.attr('data-content-reload-callback')];
+        var preCallback = ( window[elm.attr('data-pre-callback')]) ? window[elm.attr('data-pre-callback')] : jsa.evt[elm.attr('data-pre-callback')];
+        var errCallback = (elm.attr('data-err-callback')) ? window[elm.attr('data-err-callback')] : null;
+        var contentReload = (elm.attr('data-content-reload')) ? elm.attr('data-content-reload') : null;
+        if (preCallback) {
             preCallback(elm);
         }
-        var url = (elm.attr('data-url'))? elm.attr('data-url'):elm.attr('href');
-        var method = (elm.attr('data-method'))? elm.attr('data-method'):'post';
+        var url = (elm.attr('data-url')) ? elm.attr('data-url') : elm.attr('href');
+        var method = (elm.attr('data-method')) ? elm.attr('data-method') : 'post';
         var values = {};
-        if(elm.attr('data-group')) {
+        if (elm.attr('data-group')) {
             $(elm.attr('data-group')).each(function () {
                 if ($(this).attr('type') == 'radio') {
                     if ($(this).is(':checked')) values[$(this).attr('name')] = $(this).val();
@@ -278,18 +298,18 @@ var jsa = {
                 }
             });
         }
-        var name = (elm.attr('data-name'))? elm.attr('data-name'):elm.attr('name');
-        var donnes = (elm.attr('data-donnes'))? JSON.parse(elm.attr('data-donnes').replace(/\'/gi,'"')):[];
-        var data = {'data':donnes,'value':elm.val(),'values':values,'name':name};
-        if(elm.attr('data-no')) data = null;
+        var name = (elm.attr('data-name')) ? elm.attr('data-name') : elm.attr('name');
+        var donnes = (elm.attr('data-donnes')) ? JSON.parse(elm.attr('data-donnes').replace(/\'/gi, '"')) : [];
+        var data = {'data': donnes, 'value': elm.val(), 'values': values, 'name': name};
+        if (elm.attr('data-no')) data = null;
         $.ajax({
-            type        : method,
-            url         : url,
-            data        : data,
-            dataType    : type,
-            success     : function(data) {
+            type: method,
+            url: url,
+            data: data,
+            dataType: type,
+            success: function (data) {
                 if (callback) callback(elm, data);
-                if(contentReload && contentReloadCallback) {
+                if (contentReload && contentReloadCallback) {
                     $.ajax({
                         type: 'get',
                         url: contentReload,
@@ -299,7 +319,7 @@ var jsa = {
                     })
                 }
             },
-            error : function(xhr, ajaxOptions, thrownError){
+            error: function (xhr, ajaxOptions, thrownError) {
                 if (errCallback) errCallback(elm, xhr, ajaxOptions, thrownError);
             }
         });
@@ -307,55 +327,58 @@ var jsa = {
 
 
     'evt': {
-        jDelete: function(elm,data){
-            if(data.status == 'ok'){
-                jsa.update_elm(elm,data);
+        jDelete: function (elm, data) {
+            if (data.status == 'ok') {
+                jsa.update_elm(elm, data);
                 $(data.target).slideUp("slow");
             } else {
-                jsa.dialog('Erreur',data.error);
+                jsa.dialog('Erreur', data.error);
             }
         },
-        jRedirect: function(elm,data){
-            jsa.update_elm(elm,data);
+        jRedirect: function (elm, data) {
+            jsa.update_elm(elm, data);
             window.location = elm.attr('data-redirect');
         },
-        jRefresh: function(elm, data){
-            if(data.status == 'ok'){
-                if(data.refresh) {
+        jRefresh: function (elm, data) {
+            if (data.status == 'ok') {
+                if (data.refresh) {
                     for (var k in data.refresh) {
-                        if(typeof data.refresh[k] == 'object'){
-                            for (var attr in data.refresh[k]){
-                                $(k).attr(attr,data.refresh[k][attr]);
+                        if (typeof data.refresh[k] == 'object') {
+                            for (var attr in data.refresh[k]) {
+                                $(k).attr(attr, data.refresh[k][attr]);
                             }
-                        }else{
+                        } else {
                             $(k).html(data.refresh[k]);
                         }
                     }
                 }
             } else {
-                jsa.dialog('Erreur',data.error);
+                jsa.dialog('Erreur', data.error);
             }
         },
-        jHide: function(elm,data){
-            if(data.status == 'ok'){
-                jsa.update_elm(elm,data);
+        jHide: function (elm, data) {
+            if (data.status == 'ok') {
+                jsa.update_elm(elm, data);
                 $(data.target).slideUp("slow");
             } else {
-                jsa.dialog('Erreur',data.error);
+                jsa.dialog('Erreur', data.error);
             }
         },
-        jBox: function(elm,data){
-            if(data.status == 'ok'){
-                jsa.update_elm(elm,data);
+        jBox: function (elm, data) {
+            if (data.status == 'ok') {
+                jsa.update_elm(elm, data);
                 bootbox.alert({title: data.title, message: data.message});
-            }else{
-                jsa.dialog('Erreur',data.error);
+            } else {
+                jsa.dialog('Erreur', data.error);
             }
         },
-        jLoadInTarget: function(elm, data){
-            $('#'+elm.attr('data-target')).html(data.html);
+        jLoadInTarget: function (elm, data) {
+            $('#' + elm.attr('data-target')).html(data.html);
         },
-        jPreLoadInSelf: function(elm){
+        jPreLoadInTarget: function (elm, data) {
+            $('#' + elm.attr('data-target')).html('<div style="text-align:center;"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>');
+        },
+        jPreLoadInSelf: function (elm) {
             elm.html('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         }
     }

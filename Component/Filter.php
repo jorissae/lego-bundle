@@ -23,6 +23,7 @@ class Filter extends Component{
 
     private $filterBuilder;
     private $mem;
+    private $components = [];
 
     public function __construct(MetaEntityManager $mem){
         $this->mem = $mem;
@@ -40,6 +41,14 @@ class Filter extends Component{
         $reflectionClass = new \ReflectionClass($class);
         $this->getFilterBuilder()->add($reflectionClass->newInstance($name, $options));
         return $this;
+    }
+
+    public function addComponent(Component $component){
+        $this->components[] = $component;
+    }
+
+    public function getComponents(){
+        return $this->components;
     }
 
     public function getFilterBuilder()
@@ -60,7 +69,7 @@ class Filter extends Component{
     }
 
     public function getTemplateParameters(){
-        return ['filter' => $this->getFilterBuilder()];
+        return ['filter' => $this->getFilterBuilder(), 'component' => $this];
     }
 
     public function defaultValueFilter(){

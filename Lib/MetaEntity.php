@@ -22,7 +22,7 @@ class MetaEntity
 
     private $metadata;
     private $annotation;
-    private $shortame;
+    private $shortname;
 
     public function __construct(string $shortname, ClassMetadata $metadata, Entity $annotation){
         $this->shortname = $shortname;

@@ -83,6 +83,10 @@ class ListItems extends Component implements EditInPlaceInterface {
     {
         parent::bindRequest($request);
         $this->initBreakers();
+        //TODO filter parameters have to be customable or less abstract with filter component
+        if($request->query->has('filter') || $request->request->has('filter')){
+            $this->setComponentSessionStorage('page', 1);
+        }
         $this->nbEntityPerPage = $this->getComponentSessionStorage('nbepp', $this->getOption('entity_per_page'));
         $this->page = $this->getComponentSessionStorage('page',1);
         foreach($this->getOption('entity_actions', []) as $action){
