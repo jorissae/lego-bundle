@@ -53,6 +53,8 @@ abstract class AbstractConfigurator
 
     private $indexTemplate = 'IdkLegoBundle:Default:index.html.twig';
 
+    private $defaultTemplate = 'IdkLegoBundle:Default:default.html.twig';
+
     private $title;
 
     protected $page = 1;
@@ -375,9 +377,9 @@ abstract class AbstractConfigurator
     {
         $this->request = $request;
         if(!$routeSuffix) {
-            $lastUnserscore = strrchr($request->get('_route'), '_');
+            $lastUnderscore = strrchr($request->get('_route'), '_');
 
-            $index = substr($lastUnserscore, 1);
+            $index = substr($lastUnderscore, 1);
             $index = ($index == 'export') ? 'index' : $index;
         }else{
             $index = $routeSuffix;
@@ -523,15 +525,20 @@ abstract class AbstractConfigurator
         return $this->indexTemplate;
     }
 
+    public function getDefaultTemplate()
+    {
+        return $this->defaultTemplate;
+    }
+
     public function setIndexTemplate($template)
     {
         $this->indexTemplate = $template;
         return $this;
     }
 
-    public function addIndexComponent($className, array $options, $configuratorClassName = null)
+    public function addIndexComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
     {
-        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $configuratorClassName);
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $entityClassName, $nameConfigurator);
     }
 
     public function addAddComponent($className, array $options, $configuratorClassName = null)
@@ -549,25 +556,24 @@ abstract class AbstractConfigurator
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_SHOW, $configuratorClassName);
     }
 
-    public function addComponent($className, array $options, $routeSuffix, $configuratorClassName = null){
+    public function addComponent($className, array $options, $routeSuffix, $entityClassName = null, $nameConfigurator = null){
         if(!isset($this->components[$routeSuffix])){
             $this->components[$routeSuffix] = [];
         }
-        $component = $this->generateComponent($className, $options, $routeSuffix, $configuratorClassName);
+        $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName);
         $this->components[$routeSuffix][$component->getId()] = $component;
         return $component;
     }
 
-    private function generateComponent($className, array $options, $routeSuffix, $configuratorClassName = null)
+    private function generateComponent($componentClassName, array $options, $routeSuffix, $entityClassName = null, $nameConfigurator = null)
     {
-        $reflectionClass =  new \ReflectionClass($className);
-        if($configuratorClassName){
-            $configurator = $this->generateConfigurator($configuratorClassName);
-            $component = $configurator->addComponent($className,$options, $routeSuffix);
+        if($entityClassName){
+            $configurator = $this->configuratorBuilder->generateConfigurator($entityClassName, $nameConfigurator, $this);
+            $component = $configurator->addComponent($componentClassName,$options, $routeSuffix);
             $this->addChild($routeSuffix, $configurator);
             return $component;
         }else{
-            return $this->configuratorBuilder->getComponentChain()->build($className, $options, $this, $routeSuffix);
+            return $this->configuratorBuilder->getComponentChain()->build($componentClassName, $options, $this, $routeSuffix);
         }
 
     }
@@ -579,11 +585,6 @@ abstract class AbstractConfigurator
         }
         $this->children[$routeSuffix][] = $configurator;
     }
-
-    private function generateConfigurator($className = null): AbstractConfigurator{
-        return $this->configuratorBuilder->getConfigurator($className, $this);
-    }
-
 
 
     public function getPathRoute($sufix = 'index'){
@@ -612,16 +613,18 @@ abstract class AbstractConfigurator
     }
 
     public function setConfiguratorSessionStorage($key, $value){
-        return $this->configuratorBuilder->setSessionStorage($his->getId(), $key, $value);
+        return $this->configuratorBuilder->setSessionStorage($this->getId(), $key, $value);
     }
 
     public function setTitle($title){
         $this->title = $title;
     }
 
-    public function getControllerPath(){
+    static public function getControllerPath(){
         return 'lego';
     }
+
+
 
 
 

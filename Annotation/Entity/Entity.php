@@ -10,6 +10,8 @@
 
 namespace Idk\LegoBundle\Annotation\Entity;
 
+use Idk\LegoBundle\Configurator\DefaultConfigurator;
+
 /**
  * @Annotation
  */
@@ -37,7 +39,7 @@ class Entity
         return ($perms && !is_array($perms))?  [$perms]:$perms;
     }
 
-    public function getConfig(){
+    public function getConfig($nameConfigurator = null){
         return $this->config;
     }
 

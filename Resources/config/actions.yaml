@@ -1,5 +1,6 @@
 parameters:
     lego.action.index.class: Idk\LegoBundle\Action\IndexAction
+    lego.action.default.class: Idk\LegoBundle\Action\DefaultAction
     lego.action.sort_components.class: Idk\LegoBundle\Action\SortComponentsAction
     lego.action.add.class: Idk\LegoBundle\Action\AddAction
     lego.action.export.class: Idk\LegoBundle\Action\ExportAction
@@ -30,6 +31,11 @@ services:
 
     lego.action.index:
         class: '%lego.action.index.class%'
+        arguments: ["@lego.service.configurator.builder"]
+        tags: [controller.service_arguments, lego.action]
+
+    lego.action.default:
+        class: '%lego.action.default.class%'
         arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
@@ -80,12 +86,12 @@ services:
 
     lego.action.sort_components:
         class: '%lego.action.sort_components.class%'
-        arguments: ["@lego.service.configurator.builder"]
+        arguments: ["@lego.service.configurator.builder", "@event_dispatcher"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.sort_components_reset:
         class: '%lego.action.sort_components_reset.class%'
-        arguments: ["@lego.service.configurator.builder"]
+        arguments: ["@lego.service.configurator.builder","@event_dispatcher"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.autocompletion:

@@ -11,6 +11,8 @@
 declare(strict_types=1);
 namespace Idk\LegoBundle\Action;
 
+use Idk\LegoBundle\Service\ConfiguratorBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Idk\LegoBundle\Events\UpdateOrganizationComponentsEvent;
@@ -18,6 +20,14 @@ use Idk\LegoBundle\LegoEvents;
 
 final class SortComponentsResetAction extends AbstractAction
 {
+
+    private $eventDispatcher;
+
+    public function __construct(ConfiguratorBuilder $configuratorBuilder, EventDispatcherInterface $eventDispatcher)
+    {
+        parent::__construct($configuratorBuilder);
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     public function __invoke(Request $request): Response
     {
@@ -27,7 +37,7 @@ final class SortComponentsResetAction extends AbstractAction
             unset($order[$request->get('suffix_route')]);
         }
         $configurator->setConfiguratorSessionStorage('sort', $order);
-        $this ->get('event_dispatcher')->dispatch(
+        $this ->eventDispatcher->dispatch(
             LegoEvents::onResetSortComponents,
             new UpdateOrganizationComponentsEvent($configurator, $request->get('suffix_route'), $order));
         return $this->redirectToRoute($configurator->getPathRoute($request->get('suffix_route')), $configurator->getPathParameters());

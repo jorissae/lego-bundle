@@ -71,7 +71,7 @@ abstract class AbstractAction
 
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
         $redirect = null;
-        $componentResponses = $configurator->bindRequest($request);
+        $componentResponses = $configurator->bindRequest($request,$request->get('suffix_route',null));
         foreach($componentResponses as $componentResponse){
             if($componentResponse instanceof MessageComponentResponse) {
                 if($componentResponse->hasRedirect()){

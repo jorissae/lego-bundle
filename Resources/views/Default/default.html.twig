@@ -1,0 +1,10 @@
+{% extends lego_view.layout %}
+{% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()}}{% endblock %}
+{% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}
+
+
+
+{% block content %}
+    {%  include 'IdkLegoBundle:Default:_components.html.twig' with {'components': configurator.components(suffixRoute) } %}
+{% endblock %}

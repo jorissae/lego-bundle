@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\Service;
 
+use Idk\LegoBundle\Annotation\Entity\Entity;
 use Idk\LegoBundle\Service\Tag\ComponentChain;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
@@ -60,12 +61,22 @@ class ConfiguratorBuilder
         return $reflectionClass->newInstance($this, $parent, $entityName, $parameters);
     }
 
+    public function generateConfigurator($entityClassName, $nameConfigurator = null, $parent = null){
+
+        return $this->getConfigurator($this->getConfiguratorClassName($entityClassName, $nameConfigurator), $parent, $entityClassName, ['entity'=>$this->mem->getEntityShortName($entityClassName)]);
+    }
+
+    public function getConfiguratorClassName($entityClassName, $nameConfigurator = null){
+        $annotation = $this->mem->getMetaDataEntityByClassName($entityClassName);
+        return $annotation->getConfig($nameConfigurator) ?? DefaultConfigurator::class;
+    }
+
     public function isGranted($attributes, $subject = null){
         return $this->authorizationChecker->isGranted($attributes, $subject);
     }
 
-    public function getDefaultConfigurator($shortname, $name, $annotation){
-        $c = new DefaultConfigurator($this, null, $name, ['entity'=>$shortname]);
+    public function getDefaultConfigurator($shortname, $entityClassName, Entity $annotation, $parent = null){
+        $c = new DefaultConfigurator($this, $parent, $entityClassName, ['entity'=>$shortname]);
         $c->setTitle($annotation->getTitle() ?? 'lego.'.$shortname.'.title');
         return $c;
     }

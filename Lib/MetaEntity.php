@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Idk\LegoBundle\Annotation\Entity\Entity;
 use Idk\LegoBundle\Configurator\DefaultConfigurator;
 use Idk\LegoBundle\Service\ConfiguratorBuilder;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class MetaEntity
 {
@@ -24,10 +25,12 @@ class MetaEntity
     private $annotation;
     private $shortname;
 
-    public function __construct(string $shortname, ClassMetadata $metadata, Entity $annotation){
+    public function __construct(string $shortname, ClassMetadata $metadata){
         $this->shortname = $shortname;
         $this->metadata = $metadata;
-        $this->annotation = $annotation;
+        $reflectionClass = new \ReflectionClass($metadata->getName());
+        $r = new AnnotationReader();
+        $this->annotation = $r->getClassAnnotation($reflectionClass, Entity::class);
     }
 
     public function getName(){
@@ -54,8 +57,13 @@ class MetaEntity
     }
 
     public function getPath(ConfiguratorBuilder $configuratorBuilder){
-        $c = $this->getConfigurator($configuratorBuilder);
-        return new Path($c->getPathRoute('index'), $c->getPathParameters());
+        $class = $configuratorBuilder->getConfiguratorClassName($this->metadata->getName());
+        $params = [];
+        $route =  call_user_func($class .'::getControllerPath').'_index';
+        if($route === 'lego_index'){
+            $params['entity'] = $this->shortname;
+        }
+        return new Path($route,$params);
     }
 
 }
