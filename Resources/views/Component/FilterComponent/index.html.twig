@@ -4,7 +4,7 @@
 
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;Filtre</h4>
+                    <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;{{ 'lego.title.filter'|trans }}</h4>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
@@ -38,12 +38,12 @@
                                     data-target="{{ c.id }}"
                                     data-pre-callback="jPreLoadInTarget"
                                     data-callback="jLoadInTarget"
-                                    name="filter" value="filter" type="submit">{{ 'lego.action.filter'|trans }}</button>
-                            <a href="{{ c.url({reset:1}) }}" data-target="{{ c.id }}" data-pre-callback="jPreLoadInTarget" data-callback="{{ component.gid('reloader') }}"  class="jsa-ajax btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                                    name="filter" value="{{ component.id }}" type="submit">{{ 'lego.action.filter'|trans }}</button>
+                            <a href="{{ c.url({reset:component.id}) }}" data-target="{{ c.id }}" data-pre-callback="jPreLoadInTarget" data-callback="{{ component.gid('reloader') }}"  class="jsa-ajax btn btn-default">{{ 'lego.action.erease'|trans }}</a>
                         {%  endfor %}
                     {%  else %}
-                        <button class="btn btn-primary" name="filter" value="filter" type="submit">{{ 'lego.action.filter'|trans }}</button>
-                        <a href="{{ path(path.route, path.params({reset:1})) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                        <button class="btn btn-primary" name="filter" value="{{ component.id }}" type="submit">{{ 'lego.action.filter'|trans }}</button>
+                        <a href="{{ path(path.route, path.params({reset:component.id})) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
                     {%  endif %}
                 </div>
             </div>

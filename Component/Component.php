@@ -156,6 +156,12 @@ abstract class Component{
         return $this->getConfiguratorBuilder()->setSessionStorage($this->getId(), $key, $value);
     }
 
+    public function setComponentSessionStorages($storage){
+        foreach($storage as $k => $v){
+            $this->setComponentSessionStorage($k,$v);
+        }
+    }
+
 
     public function getPath(string $suffix = 'component', $params = []){
         foreach($this->getListenParamsForReload() as $key){

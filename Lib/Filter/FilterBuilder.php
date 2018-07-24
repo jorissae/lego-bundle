@@ -146,11 +146,10 @@ class FilterBuilder
         if($request->query->has('filter')){
             $this->currentParameters = $request->query->all();
         }
-        if($request->request->has('filter')){
+        if($request->request->has('filter') && 'filter_'.$request->request->get('filter') === $filterBuilderName){
             $this->currentParameters = $request->request->all();
         }
-        if($this->currentParameters)
-        if ($request->query->has('reset')) {
+        if ($request->query->has('reset') && 'filter_'.$request->query->get('reset') === $filterBuilderName) {
             $this->currentParameters = array();
         }
 

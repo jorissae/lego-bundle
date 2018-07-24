@@ -56,7 +56,7 @@ class Filter extends Component{
     public function getFilterBuilder()
     {
         if (is_null($this->filterBuilder)) {
-            $this->filterBuilder = new FilterBuilder($this->getConfigurator(),get_class($this->getConfigurator()));
+            $this->filterBuilder = new FilterBuilder($this->getConfigurator(),$this->getId());
         }
 
         return $this->filterBuilder;
@@ -99,9 +99,10 @@ class Filter extends Component{
 
     public function bindRequest(Request $request){
         parent::bindRequest($request);
-        if($request->get('id')) {
-            $this->urlParams = ['id'=>$request->get('id')];
+        if ($request->get('id')) {
+            $this->urlParams = ['id' => $request->get('id')];
         }
-        $this->getFilterBuilder()->bindRequest($request,$this->defaultValueFilter());
+        $this->getFilterBuilder()->bindRequest($request, $this->defaultValueFilter());
+        //$this->setComponentSessionStorages($storage);
     }
 }
