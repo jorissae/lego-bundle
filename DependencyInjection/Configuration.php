@@ -37,7 +37,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('service_menu')->defaultValue('Idk\LegoBundle\Service\Menu')->end()
                 ->scalarNode('service_header')->defaultValue('Idk\LegoBundle\Service\Header')->end()
                 ->scalarNode('service_footer')->defaultValue('Idk\LegoBundle\Service\Footer')->end()
-                ->scalarNode('user_class')->defaultValue('App\Entity\User')->end();
+                ->scalarNode('user_class')->defaultValue('App\Entity\User')->end()
+                ->scalarNode('locales')->defaultValue(['fr','en','de'])->end()
+                ->scalarNode('default_locale')->defaultValue('fr')->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

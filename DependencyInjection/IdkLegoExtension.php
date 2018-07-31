@@ -60,7 +60,8 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $container->setParameter( 'lego.service.header', $processedConfig[ 'service_header' ] );
         $container->setParameter( 'lego.service.footer', $processedConfig[ 'service_footer' ] );
         $container->setParameter( 'lego.user.class', $processedConfig[ 'user_class' ] );
-
+        $container->setParameter( 'lego.locales', $processedConfig[ 'locales' ] );
+        $container->setParameter( 'lego.default_locale', $processedConfig[ 'default_locale' ] );
 
 
 
