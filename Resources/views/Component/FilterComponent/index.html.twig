@@ -1,9 +1,10 @@
 {% if filter.filters|length > 0 %}
-        <form method="POST" action="{{ path(configurator.getPathRoute(), configurator.getPathParameters()) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
+       {%  set path = component.path('index') %}
+        <form method="POST" id="{{  component.gid('form') }}" action="{{ path(path.route, path.params) }}" class="form-horizontal {% if filter.isHidden() %} hidden {% endif %}">
 
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;Filtre</h4>
+                    <h4 class="box-title"><i class="icon fa fa-search"></i>&nbsp;{{ 'lego.title.filter'|trans }}</h4>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
@@ -29,10 +30,28 @@
                 </div>
 
                 <div class="box-footer">
-                    <button class="btn btn-primary apply_filter" name="filter" value="filter" type="submit">{{ 'lego.action.filter'|trans }}</button>
-                    <a href="{{ path(configurator.getPathRoute(), configurator.getPathParameters({reset:1})) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                    {%  if component.components|length %}
+                        {%  for c in  component.components  %}
+                            <button class="btn btn-primary jsa-send-form-ajax"
+                                    data-action="{{ c.url }}"
+                                    data-form="{{ component.gid('form') }}"
+                                    data-target="{{ c.id }}"
+                                    data-pre-callback="jPreLoadInTarget"
+                                    data-callback="jLoadInTarget"
+                                    name="filter" value="{{ component.id }}" type="submit">{{ 'lego.action.filter'|trans }}</button>
+                            <a href="{{ c.url({reset:component.id}) }}" data-target="{{ c.id }}" data-pre-callback="jPreLoadInTarget" data-callback="{{ component.gid('reloader') }}"  class="jsa-ajax btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                        {%  endfor %}
+                    {%  else %}
+                        <button class="btn btn-primary" name="filter" value="{{ component.id }}" type="submit">{{ 'lego.action.filter'|trans }}</button>
+                        <a href="{{ path(path.route, path.params({reset:component.id})) }}" class="btn btn-default">{{ 'lego.action.erease'|trans }}</a>
+                    {%  endif %}
                 </div>
             </div>
-
+            <script>
+                function {{ component.gid('reloader') }}(elm, data){
+                    jsa.ajax($('<span data-url="{{ component.url }}" data-callback="jLoadInTarget" data-target="{{ component.id }}"></span>'));
+                    jsa.evt.jLoadInTarget(elm,data);
+                }
+            </script>
         </form>
 {% endif %}

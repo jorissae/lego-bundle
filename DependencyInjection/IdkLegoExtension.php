@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\DependencyInjection;
 
@@ -52,7 +60,8 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $container->setParameter( 'lego.service.header', $processedConfig[ 'service_header' ] );
         $container->setParameter( 'lego.service.footer', $processedConfig[ 'service_footer' ] );
         $container->setParameter( 'lego.user.class', $processedConfig[ 'user_class' ] );
-
+        $container->setParameter( 'lego.locales', $processedConfig[ 'locales' ] );
+        $container->setParameter( 'lego.default_locale', $processedConfig[ 'default_locale' ] );
 
 
 

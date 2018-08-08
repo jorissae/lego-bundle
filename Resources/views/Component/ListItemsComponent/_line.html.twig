@@ -1,4 +1,6 @@
-<tr id="{{ component.gid('line')  }}-{{ item.id }}" >
+<tr id="{{ component.gid('line')  }}-{{ item.id }}"
+  {% if component.isTree %}data-tt-id="{{ item.id }}" data-tt-parent-id="{% if item.parent %}{{ item.parent.id }}{%  endif %}"{% endif %}
+>
 {% if component.hasBulkActions %}
     <td>
         <input type="checkbox" name="ids[]" value="{{ item.id }}" class="lego-bulk-checkbox">

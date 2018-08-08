@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\Component;
 
@@ -10,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Component{
+
 
     private $options;
 
@@ -23,6 +32,8 @@ abstract class Component{
 
     protected $listenQueryParameters = [];
 
+    protected $listCanCatchQuery = [];
+
     public function __construct(){
     }
 
@@ -30,8 +41,13 @@ abstract class Component{
         $this->options = $options;
         $this->configurator = $configurator;
         $this->suffixRoute = $suffixRoute;
-        $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
-        $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
+        if(isset($options['cid'])){
+            $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator).'-'.$options['cid']);
+            $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator).'-'.$options['cid'];
+        }else{
+            $this->id = md5($suffixRoute.'-'.get_class($this).'-'.get_class($configurator));
+            $this->valId = $suffixRoute.'-'.get_class($this).'-'.get_class($configurator);
+        }
         $this->init();
         return $this;
     }
@@ -48,6 +64,10 @@ abstract class Component{
     public function addListenQueryParameter($queryParametersGlobal, $queryParametersComponent){
         $this->listenQueryParameters[$queryParametersComponent] = $queryParametersGlobal;
         return $this;
+    }
+
+    public function addCanCatchQuery(self $component){
+       $this->listCanCatchQuery[] = $component->getId();
     }
 
     abstract protected function init();
@@ -124,12 +144,22 @@ abstract class Component{
         return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
     }
 
+    public function canCatchQuery(self $component){
+        return in_array($component->getId(), $this->listCanCatchQuery);
+    }
+
     public function getComponentSessionStorage($key, $default = null){
         return $this->getConfiguratorBuilder()->getSessionStorage($this->getId(), $key, $default);
     }
 
     public function setComponentSessionStorage($key, $value){
         return $this->getConfiguratorBuilder()->setSessionStorage($this->getId(), $key, $value);
+    }
+
+    public function setComponentSessionStorages($storage){
+        foreach($storage as $k => $v){
+            $this->setComponentSessionStorage($k,$v);
+        }
     }
 
 

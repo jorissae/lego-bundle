@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\Component;
 
@@ -15,13 +23,15 @@ class Filter extends Component{
 
     private $filterBuilder;
     private $mem;
+    private $components = [];
+    private $urlParams = [];
 
     public function __construct(MetaEntityManager $mem){
         $this->mem = $mem;
     }
 
     protected function init(){
-        foreach($this->mem->generateFilters($this->getConfigurator()->getEntityName(), null) as $filter){
+        foreach($this->mem->generateFilters($this->getConfigurator()->getEntityName(), $this->getOption('fields')) as $filter){
             /* @var \Idk\LegoBundle\Annotation\Entity\Filter\AbstractFilter $filter */
             $this->getFilterBuilder()->add($filter->newInstanceOfType());
         }
@@ -34,10 +44,19 @@ class Filter extends Component{
         return $this;
     }
 
+    public function addComponent(Component $component){
+        $this->components[] = $component;
+        $this->addCanCatchQuery($component);
+    }
+
+    public function getComponents(){
+        return $this->components;
+    }
+
     public function getFilterBuilder()
     {
         if (is_null($this->filterBuilder)) {
-            $this->filterBuilder = new FilterBuilder($this->getConfigurator(),get_class($this->getConfigurator()));
+            $this->filterBuilder = new FilterBuilder($this->getConfigurator(),$this->getId());
         }
 
         return $this->filterBuilder;
@@ -52,7 +71,7 @@ class Filter extends Component{
     }
 
     public function getTemplateParameters(){
-        return ['filter' => $this->getFilterBuilder()];
+        return ['filter' => $this->getFilterBuilder(), 'component' => $this];
     }
 
     public function defaultValueFilter(){
@@ -74,8 +93,16 @@ class Filter extends Component{
         }
     }
 
+    public function getPath(string $suffix = 'component', $params = []){
+        return parent::getPath($suffix, array_merge($this->urlParams,$params));
+    }
+
     public function bindRequest(Request $request){
         parent::bindRequest($request);
-        $this->getFilterBuilder()->bindRequest($request,$this->defaultValueFilter());
+        if ($request->get('id')) {
+            $this->urlParams = ['id' => $request->get('id')];
+        }
+        $this->getFilterBuilder()->bindRequest($request, $this->defaultValueFilter());
+        //$this->setComponentSessionStorages($storage);
     }
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\Lib\Filter;
 
@@ -138,11 +146,10 @@ class FilterBuilder
         if($request->query->has('filter')){
             $this->currentParameters = $request->query->all();
         }
-        if($request->request->has('filter')){
+        if($request->request->has('filter') && 'filter_'.$request->request->get('filter') === $filterBuilderName){
             $this->currentParameters = $request->request->all();
         }
-        if($this->currentParameters)
-        if ($request->query->has('reset')) {
+        if ($request->query->has('reset') && 'filter_'.$request->query->get('reset') === $filterBuilderName) {
             $this->currentParameters = array();
         }
 
@@ -150,7 +157,9 @@ class FilterBuilder
         if(count($this->currentParameters) == 0){
             $this->currentParameters = $defaultValue ;
         } 
-        if($request->hasSession()) $request->getSession()->set($filterBuilderName, $this->currentParameters);
+        if($request->hasSession()){
+            $request->getSession()->set($filterBuilderName, $this->currentParameters);
+        }
 
         if (isset($filterColumnNames)) {
             $filterColumnNames = array_unique($filterColumnNames);

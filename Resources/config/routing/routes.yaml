@@ -74,6 +74,12 @@ lego_autocompletion:
     defaults:
         _controller: lego.action.autocompletion
 
+lego_default:
+    path:      /lgo/{entity}/{suffix_route}
+    defaults:
+        _controller: lego.action.default
+
+
 idk_lego_widget_add:
     path:  /lgoint/widget/add
     defaults:

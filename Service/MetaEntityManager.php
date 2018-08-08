@@ -1,4 +1,13 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Idk\LegoBundle\Service;
 
 
@@ -6,6 +15,7 @@ use Couchbase\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Annotation\Entity as Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Idk\LegoBundle\Lib\MetaEntity;
 
 
@@ -191,31 +201,38 @@ class MetaEntityManager implements MetaEntityManagerInterface
     }
 
     public function getMetaDataEntities(): array{
-        $r = new AnnotationReader();
         $return = [];
         foreach($this->em->getMetadataFactory()->getAllMetadata() as $metadata){
-            $reflectionClass = new \ReflectionClass($metadata->getName());
-            $annotation = $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
-            if($annotation){
-                $shortName = $annotation->getName() ?? strtolower(substr($metadata->getName() , strrpos($metadata->getName(), '\\') + 1));
+            $shortName = $this->getEntityShortName($metadata->getName());
+            if($shortName){
                 if(key_exists($shortName, $return)){
                     throw new \Exception('
                         The shortname '. $shortName .' of the class '.$metadata->getName().' is already 
                         use in the class '.$return[$shortName]->getName().'. Use class annotation '.Annotation\Entity::class.':
                         @Lego\Entity(name="'.$shortName.'2") for exemple');
                 }
-                $return[$shortName] = new MetaEntity($shortName, $metadata, $annotation);
+                $return[$shortName] = new MetaEntity($shortName, $metadata);
             }
         }
         ksort($return);
         return $return;
     }
 
+    public function getEntityShortName($entityClassName){
+        $reflectionClass = new \ReflectionClass($entityClassName);
+        $r = new AnnotationReader();
+        $annotation = $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);
+        if($annotation){
+            $shortName = $annotation->getName() ?? strtolower(substr($entityClassName , strrpos($entityClassName, '\\') + 1));
+        }
+        return $shortName ?? null;
+    }
+
     public function getMetaDataEntity($shortName): MetaEntity{
        return $this->getMetaDataEntities()[$shortName];
     }
 
-    public function getMetaDataEntityByClassName($className){
+    public function getMetaDataEntityByClassName($className): Annotation\Entity{
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         return  $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);

@@ -16,7 +16,12 @@
 ```
 Work directly WITH USER LOGIN :-D
                 
-SF4 IDK LEGO BUNDLE V 0.1 alpha (do not use in production)
+SF 4.1 and more
+
+IDK LEGO BUNDLE V 0.1 alpha (do not use it in production)
+
+You want an very customable without to see internal code, Stay here !
+There is nothing you can't to do.
 
 Build your pages simply by adding configurable components.
 Add a filter, add a list, add a form then go
@@ -139,11 +144,12 @@ CURRENT v alpha 0.1.2
 - Flex [X]
 - Doc [ ]
 - Roles [X]
+- Tree show [X]
 
 v beta
 
 - work without fosuser (optional) [X]
-- Gestion ROLE [ ]
+- Gestion ROLE [X]
 
 Symfony 4
 
@@ -163,17 +169,17 @@ freamworks:
 
 Next todo:
 
-Opti pager, Opti menu, custom routeprefix and double config, querybuilder filter list ,connect or not, Check all type Form and branch dateTimeform, (Sub-)Filter, Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
+Opti menu, custom routeprefix and double config, querybuilder filter list ,connect or not, Check all type Form and branch dateTimeform, (Sub-)Filter, Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
 
 Optimisation todo:
 
-Pager, Use voter ,Filter, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator
+ Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator, style tree, try gridstack, widget config
 
 Bug todo:
 
 - sort component is sort execution component !
 
-Your config.yml
+Your config.yaml
 
 ```yaml
 idk_lego:

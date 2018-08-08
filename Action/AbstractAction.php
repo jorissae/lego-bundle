@@ -1,4 +1,13 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 namespace Idk\LegoBundle\Action;
 
@@ -62,7 +71,7 @@ abstract class AbstractAction
 
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
         $redirect = null;
-        $componentResponses = $configurator->bindRequest($request);
+        $componentResponses = $configurator->bindRequest($request,$request->get('suffix_route',null));
         foreach($componentResponses as $componentResponse){
             if($componentResponse instanceof MessageComponentResponse) {
                 if($componentResponse->hasRedirect()){

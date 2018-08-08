@@ -1,12 +1,24 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Idk\LegoBundle\Lib;
 
 
+
+use Doctrine\ORM\QueryBuilder;
 
 class Pager{
 
     const NBPERPAGE = 20;
     const NBBTN = 5;
+    const ALL = 0;
 
     private $queryBuilder;
     private $page;
@@ -14,19 +26,21 @@ class Pager{
     private $nbElements;
     private $nbPerPage;
 
-    public function __construct($queryBuilder ,$page = 1,$nbPerPage = null, $unlimited = false){
+    public function __construct(QueryBuilder $queryBuilder ,$page = 1,$nbPerPage = null, $unlimited = false){
         $this->nbPerPage = ($nbPerPage)? $nbPerPage:self::NBPERPAGE;
         $this->queryBuilder = clone $queryBuilder;
         $this->page = $page;
-        $this->queryBuilder->setFirstResult(($this->page-1) * $this->nbPerPage);
-        $this->queryBuilder->setMaxResults($this->nbPerPage);
+        if($this->page != self::ALL) {
+            $this->queryBuilder->setFirstResult(($this->page - 1) * $this->nbPerPage);
+            $this->queryBuilder->setMaxResults($this->nbPerPage);
+        }
         $this->unlimited = $unlimited;
         if($unlimited){
             $this->nbElements = null;
             $this->nbPage = null;
         }else {
-            //@Todo check
-            $this->nbElements = \count($queryBuilder->select('count(*) as nb')->getQuery()->getSingleResult()['nb']);
+            $rootAlias = $queryBuilder->getRootAliases()[0];
+            $this->nbElements = $queryBuilder->select('count('.$rootAlias.') as nb')->getQuery()->getSingleResult()['nb'];
             $this->nbPage = ceil($this->nbElements / $this->nbPerPage);
         }
     }

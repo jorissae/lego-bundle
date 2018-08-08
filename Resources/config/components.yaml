@@ -36,6 +36,11 @@ services:
         arguments: ['@lego.service.meta_entity_manager']
         tags: [lego.component]
 
+    Idk\LegoBundle\Component\TreeItems:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager']
+        tags: [lego.component]
+
 
 
 

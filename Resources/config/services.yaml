@@ -89,8 +89,8 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
-    lego.listener.upload_user_password:
-        class: Idk\LegoBundle\Listener\UploadUserPasswordEncoderListener
+    lego.listener.update_user_password:
+        class: Idk\LegoBundle\Listener\UpdateUserPasswordEncoderListener
         arguments:    ["@security.encoder_factory"]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
@@ -124,6 +124,7 @@ services:
     lego.service.export:
         class:  '%lego.service.export.class%'
         arguments: ["@templating", "@lego.service.csv","@lego.service.meta_entity_manager"]
+
 
 
     lego.service.components:

@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\Configurator;
 
@@ -43,13 +51,12 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
     {
         return count($this->getQuery()->getResult());
     }
-
+/*
     public function getPager($page = 1,$nbPerPage = null, $unlimited = false)
     {
         $pager = new Pager($this->getQueryBuilder(), $page, $nbPerPage, $unlimited);
         return $pager;
-    }
-
+    }*/
     public function getAllIterator()
     {
         return $this->getQuery()->getResult();
@@ -63,31 +70,28 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
     /**
      * @return Query|null
+     * @deprecated
      */
     public function getQueryBuilder()
     {
         $queryBuilder = $this->getRepository()->createQueryBuilder('b');
         $this->adaptQueryBuilder($queryBuilder);
-        $queryHelper = new QueryHelper();
-        //var_dump($this->getCurrentComponents());
-        //die();
         foreach($this->getCurrentComponents() as $component){
             /* @var Component $component */
             $component->catchQueryBuilder($queryBuilder);
         }
+        return $queryBuilder;
+    }
 
-        // Apply sorting
-        $dataClass = $this->getClassMetaData();
-        /*
-        if (!empty($this->orderBy)) {
-            $columnName = $this->orderBy;
-            $pathInfo = $queryHelper->getPathInfo($this,$dataClass,$columnName);
-            if($pathInfo['association']) $columnName.= '.id';
-            $path = $queryHelper->getPath($queryBuilder,'b',$columnName);
-            $orderBy = $path['alias'] . $path['column'];
-            $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
-        }*/
-
+    public function initQueryBuilderForComponent(Component $component): QueryBuilder{
+        $queryBuilder = $this->getRepository()->createQueryBuilder('b');
+        $this->adaptQueryBuilder($queryBuilder);
+        foreach($this->getCurrentComponents() as $curComponent){
+            /* @var Component $component */
+            if($curComponent->canCatchQuery($component) || $curComponent->getId() == $component->getId()) {
+                $curComponent->catchQueryBuilder($queryBuilder);
+            }
+        }
         return $queryBuilder;
     }
 

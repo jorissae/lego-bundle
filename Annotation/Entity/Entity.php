@@ -1,5 +1,16 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Idk\LegoBundle\Annotation\Entity;
+
+use Idk\LegoBundle\Configurator\DefaultConfigurator;
 
 /**
  * @Annotation
@@ -28,7 +39,7 @@ class Entity
         return ($perms && !is_array($perms))?  [$perms]:$perms;
     }
 
-    public function getConfig(){
+    public function getConfig($nameConfigurator = null){
         return $this->config;
     }
 

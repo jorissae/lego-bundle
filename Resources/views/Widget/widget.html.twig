@@ -1,4 +1,25 @@
-<div id="jsa-widget-{{ widget.id }}" class="jsa-widget {{ widget.classCss }}" data-widget-id="{{ widget.id }}">
-    {%  set button_remove = '<i class="pull-right jsa-remove-widget fa fa-close" data-widget-id="' ~ widget.id ~ '"></i>' %}
-    {{ include(widget.template,widget.params|merge({'button_remove': button_remove})) }}
+<div id="jsa-widget-{{ widget.id }}" class=" jsa-widget {{ widget.classCss }}" data-widget-id="{{ widget.id }}">
+
+    <div class="jsa-flip" id="jsa-widget-flip-{{ widget.id }}">
+        <div class="jsa-flip-front">
+            {%  set button_remove = '<i class="pull-right jsa-remove-widget fa fa-close" data-widget-id="' ~ widget.id ~ '"></i>' %}
+            {%  set button_flip = '<i class="pull-right jsa-flip-trigger fa fa-wrench" data-flip="jsa-widget-flip-' ~ widget.id ~ '"></i>' %}
+            {{ include(widget.template,widget.params|merge({'button_remove': button_remove, 'button_flip': button_flip})) }}
+        </div>
+        <div class="jsa-flip-back">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Title</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="flip" data-toggle="tooltip" title="" data-original-title="Flip">{{ button_flip|raw }}</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                </div>
+                <div class="box-footer">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

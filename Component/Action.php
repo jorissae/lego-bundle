@@ -1,4 +1,12 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Idk\LegoBundle\Component;
 
@@ -17,6 +25,10 @@ class Action extends Component{
     const EXPORT_XLSX = 'export_xlsx';
     const SORT_COMPONENTS_RESET = 'sort_components_reset';
 
+    static public function SCREEN($label, $suffixRoute){
+        return [$label, $suffixRoute];
+    }
+
     protected function init(){
         return;
     }
@@ -32,8 +44,10 @@ class Action extends Component{
     public function bindRequest(Request $request)
     {
         foreach($this->getOption('actions', []) as $action){
-            if($action instanceOf ListAction){
+            if($action instanceOf ListAction) {
                 $this->actions[] = $action;
+            }elseif(is_array($action)){
+                $this->actions[] = new ListAction($action[0], ['route'=>$this->getConfigurator()->getPathRoute('default'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$action[1]])]);
             }else{
                 if($action == self::ADD){
                     $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add'), 'params'=>$this->getConfigurator()->getPathParameters()]);

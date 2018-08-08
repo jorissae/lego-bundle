@@ -94,6 +94,6 @@ services:
   #@TODO
   lego.form.gedmo_translatable:
       class: Idk\LegoBundle\Form\Type\GedmoTranslatableType
-      arguments: ['fr', ['en','de','fr'], '@lego.service.gedmo_translatable_field_manager', '@translator']
+      arguments: ['%lego.default_locale%', '%lego.locales%', '@lego.service.gedmo_translatable_field_manager', '@translator']
       tags:
          - { name: form.type, alias: lego_gedmo_translatable }

@@ -1,12 +1,23 @@
 <?php
-namespace Idk\LegoBundle\Service;
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
+namespace Lle\EasyAdminPlusBundle\Service;
+
+use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Doctrine\RegistryInterface as RegistryInterface;
 use Symfony\Component\Form\Form as Form;
 use Symfony\Component\PropertyAccess\PropertyAccess as PropertyAccess;
 use Doctrine\ORM\Query as Query;
 use Gedmo\Translatable\TranslatableListener as TranslatableListener;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation as AbstractPersonalTranslation;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 //@Todo
 class GedmoTranslatableFieldManager
@@ -17,20 +28,27 @@ class GedmoTranslatableFieldManager
     CONST GEDMO_PERSONAL_TRANSLATIONS_SET = 'addTranslation';
 
     protected $em;
-    private $translationRepository;
 
     public function __construct(RegistryInterface $reg)
     {
         $this->em = $reg->getManager();
-        try {
-            $this->translationRepository = $this->em->getRepository(self::GEDMO_TRANSLATION);
-        }catch(\Exception $r){
-            $this->translationRepository = null;
+    }
+
+    public function getTranslationRepository($entity){
+        $reflectionClass = new \ReflectionClass(get_class($entity));
+        $r = new AnnotationReader();
+        $annotation = $r->getClassAnnotation($reflectionClass, Gedmo\TranslationEntity::class);
+        if($annotation){
+            return $this->em->getRepository($annotation->class);
+        }else {
+            return $this->em->getRepository(self::GEDMO_TRANSLATION);
         }
     }
+
     /* @var $translation AbstractPersonalTranslation */
     private function getTranslations($entity, $fieldName)
     {
+
         // 'personal' translations (separate table for each entity)
         if(\method_exists($entity, self::GEDMO_PERSONAL_TRANSLATIONS_GET) && \is_callable(array($entity, self::GEDMO_PERSONAL_TRANSLATIONS_GET)))
         {
@@ -47,7 +65,7 @@ class GedmoTranslatableFieldManager
         // 'basic' translations (ext_translations table)
         else
         {
-            return \array_map(function($element) {return \array_shift($element);}, $this->translationRepository->findTranslations($entity));
+            return \array_map(function($element) {return \array_shift($element);}, $this->getTranslationRepository($entity)->findTranslations($entity));
         }
     }
     private function getEntityInDefaultLocale($entity, $defaultLocale)
@@ -115,7 +133,7 @@ class GedmoTranslatableFieldManager
                 // 'ext_translations'
                 else
                 {
-                    $this->translationRepository->translate($entity, $fieldName, $locale, $value);
+                    $this->getTranslationRepository($entity)->translate($entity, $fieldName, $locale, $value);
                 }
             }
         }
