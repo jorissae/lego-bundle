@@ -55,16 +55,11 @@ abstract class AbstractAction
     }
 
     protected function trans($str, $vars= []){
-        return $this->configuratorBuilder>trans($str, $vars);
+        return $this->configuratorBuilder->trans($str, $vars);
     }
 
     public function getConfigurator(Request $request){
         if($this->configurator) return $this->configurator;
-        /*if(strstr($request->get('entity'),'-')) {
-            [$entity, $configname] = explode('-', $request->get('entity'));
-        }else{
-            [$entity, $configname] = [$request->get('entity'), null];
-        }*/
         $entity = $request->get('entity');
         $metaEntity = $this->mem->getMetaDataEntity($entity);
         return  $metaEntity->getConfigurator($this->configuratorBuilder);

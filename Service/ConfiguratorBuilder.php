@@ -108,7 +108,7 @@ class ConfiguratorBuilder
     }
 
     public function trans($str, $vars){
-        $this->translator->trans($str, $vars);
+        return $this->translator->trans($str, $vars);
     }
 
     public function render($view, $params){
