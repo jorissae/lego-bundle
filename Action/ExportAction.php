@@ -34,7 +34,8 @@ final class ExportAction extends AbstractAction
         if($response){
             return $response;
         }
-        $return =  $this->export->getDownloadableResponse($configurator, $request->get('format'));
+        $component = $configurator->getComponent($request->get('suffix_route'),$request->get('cid'));
+        $return =  $this->export->getDownloadableResponse($configurator, $component, $request->get('format'));
         return $return;
     }
 

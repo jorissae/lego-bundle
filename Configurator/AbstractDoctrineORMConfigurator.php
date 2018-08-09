@@ -57,6 +57,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
         $pager = new Pager($this->getQueryBuilder(), $page, $nbPerPage, $unlimited);
         return $pager;
     }*/
+
+    /*
+     *  @deprecated
+     */
     public function getAllIterator()
     {
         return $this->getQuery()->getResult();
@@ -93,6 +97,10 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
             }
         }
         return $queryBuilder;
+    }
+
+    public function getItems(Component $component){
+        return $this->initQueryBuilderForComponent($component)->getQuery()->getResult();
     }
 
     public function getRepository(){

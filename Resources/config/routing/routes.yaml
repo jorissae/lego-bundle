@@ -55,7 +55,7 @@ lego_edit:
         id: \d+
 
 lego_export:
-    path:      /lgo/{entity}/export.{format}
+    path:      /lgo/{entity}/{cid}/{suffix_route}/export.{format}
     defaults:
         _controller: lego.action.export
 

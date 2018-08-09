@@ -8,7 +8,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Lle\EasyAdminPlusBundle\Service;
+namespace Idk\LegoBundle\Service;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Doctrine\RegistryInterface as RegistryInterface;

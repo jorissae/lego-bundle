@@ -120,7 +120,7 @@ trait ControllerTrait
      *
      * @param string $_format
      *
-     * @Route("/export.{format}", requirements={"format" = "csv|xlsx"})
+     * @Route("/{cid}/{suffix_route}/export.{format}", requirements={"format" = "csv|xlsx"})
      * @Method({"GET", "POST"})
      * @return array
      */

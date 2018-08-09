@@ -202,16 +202,24 @@ class MetaEntityManager implements MetaEntityManagerInterface
 
     public function getMetaDataEntities(): array{
         $return = [];
-        foreach($this->em->getMetadataFactory()->getAllMetadata() as $metadata){
+        foreach($this->em->getMetadataFactory()->getAllMetadata() as $metadata) {
             $shortName = $this->getEntityShortName($metadata->getName());
-            if($shortName){
-                if(key_exists($shortName, $return)){
+            if ($shortName) {
+                if (key_exists($shortName, $return)) {
                     throw new \Exception('
-                        The shortname '. $shortName .' of the class '.$metadata->getName().' is already 
-                        use in the class '.$return[$shortName]->getName().'. Use class annotation '.Annotation\Entity::class.':
-                        @Lego\Entity(name="'.$shortName.'2") for exemple');
+                        The shortname ' . $shortName . ' of the class ' . $metadata->getName() . ' is already 
+                        use in the class ' . $return[$shortName]->getName() . '. Use class annotation ' . Annotation\Entity::class . ':
+                        @Lego\Entity(name="' . $shortName . '2") for exemple');
                 }
-                $return[$shortName] = new MetaEntity($shortName, $metadata);
+                $metaEntity = new MetaEntity($shortName, $metadata);
+
+                foreach ($metaEntity->getAnnotation()->getConfigs() as $k => $config) {
+                    if (isset($config['name'])) {
+                        $return[$config['name']] = new MetaEntity($config['name'], $metadata);
+                    } else {
+                        $return[$shortName] = $metaEntity;
+                    }
+                }
             }
         }
         ksort($return);
@@ -229,7 +237,7 @@ class MetaEntityManager implements MetaEntityManagerInterface
     }
 
     public function getMetaDataEntity($shortName): MetaEntity{
-       return $this->getMetaDataEntities()[$shortName];
+       return $this->getMetaDataEntities()[$shortName]; // editor2
     }
 
     public function getMetaDataEntityByClassName($className): Annotation\Entity{

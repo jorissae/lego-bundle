@@ -26,7 +26,17 @@ class Action extends Component{
     const SORT_COMPONENTS_RESET = 'sort_components_reset';
 
     static public function SCREEN($label, $suffixRoute){
-        return [$label, $suffixRoute];
+        return [$label, 'default', ['suffix_route'=>$suffixRoute]];
+    }
+
+    static public function EXPORT(Component $component,string $format = 'csv', $label = null){
+        if(!$label){
+            switch(strtolower($format)){
+                case 'xlsx': $label = 'lego.action.export_xlsx'; break;
+                case 'csv': $label =  'lego.action.export_csv'; break;
+            }
+        }
+        return [$label, 'export', ['suffix_route'=>'index','format'=>$format,'cid'=>$component->getId()]];
     }
 
     protected function init(){
@@ -37,8 +47,11 @@ class Action extends Component{
         return [];
     }
 
-    public function add($label, $options){
-        $this->actions[] = new ListAction($label, $options);
+
+    public function add($action){
+        $actions = $this->getOption('actions', []);
+        $actions[] = $action;
+        $this->setOption('actions',$actions);
     }
 
     public function bindRequest(Request $request)
@@ -47,7 +60,7 @@ class Action extends Component{
             if($action instanceOf ListAction) {
                 $this->actions[] = $action;
             }elseif(is_array($action)){
-                $this->actions[] = new ListAction($action[0], ['route'=>$this->getConfigurator()->getPathRoute('default'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$action[1]])]);
+                $this->actions[] = new ListAction($action[0], ['route'=>$this->getConfigurator()->getPathRoute($action[1]), 'params'=>$this->getConfigurator()->getPathParameters($action[2])]);
             }else{
                 if($action == self::ADD){
                     $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add'), 'params'=>$this->getConfigurator()->getPathParameters()]);

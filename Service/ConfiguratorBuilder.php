@@ -62,13 +62,12 @@ class ConfiguratorBuilder
     }
 
     public function generateConfigurator($entityClassName, $nameConfigurator = null, $parent = null){
-
         return $this->getConfigurator($this->getConfiguratorClassName($entityClassName, $nameConfigurator), $parent, $entityClassName, ['entity'=>$this->mem->getEntityShortName($entityClassName)]);
     }
 
     public function getConfiguratorClassName($entityClassName, $nameConfigurator = null){
         $annotation = $this->mem->getMetaDataEntityByClassName($entityClassName);
-        return $annotation->getConfig($nameConfigurator) ?? DefaultConfigurator::class;
+        return $annotation->getConfigClass($nameConfigurator) ?? DefaultConfigurator::class;
     }
 
     public function isGranted($attributes, $subject = null){

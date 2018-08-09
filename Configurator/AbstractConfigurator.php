@@ -100,7 +100,6 @@ abstract class AbstractConfigurator
         return md5(get_class($this).'-'.$this->getEntityName());
     }
 
-    //abstract function getPager();
     abstract public function getType($item,$columnName);
 
     public function getEntityName(){
@@ -544,29 +543,29 @@ abstract class AbstractConfigurator
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $entityClassName, $nameConfigurator);
     }
 
-    public function addAddComponent($className, array $options, $configuratorClassName = null)
+    public function addAddComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
     {
-        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_ADD, $configuratorClassName);
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_ADD, $entityClassName, $nameConfigurator);
     }
 
-    public function addEditComponent($className, array $options,  $configuratorClassName = null)
+    public function addEditComponent($className, array $options,  $entityClassName = null, $nameConfigurator = null)
     {
-        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_EDIT, $configuratorClassName);
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_EDIT, $entityClassName, $nameConfigurator);
     }
 
-    public function addShowComponent($className, array $options, $configuratorClassName = null)
+    public function addShowComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
     {
-        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_SHOW, $configuratorClassName);
+        return $this->addComponent($className, $options, self::ROUTE_SUFFIX_SHOW, $entityClassName, $nameConfigurator);
     }
 
     public function addComponent($className, array $options, $routeSuffix, $entityClassName = null, $nameConfigurator = null){
         if(!isset($this->components[$routeSuffix])){
             $this->components[$routeSuffix] = [];
         }
-        $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName);
+        $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName, $nameConfigurator);
         if(isset($this->components[$routeSuffix][$component->getId()])){
             $options['cid'] = count($this->components[$routeSuffix]);
-            $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName);
+            $component = $this->generateComponent($className, $options, $routeSuffix, $entityClassName, $nameConfigurator);
         }
         $this->components[$routeSuffix][$component->getId()] = $component;
         return $component;

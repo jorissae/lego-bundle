@@ -18,12 +18,19 @@ use Idk\LegoBundle\Configurator\DefaultConfigurator;
 class Entity
 {
     private $name;
+    private $config;
+    private $configs;
 
     public function __construct(array $options = [])
     {
         $this->name = $options['name'] ?? null;
         $this->permissions = $options['permissions'] ?? [];
-        $this->config = $options['config'] ?? null;
+        if(isset($options['configs']) && is_array($options['configs']) && count($options['configs'])){
+            $this->configs = $options['configs'];
+            $this->config = $options['configs'][0]['class'] ?? null;
+        }else{
+            $this->config = $options['config'] ?? null;
+        }
         $this->title = $options['title'] ?? null;
         $this->icon = $options['icon'] ?? 'rocket';
     }
@@ -39,8 +46,31 @@ class Entity
         return ($perms && !is_array($perms))?  [$perms]:$perms;
     }
 
-    public function getConfig($nameConfigurator = null){
+    public function getConfigClass($nameConfigurator = null): ?string{
+        if($nameConfigurator && $this->configs){
+            foreach($this->configs as $config){
+                if(strtolower($config['name']) === strtolower($nameConfigurator)){
+                    return $config['class'];
+                }
+            }
+        }
         return $this->config;
+    }
+
+    public function getConfig($nameConfigurator = null): array{
+        if($nameConfigurator && $this->configs){
+            foreach($this->configs as $config){
+                if(strtolower($config['name']) === strtolower($nameConfigurator)){
+                    return $config;
+                }
+            }
+        }
+        return ['class'=>$this->config];
+    }
+
+    public function getConfigs(){
+        if($this->configs) return $this->configs;
+        else return [['class'=>$this->config]];
     }
 
     public function getName(){

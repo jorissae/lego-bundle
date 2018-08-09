@@ -24,10 +24,12 @@ class MetaEntity
     private $metadata;
     private $annotation;
     private $shortname;
+    private $configname;
 
-    public function __construct(string $shortname, ClassMetadata $metadata){
+    public function __construct(string $shortname, ClassMetadata $metadata, string $configname = null){
         $this->shortname = $shortname;
         $this->metadata = $metadata;
+        $this->configname = $configname;
         $reflectionClass = new \ReflectionClass($metadata->getName());
         $r = new AnnotationReader();
         $this->annotation = $r->getClassAnnotation($reflectionClass, Entity::class);
@@ -38,12 +40,22 @@ class MetaEntity
     }
 
     public function getLibelle(){
+        $config = $this->getConfig();
+        if(isset($config['title'])) return $config['title'];
         if($this->annotation->getTitle()) return $this->annotation->getTitle();
         return $this->shortname;
     }
 
-    public function getConfigurator(ConfiguratorBuilder $configuratorBuilder){
-        $class = $this->annotation->getConfig();
+    public function getAnnotation():Entity{
+        return $this->annotation;
+    }
+
+    public function getConfig(){
+        return $this->getAnnotation()->getConfig($this->shortname);
+    }
+
+    public function getConfigurator(ConfiguratorBuilder $configuratorBuilder, string $configname = null){
+        $class = $this->annotation->getConfigClass($this->shortname);
         if($class) {
             return $configuratorBuilder->getConfigurator($class, null, $this->getName(), ['entity'=>$this->shortname]);
         }else{
@@ -57,7 +69,7 @@ class MetaEntity
     }
 
     public function getPath(ConfiguratorBuilder $configuratorBuilder){
-        $class = $configuratorBuilder->getConfiguratorClassName($this->metadata->getName());
+        $class = $configuratorBuilder->getConfiguratorClassName($this->metadata->getName(), $this->shortname);
         $params = [];
         $route =  call_user_func($class .'::getControllerPath').'_index';
         if($route === 'lego_index'){

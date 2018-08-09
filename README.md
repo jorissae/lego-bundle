@@ -122,7 +122,7 @@ CURRENT v alpha 0.1.2
 - Ressource Action [X]
 - Menu auto [X]
 - Right Bar [ ]
-- Sub-Filter and Xhr filter [ ]
+- Sub-Filter and Xhr filter [X]
 - Upload File [X]
 - EntityAction and ListAction auto [X]
 - Rupteur [X]
@@ -131,7 +131,7 @@ CURRENT v alpha 0.1.2
 - Call template (ViewParams)[X] all object pass to the view is a ViewParams
 - Url object (LegoPath) [X] all the url have to do with LegoPath
 - Header and Menu object [X]
-- Multi same component (CustomComponent or Multi ActionComponent) [ ]
+- Multi same component (CustomComponent or Multi ActionComponent) [X]
 - Skeleton [X] //  SF4 maker [X]
 - Reload line with item action [X]
 - Move component [X]
@@ -169,7 +169,15 @@ freamworks:
 
 Next todo:
 
-Opti menu, custom routeprefix and double config, querybuilder filter list ,connect or not, Check all type Form and branch dateTimeform, (Sub-)Filter, Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
+Opti menu OK
+custom routeprefix OK
+double config global (sub ok), NEXT
+export by component
+querybuilder filter list OK
+connect or not OK
+Check all type Form and branch dateTimeform
+(Sub-)Filter OK, 
+Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
 
 Optimisation todo:
 

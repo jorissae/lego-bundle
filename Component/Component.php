@@ -193,6 +193,10 @@ abstract class Component{
         return $this->getConfiguratorBuilder()->trans($str, $vars);
     }
 
+    public function setOption($key, $value){
+        $this->options[$key] = $value;
+    }
+
 
 
 

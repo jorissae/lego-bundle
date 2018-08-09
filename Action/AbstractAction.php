@@ -60,7 +60,13 @@ abstract class AbstractAction
 
     public function getConfigurator(Request $request){
         if($this->configurator) return $this->configurator;
-        $metaEntity = $this->mem->getMetaDataEntity($request->get('entity'));
+        /*if(strstr($request->get('entity'),'-')) {
+            [$entity, $configname] = explode('-', $request->get('entity'));
+        }else{
+            [$entity, $configname] = [$request->get('entity'), null];
+        }*/
+        $entity = $request->get('entity');
+        $metaEntity = $this->mem->getMetaDataEntity($entity);
         return  $metaEntity->getConfigurator($this->configuratorBuilder);
     }
 

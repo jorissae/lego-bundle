@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\Service;
 
+use Idk\LegoBundle\Component\Component;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,22 +38,22 @@ class ExportService
         return $this->mem->generateExportFields($entityName, $columns);
     }
 
-    public function getDownloadableResponse(AbstractConfigurator $configurator, $format)
+    public function getDownloadableResponse(AbstractConfigurator $configurator, Component $component ,$format)
     {
         switch ($format) {
             case self::EXT_EXCEL:
-                $writer = $this->createExcelSheet($configurator);
+                $writer = $this->createExcelSheet($configurator, $component);
                 $response = $this->createResponseForExcel($writer);
                 break;
             default:
-                $response = $this->createCsvResponse($configurator);
+                $response = $this->createCsvResponse($configurator, $component);
                 break;
         }
         return $response;
     }
 
-    public function createCsvResponse(AbstractConfigurator $configurator){
-        $allIterator = $configurator->getAllIterator();
+    public function createCsvResponse(AbstractConfigurator $configurator, $component){
+        $allIterator = $configurator->getItems($component);
         $csv = [];
         foreach($this->getExportFields($configurator->getEntityName()) as $field){
             $csv[0][] = $field->getHeader();
@@ -73,7 +74,7 @@ class ExportService
      * @throws \Exception
      * @throws \PHPExcel_Exception
      */
-    public function createExcelSheet(AbstractConfigurator $configurator)
+    public function createExcelSheet(AbstractConfigurator $configurator, $component)
     {
 
         $objPHPExcel = new Spreadsheet();
@@ -88,7 +89,7 @@ class ExportService
         }
         $objWorksheet->fromArray($row, null, 'A' . $number++);
 
-        $allIterator = $configurator->getAllIterator();
+        $allIterator = $configurator->getItems($component);
         foreach($allIterator as $entity) {
 
             $row = [];
