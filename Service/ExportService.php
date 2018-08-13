@@ -27,7 +27,7 @@ class ExportService
     const EXT_CSV = 'csv';
     const EXT_EXCEL = 'xlsx';
 
-    public function __construct($renderer, $serviceCsv, MetaEntityManager $mem)
+    public function __construct(\Twig_Environment $renderer, $serviceCsv, MetaEntityManager $mem)
     {
         $this->renderer = $renderer;
         $this->serviceCsv = $serviceCsv;
@@ -63,7 +63,7 @@ class ExportService
             foreach($this->getExportFields($configurator->getEntityName()) as $field) {
                 $csv[$i][] = $configurator->getStringValue($entity, $field->getName());
             }
-                $i++;
+            $i++;
         }
         return  $this->serviceCsv->arrayToCsvResponse($csv);
     }
@@ -97,7 +97,7 @@ class ExportService
                 $coordinate = $objWorksheet->getCellByColumnAndRow(count($row), $number)->getCoordinate();
                 $data = $configurator->getStringValue($entity, $field->getName());
                 if (is_object($data)) {
-                    if (!$this->renderer->exists($field->getTemplate())) {
+                    if (!$this->renderer->getLoader()->exists($field->getTemplate())) {
                         $data = $data->__toString();
                     }else{
                         $data = $this->renderer->render($field->getTemplate(), array("entity" => $entity, 'configurator' => $configurator, 'field' => $field));
