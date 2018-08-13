@@ -36,8 +36,8 @@ class <?= $entity_class ?>Configurator extends AbstractDoctrineORMConfigurator
         $this->addShowComponent(CPNT\Item::class, []);
     }
 
-    public function getControllerPath()
+    static public function getControllerPath()
     {
-        return 'app_<?= strtolower($entity_class) ?>lego';
+        return 'app_<?= strtolower($controller_route) ?>lego';
     }
 }

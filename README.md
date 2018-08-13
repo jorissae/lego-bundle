@@ -136,10 +136,8 @@ CURRENT v alpha 0.1.2
 - Reload line with item action [X]
 - Move component [X]
 - Dashboard [X]
-- Macro [/] In class
 - Widget Systeme [X]
 - Check double bindRequest in subComponent [ ]
-- Check execution components orders (filter after list ?)
 - ExportField [X]
 - Flex [X]
 - Doc [ ]
@@ -171,8 +169,8 @@ Next todo:
 
 Opti menu OK
 custom routeprefix OK
-double config global (sub ok), NEXT
-export by component
+double config global OK
+export by component OK
 querybuilder filter list OK
 connect or not OK
 Check all type Form and branch dateTimeform
@@ -181,7 +179,7 @@ Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulk
 
 Optimisation todo:
 
- Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, maker, getValue et setValue de Field, refactoring getType de Configurator, style tree, try gridstack, widget config
+ Use voter ,Filter, Tree, Action, tbody imbrique (breaker), Upload file+, getValue et setValue de Field, refactoring getType de Configurator, style tree, try gridstack, widget config
 
 Bug todo:
 
