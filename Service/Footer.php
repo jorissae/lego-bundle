@@ -25,7 +25,7 @@ class Footer implements LegoFooterInterface
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Layout:_footer.html.twig';
+        return '@IdkLego/Layout/_footer.html.twig';
     }
 
     public function getVersion(){

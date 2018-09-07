@@ -68,7 +68,7 @@ class DateFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:dateFilter.html.twig';
+        return '@IdkLego/FilterType/dateFilter.html.twig';
     }
 
     public function getDatePickerOptions(){

@@ -41,19 +41,19 @@ abstract class AbstractConfigurator
 
     protected $configuratorBuilder;
 
-    private $showTemplate = 'IdkLegoBundle:Default:show.html.twig';
+    private $showTemplate = '@IdkLego/Default/show.html.twig';
 
-    private $logTemplate = 'IdkLegoBundle:Default:log.html.twig';
+    private $logTemplate = '@IdkLego/Default/log.html.twig';
 
-    private $logsTemplate = 'IdkLegoBundle:Default:logs.html.twig';
+    private $logsTemplate = '@IdkLego/Default/logs.html.twig';
 
-    private $addTemplate = 'IdkLegoBundle:Default:add.html.twig';
+    private $addTemplate = '@IdkLego/Default/add.html.twig';
 
-    private $editTemplate = 'IdkLegoBundle:Default:edit.html.twig';
+    private $editTemplate = '@IdkLego/Default/edit.html.twig';
 
-    private $indexTemplate = 'IdkLegoBundle:Default:index.html.twig';
+    private $indexTemplate = '@IdkLego/Default/index.html.twig';
 
-    private $defaultTemplate = 'IdkLegoBundle:Default:default.html.twig';
+    private $defaultTemplate = '@IdkLego/Default/default.html.twig';
 
     private $title;
 

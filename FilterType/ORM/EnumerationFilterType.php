@@ -54,6 +54,6 @@ class EnumerationFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:enumerationFilter.html.twig';
+        return '@IdkLego/FilterType/enumerationFilter.html.twig';
     }
 }

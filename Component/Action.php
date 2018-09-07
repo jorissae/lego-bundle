@@ -89,7 +89,7 @@ class Action extends Component{
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\ActionComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/ActionComponent/'.$name.'.html.twig';
     }
 
     public function getTemplateParameters(){

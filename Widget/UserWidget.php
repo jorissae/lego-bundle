@@ -32,7 +32,7 @@ class UserWidget extends Widget {
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Widget:widget_user.html.twig';
+        return '@IdkLego/Widget/widget_user.html.twig';
     }
 
     public function getParams(){

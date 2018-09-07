@@ -83,6 +83,6 @@ class TreeFilterType extends EntityFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:treeFilter.html.twig';
+        return '@IdkLego/FilterType/treeFilter.html.twig';
     }
 }

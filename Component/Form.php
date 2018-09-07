@@ -40,11 +40,11 @@ class Form extends Component{
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\FormComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/FormComponent/'.$name.'.html.twig';
     }
 
     public function getTemplateParameters(){
-        return ['form' => $this->form->createView(), 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
+        return ['form' => $this->form->createView(), 'theme' => $this->getOption('theme','@IdkLego/Form/lego_base_fields.html.twig')];
     }
 
     public function generateForm($entity){

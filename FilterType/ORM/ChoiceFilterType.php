@@ -80,7 +80,7 @@ class ChoiceFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:choiceFilter.html.twig';
+        return '@IdkLego/FilterType/choiceFilter.html.twig';
     }
 
     public function getMultiple(){

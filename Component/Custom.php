@@ -36,7 +36,7 @@ class Custom extends Component{
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\CustomComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/CustomComponent/'.$name.'.html.twig';
     }
 
     public function getTemplateParameters()

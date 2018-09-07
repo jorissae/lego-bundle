@@ -158,13 +158,6 @@ default_locale: fr
        fallbacks: ['fr']
 ```
 
-framework.yml:
-```yaml
-freamworks:
-    templating:
-        engines: ['twig']
-```
-
 Next todo:
 
 Opti menu OK

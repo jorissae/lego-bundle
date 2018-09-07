@@ -194,7 +194,7 @@ class ListItems extends Component implements EditInPlaceInterface {
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\ListItemsComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/ListItemsComponent/'.$name.'.html.twig';
     }
 
     public function getTemplateParameters(){

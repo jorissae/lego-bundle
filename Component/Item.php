@@ -61,7 +61,7 @@ class Item extends Component implements EditInPlaceInterface {
         if($name == 'index' and $this->formId){
             $name = 'index_in_form_content';
         }
-        return 'IdkLegoBundle:Component\\ItemComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/ItemComponent/'.$name.'.html.twig';
     }
 
     public function bindRequest(Request $request){
@@ -85,7 +85,7 @@ class Item extends Component implements EditInPlaceInterface {
             $formView = $form->createView();
             $entity = null;
         }
-        return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','IdkLegoBundle:Form:lego_base_fields.html.twig')];
+        return ['entity' => $entity, 'form' => $formView, 'theme' => $this->getOption('theme','@IdkLego/Form/lego_base_fields.html.twig')];
     }
 
     public function renderEntity($entity){

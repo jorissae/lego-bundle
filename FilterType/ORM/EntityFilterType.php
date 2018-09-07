@@ -101,7 +101,7 @@ class EntityFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:entityFilter.html.twig';
+        return '@IdkLego/FilterType/entityFilter.html.twig';
     }
 
     public function getMultiple(){

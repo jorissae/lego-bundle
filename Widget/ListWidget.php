@@ -35,7 +35,7 @@ class ListWidget extends Widget{
     }
 
     public function getTemplate(){
-        return "IdkLegoBundle:Widget:list_widget.html.twig";
+        return "@IdkLego/Widget/list_widget.html.twig";
     }
 
     public function getClassCss(){

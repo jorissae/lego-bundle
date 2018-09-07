@@ -78,6 +78,6 @@ class NumberFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:numberFilter.html.twig';
+        return '@IdkLego/FilterType/numberFilter.html.twig';
     }
 }

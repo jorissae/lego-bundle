@@ -26,7 +26,7 @@ final class DashboardAction
 
     public function __invoke(Request $request): Response
     {
-        $template = $this->twig->loadTemplate('IdkLegoBundle:Layout:dashboard.html.twig');
+        $template = $this->twig->loadTemplate('@IdkLego/Layout/dashboard.html.twig');
         return new Response($template->render([]));
     }
 

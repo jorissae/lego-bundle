@@ -21,7 +21,7 @@ class EntityEipType extends AbstractEipType{
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:EditInPlaceType:_entity.html.twig';
+        return '@IdkLego/EditInPlaceType/_entity.html.twig';
     }
 
     public function canToErase()

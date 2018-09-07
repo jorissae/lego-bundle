@@ -67,7 +67,7 @@ class Filter extends Component{
     }
 
     public function getTemplate($name = 'index'){
-        return 'IdkLegoBundle:Component\\FilterComponent:'.$name.'.html.twig';
+        return '@IdkLego/Component/FilterComponent/'.$name.'.html.twig';
     }
 
     public function getTemplateParameters(){

@@ -57,7 +57,7 @@ class ManyFilterType extends EntityFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:manyFilter.html.twig';
+        return '@IdkLego:FilterType/manyFilter.html.twig';
     }
 
     public function getMultiple(){

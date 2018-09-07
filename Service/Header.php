@@ -30,7 +30,7 @@ class Header implements LegoHeaderInterface
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Layout:_header.html.twig';
+        return '@IdkLego/Layout/_header.html.twig';
     }
 
     public function getTitle($size = 'lg'){
@@ -56,14 +56,14 @@ class Header implements LegoHeaderInterface
     public function getItems(){
         return [
             new HeaderItem([
-                'template' => 'IdkLegoBundle:Header:_messages.html.twig',
+                'template' => '@IdkLego/Header/_messages.html.twig',
                 'template_parameters' => ['messages'=> [['user' => 'Edmond Becquerel','time' => '5 mins', 'subject' => 'To discover evidence of radioactivity']], 'libelle'=> 'You have 1 messagese', 'route'=>null],
                 'icon' => 'envelope-o',
                 'label'=> new LabelItem(1, ['css_class'=>'label-success']),
                 'css_class'=>'messages-menu',
             ]),
             new HeaderItem([
-                'template' => 'IdkLegoBundle:Header:_notifications.html.twig',
+                'template' => '@IdkLegoBundle/Header/_notifications.html.twig',
                 'template_parameters' => ['notifications' => [['icon'=>'users', 'subject'=> '5 new members joined today']], 'libelle'=> 'You have 10 notifications', 'route'=>null],
                 'icon' => 'bell-o',
                 'libelle' => null,
@@ -71,7 +71,7 @@ class Header implements LegoHeaderInterface
                 'css_class'=> 'notifications-menu',
             ]),
             new HeaderItem([
-                'template' => 'IdkLegoBundle:Header:_tasks.html.twig',
+                'template' => '@IdkLego/Header/_tasks.html.twig',
                 'template_parameters' => ['tasks' => [['percent'=>'20', 'title' => 'Design some buttons']], 'libelle'=> 'You have 9 tasks', 'route'=>null],
                 'icon' => 'flag-o',
                 'libelle' => null,
@@ -79,7 +79,7 @@ class Header implements LegoHeaderInterface
                 'css_class'=> 'tasks-menu',
             ]),
             new HeaderItem([
-                'template' => 'IdkLegoBundle:Header:_user.html.twig',
+                'template' => '@IdkLego/Header/_user.html.twig',
                 'template_parameters' => ['user'=> $this->getUser(), 'route_logout' => 'lego.route.logout', 'route_profile'=> null],
                 'libelle' => $this->getUser()->getUsername(),
                 'css_class'=> 'user-menu',

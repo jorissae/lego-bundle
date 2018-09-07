@@ -110,6 +110,6 @@ class PeriodeFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:periodeFilter.html.twig';
+        return '@IdkLego/FilterType/periodeFilter.html.twig';
     }
 }

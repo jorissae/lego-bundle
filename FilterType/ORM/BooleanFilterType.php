@@ -51,6 +51,6 @@ class BooleanFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:booleanFilter.html.twig';
+        return '@IdkLego/FilterType/booleanFilter.html.twig';
     }
 }

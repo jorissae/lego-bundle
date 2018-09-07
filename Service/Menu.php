@@ -34,7 +34,7 @@ class Menu implements LegoMenuInterface
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Layout:_menu.html.twig';
+        return '@IdkLego/Layout/_menu.html.twig';
     }
 
     public function getItems(){

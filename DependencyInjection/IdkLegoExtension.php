@@ -33,9 +33,10 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
     public function load(array $configs, ContainerBuilder $container)
     {
 
+
         if ($container->hasParameter('twig.form.resources')) {
             $container->setParameter('twig.form.resources', array_merge(
-            array('IdkLegoBundle:Form:lego_widget.html.twig'),
+            array('@IdkLego/Form/lego_widget.html.twig'),
             $container->getParameter('twig.form.resources')
             ));
         }

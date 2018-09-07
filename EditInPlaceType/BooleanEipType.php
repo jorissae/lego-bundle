@@ -21,7 +21,7 @@ class BooleanEipType extends AbstractEipType{
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:EditInPlaceType:_boolean.html.twig';
+        return '@IdkLego/EditInPlaceType/_boolean.html.twig';
     }
 
     public function getWithoutEipLayout()

@@ -18,6 +18,6 @@ class StringEipType extends AbstractEipType{
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:EditInPlaceType:_string.html.twig';
+        return '@IdkLego/EditInPlaceType/_string.html.twig';
     }
 }

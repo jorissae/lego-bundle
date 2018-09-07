@@ -46,7 +46,7 @@ class LegoTwigExtension extends \Twig_Extension
 
     public function renderFieldValue(\Twig_Environment $env, Component $component, Field $field, $item)
     {
-        $template = $env->loadTemplate("IdkLegoBundle:LegoTwigExtension:_field_value.html.twig");
+        $template = $env->loadTemplate("@IdkLego/LegoTwigExtension/_field_value.html.twig");
         $configurator = $component->getConfigurator();
         $type = $configurator->getType($item,$field->getName());
         $value =  $field->getValue($component->getConfigurator(), $item);

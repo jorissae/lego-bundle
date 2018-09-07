@@ -18,7 +18,7 @@ class TimeEipType extends AbstractEipType{
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:EditInPlaceType:_time.html.twig';
+        return '@IdkLego/EditInPlaceType/_time.html.twig';
     }
 
     public function formatValue($value){

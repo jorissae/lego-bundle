@@ -1,7 +1,7 @@
 <span id="{{ component.gid('field')  }}-{{ item.id }}-{{ field.id }}">
 {% if eipType and field.isEditInPlace(item) and (not field.editInPlaceRole or is_granted(field.editInPlaceRole)) %}
 
-    {% include 'IdkLegoBundle:EditInPlaceType:_edit_in_place.html.twig' %}
+    {% include '@IdkLego/EditInPlaceType/_edit_in_place.html.twig' %}
 
 {% else %}
 

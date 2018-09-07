@@ -30,8 +30,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('skin')->defaultValue('skin-blue')->end()
-                ->scalarNode('layout')->defaultValue('IdkLegoBundle:Layout:lego.html.twig')->end()
-                ->scalarNode('layout_login')->defaultValue('IdkLegoBundle:Layout:lego_login.html.twig')->end()
+                ->scalarNode('layout')->defaultValue('@IdkLego/Layout/lego.html.twig')->end()
+                ->scalarNode('layout_login')->defaultValue('@IdkLego/Layout/lego_login.html.twig')->end()
                 ->scalarNode('route_login')->defaultValue('idk_lego_security_check')->end()
                 ->scalarNode('route_logout')->defaultValue('idk_lego_security_logout')->end()
                 ->scalarNode('service_menu')->defaultValue('Idk\LegoBundle\Service\Menu')->end()

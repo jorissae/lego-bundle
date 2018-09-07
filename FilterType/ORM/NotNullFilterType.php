@@ -48,6 +48,6 @@ class NotNullFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:notnullFilter.html.twig';
+        return '@IdkLego/FilterType/notnullFilter.html.twig';
     }
 }

@@ -86,7 +86,7 @@ class StringFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:stringFilter.html.twig';
+        return '@IdkLego/FilterType/stringFilter.html.twig';
     }
 
     /**

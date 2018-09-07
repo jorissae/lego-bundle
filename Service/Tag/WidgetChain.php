@@ -44,15 +44,15 @@ class WidgetChain
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Widget:widget.html.twig';
+        return '@IdkLego/Widget/widget.html.twig';
     }
 
     public function getWidgetsTemplate(){
-        return 'IdkLegoBundle:Widget:widgets.html.twig';
+        return '@IdkLego/Widget/widgets.html.twig';
     }
 
     public function getWidgetsListTemplate(){
-        return 'IdkLegoBundle:Widget:list.html.twig';
+        return '@IdkLego/Widget/list.html.twig';
     }
 
     public function saveInSession($order){

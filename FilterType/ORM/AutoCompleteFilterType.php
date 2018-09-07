@@ -64,7 +64,7 @@ class AutoCompleteFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:autoCompleteFilter.html.twig';
+        return '@IdkLego/FilterType/autoCompleteFilter.html.twig';
     }
 
     public function getRoute(){

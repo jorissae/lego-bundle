@@ -21,7 +21,7 @@ class DateTimeEipType extends AbstractEipType{
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:EditInPlaceType:_datetime.html.twig';
+        return '@IdkLego/EditInPlaceType/_datetime.html.twig';
     }
 
     public function formatValue($value){

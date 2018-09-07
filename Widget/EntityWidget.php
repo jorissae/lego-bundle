@@ -29,7 +29,7 @@ class EntityWidget extends Widget {
     }
 
     public function getTemplate(){
-        return 'IdkLegoBundle:Widget:widget_entity.html.twig';
+        return '@IdkLego/Widget/widget_entity.html.twig';
     }
 
     public function getParams(){

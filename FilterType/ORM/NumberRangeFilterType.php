@@ -65,6 +65,6 @@ class NumberRangeFilterType extends AbstractORMFilterType
      */
     public function getTemplate()
     {
-        return 'IdkLegoBundle:FilterType:numberRangeFilter.html.twig';
+        return '@IdkLego/FilterType/numberRangeFilter.html.twig';
     }
 }
