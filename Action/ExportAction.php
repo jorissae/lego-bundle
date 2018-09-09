@@ -11,6 +11,7 @@
 declare(strict_types=1);
 namespace Idk\LegoBundle\Action;
 
+use Idk\LegoBundle\Component\ListItems;
 use Idk\LegoBundle\Service\ConfiguratorBuilder;
 use Idk\LegoBundle\Service\ExportService;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,11 @@ final class ExportAction extends AbstractAction
         if($response){
             return $response;
         }
-        $component = $configurator->getComponent($request->get('suffix_route'),$request->get('cid'));
+        if($request->get('cid') !== '0') {
+            $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
+        }else{
+            $component = $configurator->getComponentByClass($request->get('suffix_route'), ListItems::class);
+        }
         $return =  $this->export->getDownloadableResponse($configurator, $component, $request->get('format'));
         return $return;
     }

@@ -58,6 +58,7 @@ lego_export:
     path:      /lgo/{entity}/{cid}/{suffix_route}/export.{format}
     defaults:
         _controller: lego.action.export
+        cid: 0
 
 lego_sortcomponents:
     path:      /lgo/{entity}/sc/{suffix_route}

@@ -485,6 +485,16 @@ abstract class AbstractConfigurator
         return null;
     }
 
+    public function getComponentByClass(string $routeSuffix, string $className): ?Component{
+        $this->currentComponentSuffixRoute = $routeSuffix;
+        foreach($this->components[$routeSuffix] as $component){
+            if($component instanceof $className) {
+                return $component;
+            }
+        }
+        return null;
+    }
+
     public function getComponents($routeSuffix)
     {
         if (isset($this->components[$routeSuffix])) {

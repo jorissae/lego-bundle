@@ -156,6 +156,8 @@ class MetaEntityManager implements MetaEntityManagerInterface
 
     public function generateExportFields($className, array $columns = null){
         $return = [];
+
+        $fields = $this->generateFields($className,null, true);
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         $entityExport = $r->getClassAnnotation($reflectionClass, Annotation\EntityExport::class);
@@ -163,6 +165,9 @@ class MetaEntityManager implements MetaEntityManagerInterface
             foreach ($entityExport->getFields() as $fieldName) {
                 $field = new Annotation\FieldExport();
                 $field->setName($fieldName);
+                if(isset($fields[$fieldName]) && $fields[$fieldName]){
+                    $field->setHeader($fields[$fieldName]->getHeader());
+                }
                 $return[$fieldName] = $field;
             }
         }
@@ -198,6 +203,10 @@ class MetaEntityManager implements MetaEntityManagerInterface
             }
         }
         return $return;
+    }
+
+    public function normalizeClassName(string $className): string{
+        return $this->em->getClassMetadata($className)->getName();
     }
 
     public function getMetaDataEntities(): array{
@@ -241,6 +250,7 @@ class MetaEntityManager implements MetaEntityManagerInterface
     }
 
     public function getMetaDataEntityByClassName($className): Annotation\Entity{
+        $className = $this->normalizeClassName($className);
         $r = new AnnotationReader();
         $reflectionClass = new \ReflectionClass($className);
         return  $r->getClassAnnotation($reflectionClass, Annotation\Entity::class);

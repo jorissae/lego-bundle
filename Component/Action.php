@@ -73,9 +73,9 @@ class Action extends Component{
                 }elseif($action == self::LOGS){
                     $action = new ListAction('lego.action.logs', ['route'=>$this->getConfigurator()->getPathRoute('logs'), 'params' => $this->getConfigurator()->getPathParameters()]);
                 }elseif($action == self::EXPORT_CSV) {
-                    $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'csv'])]);
+                    $action = new ListAction('lego.action.export_csv', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'csv', 'suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()])]);
                 }elseif($action == self::EXPORT_XLSX) {
-                    $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'xlsx'])]);
+                    $action = new ListAction('lego.action.export_xlsx', ['route' => $this->getConfigurator()->getPathRoute('export'), 'params'=>$this->getConfigurator()->getPathParameters(['format'=>'xlsx', 'suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()])]);
                 }elseif($action == self::SORT_COMPONENTS_RESET) {
                     $action = new ListAction('lego.action.reset_sort_components', ['route' => $this->getConfigurator()->getPathRoute('sortcomponentsreset'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$this->getConfigurator()->getCurrentComponentSuffixRoute()])]);
                 }
