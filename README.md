@@ -189,3 +189,276 @@ idk_lego:
     service_footer_class: App\Service\Footer
 ```
 
+
+Configurateur (optional):
+```php
+<?php
+
+namespace App\Configurator;
+
+
+use App\Entity\LiaisonPlayDuration;
+use App\Entity\Play;
+use Idk\LegoBundle\Configurator\AbstractDoctrineORMConfigurator;
+use Idk\LegoBundle\Component as CPNT;
+
+/**
+ * The lego config for Play
+ */
+class PlayConfigurator extends AbstractDoctrineORMConfigurator
+{
+
+
+    public function build(){
+        //21 lignes for very complex Administrators items Play
+        
+        //INDEX with Actions, Filters, Lists, Filters, Lists
+        
+        $actions = $this->addIndexComponent(CPNT\Action::class, ['actions' => [CPNT\Action::ADD]]);
+        $filter = $this->addIndexComponent(CPNT\Filter::class,[]);
+
+        $list = $this->addIndexComponent(CPNT\ListItems::class,  [
+            'fields'=> ['name', 'pictur', 'age', 'description'],
+            'can_modify_nb_entity_per_page' => true,
+            'entity_per_page' => 5,
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE]
+        ]);
+        
+        
+        $actions->add(CPNT\Action::EXPORT($list, 'xlsx'));
+        $actions->add(CPNT\Action::EXPORT($list));
+        $filter->addComponent($list);
+        
+        $filter2 = $this->addIndexComponent(CPNT\Filter::class,[]);
+        
+        $list->add('nbPlayer',['label'=>'NBJ', 'edit_in_place'=>true]);
+        $list->addPredefinedBulkAction(CPNT\ListItems::BULK_ACTION_DELETE);
+
+        $list2 = $this->addIndexComponent(CPNT\ListItems::class,  [
+            'fields'=> ['name', 'pictur'],
+            'can_modify_nb_entity_per_page' => false,
+            'entity_per_page' => 5,
+            'dql' => 'b.age = 21',
+            'entity_actions' => [CPNT\ListItems::ENTITY_ACTION_EDIT, CPNT\ListItems::ENTITY_ACTION_DELETE]
+        ]);
+        $list2->addPredefinedBulkAction(CPNT\ListItems::BULK_ACTION_DELETE);
+        
+        $actions->add(CPNT\Action::EXPORT($list2));
+        
+        $filter2->addComponent($list2);
+        
+        //SHOW with Value items, filters of sublist , sublist
+        $this->addShowComponent(CPNT\Item::class,[]);
+
+        $filter3 = $this->addShowComponent(CPNT\Filter::class,['fields'=>['nbPlayer']], LiaisonPlayDuration::class);
+        $list =  $this->addShowComponent(CPNT\ListItems::class,['fields'=>['duration.duration', 'nbPlayer']], LiaisonPlayDuration::class);
+        $filter3->addComponent($list);
+        
+        
+        //NEW with Action back and form
+        $this->addAddComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
+        $this->addAddComponent(CPNT\Form::class, []);
+
+        //EDIT with Action back and form
+        $this->addEditComponent(CPNT\Action::class, ['actions' => [CPNT\Action::BACK]]);
+        $this->addEditComponent(CPNT\Form::class, []);
+    }
+
+
+    public function getEntityName()
+    {
+        return Play::class;
+    }
+
+    public function getTitle()
+    {
+        return 'Gestion des jeux';
+    }
+
+    static public function getControllerPath()
+    {
+        return 'app_backend_playlego';
+    }
+}
+```
+
+Entity
+```php
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Idk\LegoBundle\Annotation\Entity as Lego;
+
+/**
+ * Play
+ *
+ * @Lego\Entity(
+ *     config="App\Configurator\PlayConfigurator",
+ *     title="Jeu",
+ *     permissions={"edit"="ROLE_USER"})
+ * @ORM\Table(name="jeu")
+ * @ORM\Entity(repositoryClass="App\Repository\PlayRepository")
+ * @Lego\EntityExport(fields={"id", "name"})
+ */
+class Play
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     * @Lego\Field(label="Nom",path="show", edit_in_place=true)
+     * @Lego\Filter\StringFilter()
+     */
+    private $name;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="nbPlayer", type="integer")
+     * @Lego\Field(label="Nombre de joueurs")
+     * @Lego\Filter\NumberRangeFilter()
+     */
+    private $nbPlayer;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="note", type="integer")
+     * @Lego\Field(label="Note")
+     * @Lego\Form\NoteForm()
+     * @Lego\Filter\NumberRangeFilter()
+     */
+    private $note;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="age", type="integer")
+     * @Lego\Field(label="Age", sort=true)
+     * @Lego\Filter\NumberRangeFilter()
+     */
+    private $age;
+
+    /**
+     * @var Author
+     *
+     * @ORM\ManyToMany(targetEntity="Category")
+     * @Lego\Form\EntityForm(class="App\Entity\Category", multiple=true)
+     * @Lego\Field(label="Catégorie", edit_in_place=false)
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    private $categories;
+
+    /**
+     * @var Editor
+     *
+     * @ORM\ManyToOne(targetEntity="Editor")
+     * @Lego\Field(label="Editeur",  edit_in_place={"reload":"field"}, path={"route":"app_backend_editorlego_show", "params"={"id":"editor.id"}})
+     * @ORM\JoinColumn(name="editeur_id", referencedColumnName="id")
+     */
+    private $editor;
+
+    /**
+     * @var string
+     *
+     * @Lego\File(directory="public/uploads/play")
+     * @Lego\Form\FileForm()
+     * @Lego\Field(label="Image", image={"directory":"/uploads/play","width":"100px"})
+     * @ORM\Column(name="pictur", type="string", nullable=true)
+     */
+    private $pictur;
+
+    /**
+     * @var string
+     *
+     * @Lego\Field(label="Description")
+     * @ORM\Column(name="description", type="string")
+     */
+    private $description;
+
+
+    /**
+     * @var ArrayCollection
+     *
+     * @Lego\Field(label="Durées")
+     * //@Lego\Form\CollectionForm(entity="App\Entity\LiaisonPlayDuration")
+     * @Lego\Form\ManyToManyJoinForm(entity="App\Entity\LiaisonPlayDuration")
+     * @ORM\OneToMany(targetEntity="App\Entity\LiaisonPlayDuration",orphanRemoval=true, mappedBy="play", cascade={"persist","remove"})
+     */
+    private $durations;
+
+
+```
+
+The controller (optional)
+```
+<?php
+
+namespace App\Controller\Backend;
+
+use App\Configurator\PlayConfigurator as Configurator;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+/**
+ * The admin list controller for Jeu
+ * @Route("/jeu")
+ */
+class PlayLegoController extends Controller
+{
+
+    use \Idk\LegoBundle\Traits\ControllerTrait;
+
+    const LEGO_CONFIGURATOR = Configurator::class;
+
+}
+
+```
+
+The configurator is set in Controller and Entity
+
+The entity is set in configurator but the Entity know the configurator
+
+This is unless soon with last refactoring:
+```php
+//In controller
+const LEGO_CONFIGURATOR = Configurator::class;
+
+//in configurator
+public function getEntityName()
+{
+    return Play::class;
+}
+```
+
+
+Exemple multi config
+```php
+<?php
+/**
+ * Editor
+ *
+ * @ORM\Table(name="editor")
+ * @Lego\Entity(title="Editeur",
+ *     configs={
+ *     {"name":"editor","class":"App\Configurator\EditorConfigurator","title":"Editeur 1"},
+ *     {"name":"editor2","class":"App\Configurator\Editor2Configurator","title":"Editeur 2"}})
+ * @ORM\Entity(repositoryClass="App\Repository\EditorRepository")
+ */
+class Editor{}
+
+```
+
+
