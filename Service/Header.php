@@ -63,7 +63,7 @@ class Header implements LegoHeaderInterface
                 'css_class'=>'messages-menu',
             ]),
             new HeaderItem([
-                'template' => '@IdkLegoBundle/Header/_notifications.html.twig',
+                'template' => '@IdkLego/Header/_notifications.html.twig',
                 'template_parameters' => ['notifications' => [['icon'=>'users', 'subject'=> '5 new members joined today']], 'libelle'=> 'You have 10 notifications', 'route'=>null],
                 'icon' => 'bell-o',
                 'libelle' => null,
