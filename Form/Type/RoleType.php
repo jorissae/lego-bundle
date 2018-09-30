@@ -41,7 +41,7 @@ class RoleType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['full_name'] .= '[]';
-        $view->vars['roles'] = $this->roles;
+        $view->vars['roles'] = empty($this->roles) ?  ['ROLE_USER'=>'ROLE_USER','ROLE_ADMIN'=>'ROLE_ADMIN']:$this->roles;
     }
 
     public function getName()

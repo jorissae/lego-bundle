@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
+use Idk\LegoBundle\Annotation\Entity as Lego;
 /**
  *
  * @MappedSuperclass
@@ -31,6 +32,7 @@ class LegoUserModel implements UserInterface, EquatableInterface
     /**
      * @var integer
      *
+     * @Lego\Field(label="lego.user.name")
      * @ORM\Column(name="name", type="string", nullable=true)
      */
     protected $name;
@@ -38,6 +40,7 @@ class LegoUserModel implements UserInterface, EquatableInterface
     /**
      * @var integer
      *
+     * @Lego\Field(label="lego.user.email")
      * @ORM\Column(name="email", type="string", nullable=true)
      */
     protected $email;
@@ -45,13 +48,14 @@ class LegoUserModel implements UserInterface, EquatableInterface
     /**
      * @var integer
      *
+     * @Lego\Field(label="lego.user.username")
      * @ORM\Column(name="username", type="string", nullable=true)
      */
     protected $username;
 
     /**
      * @var integer
-     *
+     * @Lego\Field(label="lego.user.enable", edit_in_place=true)
      * @ORM\Column(name="enable", type="boolean", nullable=true)
      */
     protected $enable;
@@ -59,6 +63,7 @@ class LegoUserModel implements UserInterface, EquatableInterface
     /**
      * @var integer
      *
+     * @Lego\Field(label="lego.user.roles")
      * @ORM\Column(name="roles", type="array", nullable=true)
      */
     protected $roles;

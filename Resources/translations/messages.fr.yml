@@ -28,8 +28,15 @@ lego.action.signe_out: Logout
 lego.action.add_widget: Ajouter un widget
 lego.form.login_username: Nom d'utilisateur
 lego.form.login_password: Mot de passe
+lego.form.password: Mot de passe
+lego.form.username: Identifiant
+lego.form.enable: Actif
+lego.form.roles: Droits
+lego.form.email: Adresse email
+lego.form.update_password: Mot de passe ( pour modification )
 lego.form.remember_me: Se souvenir de moi
 lego.form.submit_login: Login
+lego.form.error_repeat_password: Erreur de saisie dans le champ de verification
 lego.form.choice_entity: Choisir un item
 lego.form.success.add: Elément ajouté
 lego.form.success.edit: Elément mis à jour
@@ -62,3 +69,9 @@ lego.action.reset_sort_components: Organisation par défaut
 lego.title.form: Formulaire
 lego.title.filter: Filtre
 lego.delete_entities: "%nb% éléments supprimé"
+lego.user.title: Gestion des utilisateurs
+lego.user.name: Nom
+lego.user.username: Identifiant
+lego.user.email: Adresse email
+lego.user.roles: Droits
+lego.user.enable: Actif
