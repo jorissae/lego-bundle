@@ -29,7 +29,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Common\Inflector\Inflector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;

@@ -410,7 +410,7 @@ namespace App\Controller\Backend;
 
 use App\Configurator\PlayConfigurator as Configurator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * The admin list controller for Jeu
