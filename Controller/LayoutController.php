@@ -14,8 +14,7 @@ namespace Idk\LegoBundle\Controller;
 use Idk\LegoBundle\Service\LegoFooterInterface;
 use Idk\LegoBundle\Service\LegoHeaderInterface;
 use Idk\LegoBundle\Service\LegoMenuInterface;
-use Idk\LegoBundle\Service\Interf\MenuInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**

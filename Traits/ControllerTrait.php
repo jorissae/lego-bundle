@@ -27,7 +27,7 @@ use Idk\LegoBundle\Action\BulkAction;
 use Idk\LegoBundle\Action\DeleteAction;
 use Idk\LegoBundle\Action\EditAction;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
