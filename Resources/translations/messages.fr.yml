@@ -33,6 +33,8 @@ lego.form.username: Identifiant
 lego.form.enable: Actif
 lego.form.roles: Droits
 lego.form.email: Adresse email
+lego.form.name: Nom
+lego.form.firstname: Prénom
 lego.form.update_password: Mot de passe ( pour modification )
 lego.form.remember_me: Se souvenir de moi
 lego.form.submit_login: Login

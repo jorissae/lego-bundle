@@ -14,6 +14,7 @@ use Idk\LegoBundle\Form\Type\RoleType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 
@@ -36,6 +37,7 @@ class UserAdminType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('username',null, ['label'=>'lego.form.username']);
+        $builder->add('name', TextType::class, ['label' => 'lego.form.name']);
         $builder->add('email',EmailType::class, ['label'=>'lego.form.email']);
         $builder->add('roles', RoleType::class, ['label'=>'lego.form.roles']);
         $builder->add('plainPassword', RepeatedType::class, array(
