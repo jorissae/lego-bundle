@@ -105,4 +105,15 @@ class Filter extends Component{
         $this->getFilterBuilder()->bindRequest($request, $this->defaultValueFilter());
         //$this->setComponentSessionStorages($storage);
     }
+
+    public function initWithComponents(iterable $components): void{
+        if(\count($this->components) === 0){
+            foreach ($components as $c) {
+                if ($c instanceof ListItems) {
+                    $this->addComponent($c);
+                    return;
+                }
+            }
+        }
+    }
 }

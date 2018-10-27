@@ -197,6 +197,10 @@ abstract class Component{
         $this->options[$key] = $value;
     }
 
+    public function initWithComponents(iterable $components):void{
+        return;
+    }
+
 
 
 

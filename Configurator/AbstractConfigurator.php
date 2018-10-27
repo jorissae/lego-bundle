@@ -384,11 +384,16 @@ abstract class AbstractConfigurator
             $index = $routeSuffix;
         }
         $this->currentComponentSuffixRoute = $index;
+
+
         return $this->bindRequestCurrentComponents($request);
     }
 
 
     public function bindRequestCurrentComponents(Request $request, Component $excepted = null){
+        foreach($this->getCurrentComponents() as $component){
+            $component->initWithComponents($this->getCurrentComponents());
+        }
         $componentResponse = [];
         foreach($this->getChildren($this->currentComponentSuffixRoute) as $configurator){
             $configurator->bindRequest($request, $this->currentComponentSuffixRoute);
