@@ -652,7 +652,7 @@ $(function(){
         <div class="{% if item starts with '*' %}collapse sub_{{key}}{% endif %}">
             <input id="{{id}}_{{ key }}" class="cascade cascade_{{ key }}" data-cascade="cascade_{{ key }}" {{ block('widget_attributes') }} type="checkbox" value="{{key}}" {% if key in value %} checked="checked"{% endif %}>&nbsp;
             <label><b>{{ key|replace({'ROLE_':''})|capitalize }}</b></label>
-            &nbsp;&nbsp;<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>
+            &nbsp;{%  if item is iterable %}<i class="fa fa-plus-circle" onclick="$('.sub_{{key}}').toggle()"></i>{% endif %}
             <lu class="collapse sub_{{ key }}" style="list-style: none;">
                 {%  for role in item %}
                     <li style="margin-left:20px;">

@@ -26,6 +26,9 @@ class DistinctArrayTransformer implements DataTransformerInterface
 
     public function reverseTransform($array)
     {
+        if(null === $array){
+            return [];
+        }
         return  array_unique($array);
     }
 }
