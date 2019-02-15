@@ -169,13 +169,15 @@ abstract class AbstractDoctrineORMConfigurator extends AbstractConfigurator
 
     }
 
+    /* @TODO revers args $filedName, $item */
     public function getType($item,$fieldName){
-        if(is_object($item)){
-            $classMetaData = $this->getEntityManager()->getClassMetaData(get_class($item));
+        if(is_object($item) or $item === null){
+            $classMetaData = $this->getEntityManager()->getClassMetaData(($item === null)? $this->getEntityName():get_class($item));
             foreach(explode('.', $fieldName) as $fieldn){
                 if($classMetaData->hasAssociation($fieldn)) {
                     $mapping = $classMetaData->getAssociationMapping($fieldn);
                     $classMetaData = $this->getEntityManager()->getClassMetaData( $mapping['targetEntity']);
+                    /*@ TODO return */
                 }else{
                     return $classMetaData->getTypeOfColumn($fieldn);
                 }

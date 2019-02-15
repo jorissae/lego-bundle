@@ -168,6 +168,8 @@ querybuilder filter list OK
 connect or not OK
 Check all type Form and branch dateTimeform
 (Sub-)Filter OK, 
+4eme argument de addComponent ???
+retoure sur l bonne page apres edit ou new depuis un esub list.
 Multi-widget xhr-widget, Group bs, fos group, Custom action, itemAction and bulkAction
 
 Optimisation todo:

@@ -404,11 +404,11 @@ $(function(){
             $('#{{ id }}_container').html("");
             for (var note = {{ min }}; note <= {{ max }}; note++) {
                 if(note == {{ min }}){
-                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="width:20px; height:20px;" class="fa lego-note"></i>&nbsp;'));
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="width:20px; height:20px;" class="fa lego-note-{{ id }}"></i>&nbsp;'));
                 }else if (note <= cnote) {
-                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star lego-note"></i>'));
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star lego-note-{{ id }}"></i>'));
                 } else {
-                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star-o lego-note"></i>'));
+                    $('#{{ id }}_container').append($('<i data-note="' + note + '" style="margin:2px;" class="fa fa-star-o lego-note-{{ id }}"></i>'));
                 }
             }
         }
@@ -419,21 +419,21 @@ $(function(){
         }
         {{ id }}draw({{ value }});
         {{ id }}update({{ value }});
-        $('body').on('mouseover','.lego-note',function(e){
+        $('body').on('mouseover','.lego-note-{{  id }}',function(e){
             if($(this).attr('data-note') != {{ id }}oldhover) {
                 {{ id }}oldhover = $(this).attr('data-note');
                 $('#{{ id }}_display_note').html($(this).attr('data-note'));
                 {{ id }}draw($(this).attr('data-note'));
             }
         });
-        $('body').on('mouseout','.lego-note',function(e){
+        $('body').on('mouseout','.lego-note-{{  id }}',function(e){
             {{ id }}oldhover = null;
             $('#{{ id }}_display_note').html($('#{{ id }}').val());
             if($(this).attr('data-note') != $('#{{ id }}').val()){
                 {{ id }}draw($('#{{ id }}').val());
             }
         });
-        $('body').on('click','.lego-note',function(e){
+        $('body').on('click','.lego-note-{{ id }}',function(e){
             {{ id }}update($(this).attr('data-note'));
             {{ id }}draw($(this).attr('data-note'));
         });
@@ -607,9 +607,9 @@ $(function(){
         {% if allow_add %}
         function addForm{{ id }}($collectionHolder) {
             var index = $collectionHolder.data('index');
-            var newLine = $($collectionHolder.data('prototype'));
-            //newForm = newForm.replace(/__name__/g, index);
-            //$collectionHolder.data('index', index + 1);
+            var newLine = $collectionHolder.data('prototype');
+            newLine = $(newLine.replace(/__name__/g, index));
+            $collectionHolder.data('index', index + 1);
             {% if allow_delete %}addFormDeleteLink{{ id }}(newLine);{%  endif %}
             $('#tbody_{{ id }}').append(newLine);
             $("#tbody_{{ id }} select.select2").select2({'width':'100%'});
@@ -617,7 +617,7 @@ $(function(){
         {%  endif %}
         {% if allow_delete %}
         function addFormDeleteLink{{ id }}(line) {
-            var deleteLink = $('<td><a href="#">delete this item</a></td>');
+            var deleteLink = $('<td><a href="#"><span style="color:red" class="fa fa-trash"></span></a></td>');
             line.append(deleteLink);
             deleteLink.on('click', function(e) {
                 e.preventDefault();
@@ -628,7 +628,7 @@ $(function(){
         jQuery(document).ready(function() {
             var collection = $('div#{{ id }}');
             {% if allow_add%}
-            var addLink = $('<span></span>').append($('<a href="#" class="add_link">Add</a>'));
+            var addLink = $('<span></span>').append($('<a href="#" class="add_link"><span style="color:green;" class="fa fa-plus"></span> {{ 'lego.action.add'|trans }}</a>'));
             collection.append(addLink);
             addLink.on('click', function(e) {
                 e.preventDefault();

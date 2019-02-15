@@ -1,5 +1,6 @@
 lego.action.save: Sauvegarder
 lego.action.show: Afficher
+lego.acion.add: Ajouter
 lego.action.delete: Supprimer
 lego.action.edit: Editer
 lego.action.export_xlsx: Export Excel

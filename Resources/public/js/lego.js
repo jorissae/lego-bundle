@@ -29,6 +29,12 @@ $(function(){
         }
     });
 
+    $('body').on('keypress', '.lego-edit-in-place-input', function(evt){
+        if(evt.keyCode == 13){
+            $(this).parent().find('.lego-edit-in-place-ok').click();
+        }
+    });
+
     $('body').on('click', '.lego-bulk-button', function (evt) {
         evt.preventDefault();
         var container_checkbox_id = $(this).attr('data-container-id');

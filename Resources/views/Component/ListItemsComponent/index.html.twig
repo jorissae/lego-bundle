@@ -27,6 +27,7 @@
                         {% set columnkey = field.header %}
                         {% set orderDirection = component.sortDirection(columnName) %}
                         {% set extraHeaderClass = "" %}
+                        {% set type = configurator.type(null, field.name) %}
                         {% if ( columnName == configurator.orderBy )%}
                             {% if configurator.orderDirection == "DESC" %}
                                 {% set orderDirection = "ASC" %}
@@ -40,8 +41,13 @@
                         <th {% if field.style %} style="{{ field.style }}"  {% endif %} class="{{extraHeaderClass}}">
                             {{ columnkey | trans }}
                             {% if field.sort %}
+
                             <a class="jsa-ajax" data-target="{{ component.id }}" data-pre-callback="jPreLoadInSelf" data-callback="jLoadInTarget" href="{{ component.url({ 'orderBy': columnName, "orderDirection": orderDirection }) }}">
-                                {% if orderDirection == 'DESC' %}<i class="fa fa-sort-numeric-asc"></i>{%  else %}<i class="fa fa-sort-numeric-desc"></i>{%  endif  %}
+                                {%  if type == 'string' %}
+                                    {% if orderDirection == 'DESC' %}<i class="fa fa-sort-alpha-asc"></i>{%  else %}<i class="fa fa-sort-alpha-desc"></i>{%  endif  %}
+                                {%  else %}
+                                    {% if orderDirection == 'DESC' %}<i class="fa fa-sort-numeric-asc"></i>{%  else %}<i class="fa fa-sort-numeric-desc"></i>{%  endif  %}
+                                {%  endif %}
                             </a>
                             {%  endif %}
                         </th>

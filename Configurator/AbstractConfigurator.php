@@ -553,7 +553,7 @@ abstract class AbstractConfigurator
         return $this;
     }
 
-    public function addIndexComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
+    public function addIndexComponent($className, array $options, $entityClassName = null, $nameConfigurator = null): Component
     {
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $entityClassName, $nameConfigurator);
     }

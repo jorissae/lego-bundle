@@ -1,6 +1,6 @@
 parameters:
     lego.service.export.class: Idk\LegoBundle\Service\ExportService
-    lego.service.menu: '@Idk\LegoBundle\Service\Menu'
+    #lego.service.menu: '@Idk\LegoBundle\Service\Menu'
     lego.service.header: '@Idk\LegoBundle\Service\Header'
     lego.service.footer: '@Idk\LegoBundle\Service\Footer'
     lego.service.meta_entity_manager.class: Idk\LegoBundle\Service\MetaEntityManager

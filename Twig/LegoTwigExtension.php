@@ -48,7 +48,7 @@ class LegoTwigExtension extends \Twig_Extension
     {
         $template = $env->loadTemplate("@IdkLego/LegoTwigExtension/_field_value.html.twig");
         $configurator = $component->getConfigurator();
-        $type = $configurator->getType($item,$field->getName());
+        $type = $configurator->getType(null,$field->getName());
         $value =  $field->getValue($component->getConfigurator(), $item);
         $editInPlaceType = null;
         if($field->isEditInPlace($item)) {

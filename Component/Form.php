@@ -12,6 +12,9 @@ namespace Idk\LegoBundle\Component;
 
 use Idk\LegoBundle\ComponentResponse\ErrorComponentResponse;
 use Idk\LegoBundle\ComponentResponse\SuccessComponentResponse;
+use Idk\LegoBundle\LegoEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -25,10 +28,12 @@ class Form extends Component{
     private $form;
     private $mem;
     private $formFactory;
+    private $eventDispatcher;
 
-    public function __construct(MetaEntityManager $mem, FormFactoryInterface $formFactory){
+    public function __construct(MetaEntityManager $mem, FormFactoryInterface $formFactory, EventDispatcherInterface $eventDispatcher){
         $this->mem = $mem;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     protected function init(){
@@ -64,8 +69,12 @@ class Form extends Component{
     public function bindRequest(Request $request){
         if($request->get('id')){
             $entity = $this->getConfigurator()->getRepository()->find($request->get('id'));
+            $preEvent = LegoEvents::prePersistEditEntity;
+            $postEvent = LegoEvents::postPersistEditEntity;
         }else{
             $entity = $this->getConfigurator()->newInstance();
+            $preEvent = LegoEvents::prePersistAddEntity;
+            $postEvent = LegoEvents::postPersistAddEntity;
         }
 
         $this->form = $this->generateForm($entity);
@@ -73,8 +82,10 @@ class Form extends Component{
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
             if ($this->form->isValid()) {
                 $em = $this->getConfigurator()->getEntityManager();
+                $this->eventDispatcher->dispatch($preEvent, new GenericEvent(['entity'=>$entity]));
                 $em->persist($entity);
                 $em->flush();
+                $this->eventDispatcher->dispatch($postEvent, new GenericEvent(['entity'=>$entity]));
                 if($request->get('id')){
                     $response = new SuccessComponentResponse($this->trans('lego.form.success.edit'));
                 } else {
