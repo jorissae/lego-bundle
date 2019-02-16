@@ -15,7 +15,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType as ParentType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType as ParentType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 class RoleType extends AbstractType
@@ -36,6 +37,15 @@ class RoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new DistinctArrayTransformer());
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'allow_extra_fields' => true,
+            'by_reference' => false,
+            'allow_add' => true
+        ]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)

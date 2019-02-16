@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Idk\LegoBundle\Configurator\DefaultConfigurator;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
 class ConfiguratorBuilder
 {
@@ -38,7 +39,7 @@ class ConfiguratorBuilder
         TokenStorageInterface $security,
         AuthorizationCheckerInterface $authorizationChecker,
         \Twig_Environment $twig,
-        DataCollectorTranslator $translator,
+        TranslatorBagInterface $translator,
         Router $router,
         ComponentChain $componentChain
 ){
