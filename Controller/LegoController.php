@@ -46,10 +46,6 @@ abstract class LegoController extends Controller
         $this->addFlash('info',$msg);
     }
 
-    protected function addFlash($type,$msg){
-        $this->get('session')->getFlashBag()->add($type, $msg);
-    }
-
     protected function comunicateComponents(AbstractConfigurator $configurator,  $request, $entityId = null){
         $redirect = null;
         $componentResponses = $configurator->bindRequest($request);
