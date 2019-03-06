@@ -1,4 +1,13 @@
 <?php
+/**
+ *  This file is part of the Lego project.
+ *
+ *   (c) Joris Saenger <joris.saenger@gmail.com>
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Idk\LegoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -22,10 +31,11 @@ class GedmoTranslatableType extends AbstractType
     private $currentLocale;
 
 
-    public function __construct($defaultLocale, $localeCodes, GedmoTranslatableFieldManager $translatableFieldManager, TranslatorInterface $translator)
+    //the 2eme argument is best if $locales
+    public function __construct($defaultLocale, $locales, GedmoTranslatableFieldManager $translatableFieldManager, TranslatorInterface $translator)
     {
         $this->defaultLocale = $defaultLocale;
-        $this->locales = $localeCodes;
+        $this->locales = (\count($locales) <= 1)? ['fr','en','de']:$locales;
         $this->translatablefieldmanager = $translatableFieldManager;
         $this->currentLocale = $translator->getLocale();
     }
@@ -35,7 +45,6 @@ class GedmoTranslatableType extends AbstractType
         $fieldName = $builder->getName();
         $locales = $this->locales;
         $defaultLocale = $this->defaultLocale;
-        // set fields
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($fieldName, $locales, $options) {
             $form = $event->getForm();
             foreach ($locales as $locale) {
@@ -83,7 +92,7 @@ class GedmoTranslatableType extends AbstractType
     {
         $tabLabels = array();
         foreach ($this->locales as $locale) {
-            $tabLabels[$locale] = \Locale::getDisplayLanguage($locale, $this->currentLocale);
+            $tabLabels[$locale] = ucfirst(\Locale::getDisplayLanguage($locale, $this->currentLocale));
         }
         return $tabLabels;
     }
