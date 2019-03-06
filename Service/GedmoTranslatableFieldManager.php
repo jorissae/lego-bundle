@@ -19,7 +19,7 @@ use Gedmo\Translatable\TranslatableListener as TranslatableListener;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation as AbstractPersonalTranslation;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-//@Todo
+//@Todo follow Lego
 class GedmoTranslatableFieldManager
 {
     CONST GEDMO_TRANSLATION = 'Gedmo\\Translatable\\Entity\\Translation';
@@ -83,7 +83,7 @@ class GedmoTranslatableFieldManager
             ->useQueryCache(false)
             ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, self::GEDMO_TRANSLATION_WALKER)
             ->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, $defaultLocale)
-            ->getSingleResult();
+            ->getOneOrNullResult();
 
         return $entityInDefaultLocale;
     }
@@ -96,8 +96,10 @@ class GedmoTranslatableFieldManager
         // 2/3 translations
         $translations = $this->getTranslations($entity, $fieldName);
         // 3/3 translations + default
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-        $translations[$defaultLocale] = $propertyAccessor->getValue($entityInDefaultLocale, $fieldName);
+        if ($entityInDefaultLocale) {
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+            $translations[$defaultLocale] = $propertyAccessor->getValue($entityInDefaultLocale, $fieldName);
+        }
         return $translations;
     }
     private function getPersonalTranslationClassName($entity)
@@ -127,7 +129,9 @@ class GedmoTranslatableFieldManager
                         }
                     }
                     if($needAddTranslation && $value !== null) {
-                        $entity->addTranslation(new $translationClassName($locale, $fieldName, $value));
+                        $translationClassNameObject = new $translationClassName($locale, $fieldName, $value);
+                        $translationClassNameObject->setObject($entity);
+                        $entity->addTranslation($translationClassNameObject);
                     }
                 }
                 // 'ext_translations'
@@ -137,7 +141,5 @@ class GedmoTranslatableFieldManager
                 }
             }
         }
-        $this->em->persist($entity);
-        $this->em->flush();
     }
 }
