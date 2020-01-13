@@ -11,18 +11,17 @@
 namespace Idk\LegoBundle\Controller;
 
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The Lego log controller
  * @Route("/admin/log")
  */
-class LogController extends Controller
+class LogController extends AbstractController
 {
     
     /**
@@ -30,8 +29,7 @@ class LogController extends Controller
      *
      * @param string $_format
      *
-     * @Route("/", name="idklegobundle_log")
-     * @Method({"GET", "POST"})
+     * @Route("/", name="idklegobundle_log", methods={"GET", "POST"})
      * @Template()
      */
     public function indexAction(Request $request)
@@ -45,8 +43,7 @@ class LogController extends Controller
      *
      * @param string $_format
      *
-     * @Route("/revert/{class}/{id}/{version}", name="idklegobundle_log_revert")
-     * @Method({"GET", "POST"})
+     * @Route("/revert/{class}/{id}/{version}", name="idklegobundle_log_revert", methods={"GET", "POST"}))
      * @return array
      */
     public function revertAction($class,$id,$version){

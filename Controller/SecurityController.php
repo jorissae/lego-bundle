@@ -10,19 +10,17 @@
 
 namespace Idk\LegoBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
 
     /**
-     * @Method({"GET"})
-     * @Route("/login")
+     * @Route("/login", methods={"GET"}))
      * @Template()
      */
     public function loginAction(Request $request)
@@ -45,8 +43,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Method({"POST"})
-     * @Route("/login_check")
+     * @Route("/login_check", methods={"POST"}))
      */
     public function check()
     {
@@ -54,8 +51,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/logout")
+     * @Route("/logout", methods={"GET"}))
      */
     public function logout()
     {

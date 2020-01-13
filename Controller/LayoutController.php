@@ -14,14 +14,14 @@ namespace Idk\LegoBundle\Controller;
 use Idk\LegoBundle\Service\LegoFooterInterface;
 use Idk\LegoBundle\Service\LegoHeaderInterface;
 use Idk\LegoBundle\Service\LegoMenuInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * The layout controller
  * @Route("/admin/layout")
  */
-class LayoutController extends Controller
+class LayoutController extends AbstractController
 {
 
     public function menuAction(LegoMenuInterface $menu){

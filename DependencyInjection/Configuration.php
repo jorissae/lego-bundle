@@ -25,8 +25,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('idk_lego');
+        $treeBuilder = new TreeBuilder('idk_lego');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
                 ->scalarNode('skin')->defaultValue('skin-blue')->end()

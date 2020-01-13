@@ -26,7 +26,7 @@
             <span style="color:#fff; padding:3px;"><i class="fa fa-close"></i>{{
                 error.messagePluralization is null
                 ? error.messageTemplate|trans(error.messageParameters, 'validators')
-                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+                : error.messageTemplate|trans(error.messagePluralization, error.messageParameters, 'validators', {'%count%':2})
                 }}</span>
         {% endfor %}
         </div>

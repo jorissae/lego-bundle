@@ -13,7 +13,6 @@ namespace Idk\LegoBundle\Command;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\Service\GlobalsParametersProvider;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -23,7 +22,7 @@ use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-final class CreateUserLegoCommand extends ContainerAwareCommand
+final class CreateUserLegoCommand extends Command
 {
 
     private $parametersProvider;
