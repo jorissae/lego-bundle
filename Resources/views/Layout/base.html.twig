@@ -87,8 +87,8 @@
 <body class="hold-transition {{ lego_view.skin }} sidebar-mini">
     <div class="wrapper">
 
-        {{ render(controller('IdkLegoBundle:Layout:header')) }}
-        {{ render(controller('IdkLegoBundle:Layout:menu')) }}
+        {{ render(controller('Idk\\LegoBundle\\Controller\\LayoutController::header')) }}
+        {{ render(controller('Idk\\LegoBundle\\Controller\\LayoutController::menu')) }}
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
@@ -111,7 +111,7 @@
             </section>
             <!-- /.content -->
         </div>
-        {{ render(controller('IdkLegoBundle:Layout:footer')) }}
+        {{ render(controller('Idk\\LegoBundle\\Controller\\LayoutController::footer')) }}
         {% include '@IdkLego/Layout/_menu_right.html.twig' %}
 
     </div>

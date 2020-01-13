@@ -24,15 +24,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class LayoutController extends AbstractController
 {
 
-    public function menuAction(LegoMenuInterface $menu){
+    public function menu(LegoMenuInterface $menu){
         return $this->render($menu->getTemplate(), ['menu' => $menu]);
     }
 
-    public function headerAction(LegoHeaderInterface $header){
+    public function header(LegoHeaderInterface $header){
         return $this->render($header->getTemplate(), ['header' => $header]);
     }
 
-    public function footerAction(LegoFooterInterface $footer){
+    public function footer(LegoFooterInterface $footer){
         return $this->render($footer->getTemplate(), ['footer' => $footer]);
     }
 }

@@ -39,6 +39,9 @@ services:
         arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
+    Idk\LegoBundle\Controller\LayoutController:
+        tags: [controller.service_arguments]
+
     lego.action.component:
         class: '%lego.action.component.class%'
         arguments: ["@lego.service.configurator.builder"]
