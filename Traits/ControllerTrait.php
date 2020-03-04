@@ -34,14 +34,15 @@ use Idk\LegoBundle\Service\MetaEntityManager;
 
 trait ControllerTrait
 {
-    
 
 
-    protected function getConfigurator(){
+    protected function getConfigurator()
+    {
         return $this->container->get('lego.service.configurator.builder')->getConfigurator(self::LEGO_CONFIGURATOR);
     }
 
-    protected function getResponse(string $action, Request $request): Response{
+    protected function getResponse(string $action, Request $request): Response
+    {
         return $this->get(ActionChain::class)->getResponse($action, $this->getConfigurator(), $request);
     }
 
@@ -49,10 +50,9 @@ trait ControllerTrait
     /**
      * The index action
      *
-     * @Route("/")
-     * @Method({"GET", "POST"})
+     * @Route("/", methods={"GET", "POST"})
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         return $this->getResponse(IndexAction::class, $request);
     }
@@ -62,11 +62,11 @@ trait ControllerTrait
      *
      * @param int $id
      *
-     * @Route("/{id}/show", requirements={"id" = "\d+", methods={"GET"}})
+     * @Route("/{id}/show", requirements={"id" = "\d+"}, methods={"GET"})
      *
-     * @return array
+     * @return Response
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request): Response
     {
         return $this->getResponse(ShowAction::class, $request);
     }
@@ -75,9 +75,9 @@ trait ControllerTrait
      * The add action
      *
      * @Route("/add", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request): Response
     {
         return $this->getResponse(AddAction::class, $request);
     }
@@ -89,9 +89,9 @@ trait ControllerTrait
      *
      * @Route("/{id}", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      *
-     * @return array
+     * @return Response
      */
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, $id): Response
     {
         return $this->getResponse(EditAction::class, $request);
     }
@@ -103,9 +103,9 @@ trait ControllerTrait
      *
      * @Route("/{id}/delete", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      *
-     * @return array
+     * @return Response
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request): Response
     {
         return $this->getResponse(DeleteAction::class, $request);
     }
@@ -116,9 +116,9 @@ trait ControllerTrait
      * @param string $_format
      *
      * @Route("/{cid}/{suffix_route}/export.{format}", defaults={"cid"=0}, requirements={"format" = "csv|xlsx"}, methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function exportAction(Request $request)
+    public function exportAction(Request $request): Response
     {
         return $this->getResponse(ExportAction::class, $request);
     }
@@ -128,9 +128,9 @@ trait ControllerTrait
      * The edit in place action
      *
      * @Route("/eip", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function editInPlaceAction(Request $request)
+    public function editInPlaceAction(Request $request): Response
     {
         return $this->getResponse(EditInPlaceAction::class, $request);
     }
@@ -139,9 +139,9 @@ trait ControllerTrait
      * The edit in place action
      *
      * @Route("/entity/reload/{id}/{cid}/{suffix_route}", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function entityReloadAction(Request $request)
+    public function entityReloadAction(Request $request): Response
     {
         return $this->getResponse(EntityReloadAction::class, $request);
     }
@@ -150,9 +150,9 @@ trait ControllerTrait
      * The edit in place action
      *
      * @Route("/eip/choice/{cid}/{suffix_route}", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function editInPlaceEntityChoiceAction(Request $request)
+    public function editInPlaceEntityChoiceAction(Request $request): Response
     {
         return $this->getResponse(EditInPlaceEntityChoiceAction::class, $request);
     }
@@ -161,9 +161,9 @@ trait ControllerTrait
      * sort components
      *
      * @Route("/sc/{suffix_route}", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function sortComponentsAction(Request $request)
+    public function sortComponentsAction(Request $request): Response
     {
         return $this->getResponse(SortComponentsAction::class, $request);
     }
@@ -172,9 +172,9 @@ trait ControllerTrait
      * sort components reset
      *
      * @Route("/screset/{suffix_route}", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function sortComponentsResetAction(Request $request)
+    public function sortComponentsResetAction(Request $request): Response
     {
         return $this->getResponse(SortComponentsResetAction::class, $request);
     }
@@ -183,9 +183,9 @@ trait ControllerTrait
      * The auto completion action
      *
      * @Route("/ac", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function autoCompletionAction(Request $request)
+    public function autoCompletionAction(Request $request): Response
     {
         return $this->getResponse(AutoCompletionAction::class, $request);
     }
@@ -194,9 +194,9 @@ trait ControllerTrait
      * The auto completion action
      *
      * @Route("/component/{cid}/{suffix_route}", methods={"GET", "POST"})
-     * @return array
+     * @return Response
      */
-    public function componentAction(Request $request)
+    public function componentAction(Request $request): Response
     {
         return $this->getResponse(ComponentAction::class, $request);
     }
@@ -205,9 +205,9 @@ trait ControllerTrait
      * The auto completion action
      *
      * @Route("/bulk/{cid}/{ida}", methods={"POST"})
-     * @return array
+     * @return Response
      */
-    public function bulkAction(Request $request)
+    public function bulkAction(Request $request): Response
     {
         return $this->getResponse(BulkAction::class, $request);
     }
@@ -216,8 +216,9 @@ trait ControllerTrait
      * The index action
      *
      * @Route("/{suffix_route}", methods={"GET", "POST"})
+     * @return Response
      */
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         return $this->getResponse(DefaultAction::class, $request);
     }
