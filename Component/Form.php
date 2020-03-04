@@ -82,7 +82,7 @@ class Form extends Component{
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
             if ($this->form->isValid()) {
                 $em = $this->getConfigurator()->getEntityManager();
-                $this->eventDispatcher->dispatch(new GenericEvent(['entity'=>$entity]), $prevent);
+                $this->eventDispatcher->dispatch(new GenericEvent(['entity'=>$entity]), $preEvent);
                 $em->persist($entity);
                 $em->flush();
                 $this->eventDispatcher->dispatch(new GenericEvent(['entity'=>$entity]), $postEvent);

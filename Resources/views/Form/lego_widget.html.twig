@@ -636,8 +636,10 @@ $(function(){
             });
             {%  endif %}
             {% if allow_delete %}
-            collection.find('tr.lego_collection_type').each(function() {
-                addFormDeleteLink{{ id }}($(this));
+            collection.find('tr.lego_collection_type').each(function () {
+                if($(this).find('.fa-trash').length === 0){
+                        addFormDeleteLink{{ id }}($(this));
+                }
             });
             {%  endif %}
 
