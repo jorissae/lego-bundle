@@ -28,7 +28,6 @@ use Idk\LegoBundle\Action\DeleteAction;
 use Idk\LegoBundle\Action\EditAction;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Idk\LegoBundle\Service\MetaEntityManager;
@@ -63,8 +62,7 @@ trait ControllerTrait
      *
      * @param int $id
      *
-     * @Route("/{id}/show", requirements={"id" = "\d+"})
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/show", requirements={"id" = "\d+", methods={"GET"}})
      *
      * @return array
      */
@@ -76,8 +74,7 @@ trait ControllerTrait
     /**
      * The add action
      *
-     * @Route("/add")
-     * @Method({"GET", "POST"})
+     * @Route("/add", methods={"GET", "POST"})
      * @return array
      */
     public function addAction(Request $request)
@@ -90,8 +87,7 @@ trait ControllerTrait
      *
      * @param int $id
      *
-     * @Route("/{id}", requirements={"id" = "\d+"})
-     * @Method({"GET", "POST"})
+     * @Route("/{id}", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      *
      * @return array
      */
@@ -105,8 +101,7 @@ trait ControllerTrait
      *
      * @param int $id
      *
-     * @Route("/{id}/delete", requirements={"id" = "\d+"})
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/delete", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      *
      * @return array
      */
@@ -120,8 +115,7 @@ trait ControllerTrait
      *
      * @param string $_format
      *
-     * @Route("/{cid}/{suffix_route}/export.{format}", defaults={"cid"=0}, requirements={"format" = "csv|xlsx"})
-     * @Method({"GET", "POST"})
+     * @Route("/{cid}/{suffix_route}/export.{format}", defaults={"cid"=0}, requirements={"format" = "csv|xlsx"}, methods={"GET", "POST"})
      * @return array
      */
     public function exportAction(Request $request)
@@ -133,8 +127,7 @@ trait ControllerTrait
     /**
      * The edit in place action
      *
-     * @Route("/eip")
-     * @Method({"GET", "POST"})
+     * @Route("/eip", methods={"GET", "POST"})
      * @return array
      */
     public function editInPlaceAction(Request $request)
@@ -145,8 +138,7 @@ trait ControllerTrait
     /**
      * The edit in place action
      *
-     * @Route("/entity/reload/{id}/{cid}/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/entity/reload/{id}/{cid}/{suffix_route}", methods={"GET", "POST"})
      * @return array
      */
     public function entityReloadAction(Request $request)
@@ -157,8 +149,7 @@ trait ControllerTrait
     /**
      * The edit in place action
      *
-     * @Route("/eip/choice/{cid}/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/eip/choice/{cid}/{suffix_route}", methods={"GET", "POST"})
      * @return array
      */
     public function editInPlaceEntityChoiceAction(Request $request)
@@ -169,8 +160,7 @@ trait ControllerTrait
     /**
      * sort components
      *
-     * @Route("/sc/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/sc/{suffix_route}", methods={"GET", "POST"})
      * @return array
      */
     public function sortComponentsAction(Request $request)
@@ -181,8 +171,7 @@ trait ControllerTrait
     /**
      * sort components reset
      *
-     * @Route("/screset/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/screset/{suffix_route}", methods={"GET", "POST"})
      * @return array
      */
     public function sortComponentsResetAction(Request $request)
@@ -193,8 +182,7 @@ trait ControllerTrait
     /**
      * The auto completion action
      *
-     * @Route("/ac")
-     * @Method({"GET", "POST"})
+     * @Route("/ac", methods={"GET", "POST"})
      * @return array
      */
     public function autoCompletionAction(Request $request)
@@ -205,8 +193,7 @@ trait ControllerTrait
     /**
      * The auto completion action
      *
-     * @Route("/component/{cid}/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/component/{cid}/{suffix_route}", methods={"GET", "POST"})
      * @return array
      */
     public function componentAction(Request $request)
@@ -217,8 +204,7 @@ trait ControllerTrait
     /**
      * The auto completion action
      *
-     * @Route("/bulk/{cid}/{ida}")
-     * @Method({"POST"})
+     * @Route("/bulk/{cid}/{ida}", methods={"POST"})
      * @return array
      */
     public function bulkAction(Request $request)
@@ -229,8 +215,7 @@ trait ControllerTrait
     /**
      * The index action
      *
-     * @Route("/{suffix_route}")
-     * @Method({"GET", "POST"})
+     * @Route("/{suffix_route}", methods={"GET", "POST"})
      */
     public function defaultAction(Request $request)
     {
