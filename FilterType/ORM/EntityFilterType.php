@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\FilterType\ORM;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class EntityFilterType extends AbstractORMFilterType
@@ -19,6 +20,13 @@ class EntityFilterType extends AbstractORMFilterType
     protected $method;
     protected $multiple;
     protected $args;
+    protected $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @param Request $request  The request
      * @param array   &$data    The data
@@ -35,10 +43,10 @@ class EntityFilterType extends AbstractORMFilterType
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName, $config, $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
 
-        parent::__construct($columnName, $config, $alias);
+        parent::load($columnName, $config, $alias);
         $this->table = $config['table'];
         $this->method = (isset($config['method']))? $config['method']:'findAll';
         $this->args = (isset($config['arguments']))? $config['arguments']:null;
@@ -76,7 +84,7 @@ class EntityFilterType extends AbstractORMFilterType
         }else{
             $m = $this->method;
             $args = $this->args;
-            $repo = $this->getRepository($this->table);
+            $repo = $this->em->getRepository($this->table);
             if($args){
                 $classRfx = new \ReflectionClass(get_class($repo));
                 $methodRfx = $classRfx->getMethod($m);
@@ -85,6 +93,7 @@ class EntityFilterType extends AbstractORMFilterType
                 $elements = $repo->$m();
             }
         }
+        dump($elements);
         return $elements;
     }
 

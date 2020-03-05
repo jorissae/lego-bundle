@@ -93,9 +93,9 @@ class StringFilterType extends AbstractORMFilterType
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName, $config = array(), $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
-        parent::__construct($columnName, $config, $alias);
+        parent::load($columnName, $config, $alias);
         $this->defaultValue = (isset($config['defaultValue']))? $config['defaultValue']:"";
         $this->defaultComparator = (isset($config['defaultComparator']))? $config['defaultComparator']:"startswith";
     }

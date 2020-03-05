@@ -1,0 +1,24 @@
+services:
+
+    _defaults:
+        autowire: true
+        public: false
+
+    _instanceof:
+        Idk\LegoBundle\FilterType\FilterTypeInterface:
+            tags: [lego.filter]
+
+    Idk\LegoBundle\FilterType\:
+        resource: '../../FilterType/*'
+        exclude: '../../FilterType/ORM/{HiddenEntity.php}'
+        tags: [lego.filter]
+        shared: false
+
+    Idk\LegoBundle\FilterType\ORM\EntityFilterType:
+        tags: [lego.filter]
+        arguments: ["@doctrine.orm.entity_manager"]
+        shared: false
+
+    lego.filter.chain:
+        class: Idk\LegoBundle\Service\Tag\FilterChain
+        arguments: [!tagged lego.filter]

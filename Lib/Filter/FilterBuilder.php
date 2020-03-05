@@ -11,6 +11,7 @@
 namespace Idk\LegoBundle\Lib\Filter;
 
 use Idk\LegoBundle\FilterType\AbstractFilterType;
+use Idk\LegoBundle\FilterType\FilterTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -54,7 +55,7 @@ class FilterBuilder
      *
      * @return FilterBuilder
      */
-    public function add(AbstractFilterType $filter)
+    public function add(FilterTypeInterface $filter)
     {
         $this->filters[$filter->getName()] = $filter;
         return $this;

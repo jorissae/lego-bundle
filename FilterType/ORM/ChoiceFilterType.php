@@ -36,9 +36,9 @@ class ChoiceFilterType extends AbstractORMFilterType
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName, $config, $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
-        parent::__construct($columnName,$alias);
+        parent::load($columnName, $config, $alias);
         $this->choices = $config['choices'];
         $this->multiple = (isset($config['multiple']))? $config['multiple']:true;
     }

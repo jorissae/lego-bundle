@@ -22,10 +22,10 @@ class TreeFilterType extends EntityFilterType
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName,$config,$alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
         if(!isset($config['method'])) $config['method'] = 'getChildren';
-        parent::__construct($columnName,$config,$alias);
+        parent::load($columnName,$config,$alias);
         if(!isset($config['start_level'])) $config['start_level'] = 1;
         $this->startLevel = $config['start_level'];
     }
@@ -59,7 +59,7 @@ class TreeFilterType extends EntityFilterType
         }
     }
 
-    public function getEntities(){
+    public function getEntities($data){
         $em = $this->em; 
         $m = $this->method;
         $elements = $em->getRepository($this->table)->$m();

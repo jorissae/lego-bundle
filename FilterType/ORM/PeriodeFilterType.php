@@ -35,9 +35,9 @@ class PeriodeFilterType extends AbstractORMFilterType
         return ($data['value'] != '');
     }
 
-    public function __construct($columnName, $config = array(), $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
-        parent::__construct($columnName, $config, $alias);
+        parent::load($columnName, $config, $alias);
         $this->choices = (isset($config['choices']))? $config['choices']:null;
         $this->format = (isset($config['format']))? $config['format']:'d/m/Y';
     }

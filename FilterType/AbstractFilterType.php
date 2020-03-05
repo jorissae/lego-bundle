@@ -38,7 +38,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName, $config = array(), $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
         $this->config = $config;
         $this->columnName = $columnName;
@@ -46,6 +46,8 @@ abstract class AbstractFilterType implements FilterTypeInterface
         $this->alias      = $alias;
         $this->hidden = (isset($confi['hidden']))? $config['hidden']:false;
     }
+
+
 
     public function getName(){
         return $this->columnName;

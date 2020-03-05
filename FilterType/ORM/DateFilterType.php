@@ -20,9 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
 class DateFilterType extends AbstractORMFilterType
 {
 
-    public function __construct($columnName, $config = [], $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
-        parent::__construct($columnName, $config, $alias);
+        parent::load($columnName, $config, $alias);
         $this->yearRange = (isset($config['yearRange']))? $config['yearRange']:null;
     }
 

@@ -12,6 +12,7 @@ namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Annotation\Entity\Entity;
 use Idk\LegoBundle\Service\Tag\ComponentChain;
+use Idk\LegoBundle\Service\Tag\FilterChain;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

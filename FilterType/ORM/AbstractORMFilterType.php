@@ -10,6 +10,7 @@
 
 namespace Idk\LegoBundle\FilterType\ORM;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Idk\LegoBundle\FilterType\AbstractFilterType;
 
 use Doctrine\ORM\QueryBuilder;
@@ -26,23 +27,12 @@ abstract class AbstractORMFilterType extends AbstractFilterType
      */
     protected $queryBuilder;
 
-    protected $em = null;
-
-
     /**
      * @param QueryBuilder $queryBuilder
      */
     public function setQueryBuilder(QueryBuilder $queryBuilder)
     {
         $this->queryBuilder = $queryBuilder;
-    }
-
-    public function setEm(EntityManager $em){
-        $this->em = $em;
-    }
-
-    public function getRepository($name){
-        return $this->em->getRepository($name);
     }
 
     public function getColumnName(){

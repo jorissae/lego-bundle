@@ -60,8 +60,13 @@ abstract class AbstractFilter
         return (isset($this->options[$key]))? $this->options[$key]:$default;
     }
 
+    public function getOptions(){
+        return $this->options;
+    }
+
     public function newInstanceOfType(){
         $reflectionClass = new \ReflectionClass($this->getClassNameType());
+        dd($reflectionClass);
         return $reflectionClass->newInstance($this->name, $this->options);
     }
 

@@ -14,6 +14,7 @@ use Idk\LegoBundle\Lib\Filter\FilterBuilder;
 use Idk\LegoBundle\FilterType\ORM\AbstractORMFilterType;
 use Idk\LegoBundle\Service\MetaEntityManager;
 use Idk\LegoBundle\Service\MetaEntityManagerInterface;
+use Idk\LegoBundle\Service\Tag\FilterChain;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Lib\Filter\Filter as Fi;
@@ -25,15 +26,18 @@ class Filter extends Component{
     private $mem;
     private $components = [];
     private $urlParams = [];
+    private $filterChain;
 
-    public function __construct(MetaEntityManager $mem){
+    public function __construct(MetaEntityManager $mem, FilterChain $filterChain){
         $this->mem = $mem;
+        $this->filterChain = $filterChain;
     }
 
     protected function init(){
         foreach($this->mem->generateFilters($this->getConfigurator()->getEntityName(), $this->getOption('fields')) as $filter){
             /* @var \Idk\LegoBundle\Annotation\Entity\Filter\AbstractFilter $filter */
-            $this->getFilterBuilder()->add($filter->newInstanceOfType());
+            $filterType = $this->filterChain->get($filter->getClassNameType(), $filter->getName(), $filter->getOptions());
+            $this->getFilterBuilder()->add($filterType);
         }
         return $this;
     }

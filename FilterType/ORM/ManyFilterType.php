@@ -24,9 +24,9 @@ class ManyFilterType extends EntityFilterType
      * @param string $columnName The column name
      * @param string $alias      The alias
      */
-    public function __construct($columnName, $config, $alias = 'b')
+    public function load($columnName, $config = array(), $alias = 'b')
     {
-        parent::__construct($columnName, $config, $alias);
+        parent::load($columnName, $config, $alias);
         $this->join = $config['join'];
         $this->multiple = (isset($config['multiple']))? $config['multiple']:false;
     }
@@ -45,7 +45,7 @@ class ManyFilterType extends EntityFilterType
         }
     }
 
-    public function getEntities(){
+    public function getEntities($data){
         $em = $this->em; 
         $m = $this->method;
         $elements = $em->getRepository($this->table)->$m();
