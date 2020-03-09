@@ -31,6 +31,11 @@ services:
         arguments: ['@lego.service.meta_entity_manager', '@form.factory']
         tags: [lego.component]
 
+    Idk\LegoBundle\Component\History:
+        shared: false
+        arguments: ['@lego.service.meta_entity_manager']
+        tags: [lego.component]
+
     Idk\LegoBundle\Component\ListItems:
         shared: false
         arguments: ['@lego.service.meta_entity_manager']

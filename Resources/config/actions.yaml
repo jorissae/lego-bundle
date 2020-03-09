@@ -18,6 +18,7 @@ parameters:
     lego.action.widget_get.class: Idk\LegoBundle\Action\WidgetGetAction
     lego.action.dashboard.class: Idk\LegoBundle\Action\DashboardAction
     lego.action.entityreload.class: Idk\LegoBundle\Action\EntityReloadAction
+    lego.action.rightbar.class: Idk\LegoBundle\Action\RightbarAction
 
 
 services:
@@ -115,6 +116,11 @@ services:
     lego.action.widget_add:
         class: '%lego.action.widget_add.class%'
         arguments: ["@lego.widget.chain", "@twig"]
+        tags: [controller.service_arguments]
+
+    lego.action.rightbar:
+        class: '%lego.action.rightbar.class%'
+        arguments: [ "@lego.right_bar.chain","@twig"]
         tags: [controller.service_arguments]
 
     lego.action.widget_save:

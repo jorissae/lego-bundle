@@ -112,7 +112,7 @@
             <!-- /.content -->
         </div>
         {{ render(controller('Idk\\LegoBundle\\Controller\\LayoutController::footer')) }}
-        {% include '@IdkLego/Layout/_menu_right.html.twig' %}
+        {{ render(controller('Idk\\LegoBundle\\Controller\\LayoutController::right')) }}
 
     </div>
 

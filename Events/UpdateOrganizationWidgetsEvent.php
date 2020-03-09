@@ -11,7 +11,7 @@
 namespace Idk\LegoBundle\Events;
 
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class UpdateOrganizationWidgetsEvent extends Event
 {

@@ -14,6 +14,9 @@ services:
         arguments: ["@lego.service.meta_entity_manager"]
         tags: [lego.widget]
 
+    Idk\LegoBundle\Service\RightBar\HistoryRightBar:
+        tags: [lego.right_bar]
+
     #Idk\LegoBundle\Widget\ListWidget:
     #    arguments: ["bibi"]
     #    tags: [lego.widget]

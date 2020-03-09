@@ -38,8 +38,7 @@ final class WidgetSaveAction
     {
         $this->widgetChain->saveInSession($request->request->get('sort'));
         $this->eventDispatcher->dispatch(
-            LegoEvents::onMoveWidgets,
-            new UpdateOrganizationWidgetsEvent($request->request->get('sort')));
+            new UpdateOrganizationWidgetsEvent($request->request->get('sort')), LegoEvents::onMoveWidgets);
         return new JsonResponse(['status'=>'ok']);
     }
 

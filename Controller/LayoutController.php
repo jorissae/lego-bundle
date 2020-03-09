@@ -14,6 +14,8 @@ namespace Idk\LegoBundle\Controller;
 use Idk\LegoBundle\Service\LegoFooterInterface;
 use Idk\LegoBundle\Service\LegoHeaderInterface;
 use Idk\LegoBundle\Service\LegoMenuInterface;
+use Idk\LegoBundle\Service\LegoRightInterface;
+use Idk\LegoBundle\Service\Tag\RightBarChain;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -35,4 +37,10 @@ class LayoutController extends AbstractController
     public function footer(LegoFooterInterface $footer){
         return $this->render($footer->getTemplate(), ['footer' => $footer]);
     }
+
+    public function right(LegoRightInterface $right){
+        return $this->render($right->getTemplate(), ['right' => $right]);
+    }
+
+    
 }

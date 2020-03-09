@@ -29,9 +29,15 @@ services:
     Idk\LegoBundle\Service\Footer:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
     Idk\LegoBundle\Service\LegoFooterInterface: '@Idk\LegoBundle\Service\Footer'
+    Idk\LegoBundle\Service\Right:
+    Idk\LegoBundle\Service\LegoRightInterface: '@Idk\LegoBundle\Service\Right'
     lego.widget.chain:
         class: Idk\LegoBundle\Service\Tag\WidgetChain
         arguments: [!tagged lego.widget, '@session']
+
+    lego.right_bar.chain:
+        class: Idk\LegoBundle\Service\Tag\RightBarChain
+        arguments: [!tagged lego.right_bar]
 
     lego.injector.chain:
         class: Idk\LegoBundle\Service\Tag\InjectorChain

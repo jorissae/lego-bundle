@@ -11,7 +11,7 @@
 namespace Idk\LegoBundle\Widget;
 
 
-abstract class Widget
+abstract class Widget implements WidgetInterface
 {
 
     public function getClassCss()

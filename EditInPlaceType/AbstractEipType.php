@@ -13,7 +13,7 @@ namespace Idk\LegoBundle\EditInPlaceType;
 use Idk\LegoBundle\Action\EditInPlaceAction;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractEipType{
+abstract class AbstractEipType implements EipTypeInterface {
 
 
     public function __construct(){
