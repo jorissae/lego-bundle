@@ -20,5 +20,7 @@ final class LegoEvents
     const postPersistAddEntity = 'idk.lego.post_persist_add_entity';
     const prePersistEditEntity = 'idk.lego.pre_persist_edit_entity';
     const postPersistEditEntity = 'idk.lego.post_persist_edit_entity';
+    const preDeleteEntity = 'idk.lego.pre_delete_entity';
+    const postDeleteEntity = 'idk.lego.post_delete_entity';
 
 }

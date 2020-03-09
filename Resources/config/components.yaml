@@ -23,7 +23,7 @@ services:
 
     Idk\LegoBundle\Component\Form:
         shared: false
-        arguments: ['@lego.service.meta_entity_manager','@form.factory']
+        arguments: ['@lego.service.meta_entity_manager','@form.factory', '@event_dispatcher']
         tags: [lego.component]
 
     Idk\LegoBundle\Component\Item:

@@ -54,7 +54,7 @@ services:
 
     lego.action.delete:
         class: '%lego.action.delete.class%'
-        arguments: ["@lego.service.configurator.builder"]
+        arguments: ["@lego.service.configurator.builder", "@event_dispatcher"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.edit:

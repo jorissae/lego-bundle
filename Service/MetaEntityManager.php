@@ -129,7 +129,9 @@ class MetaEntityManager implements MetaEntityManagerInterface
         if($entityForm) {
             foreach ($entityForm->getFields() as $fieldName) {
                 $field = new Annotation\Form\FieldForm();
-                $field->setField($fields[$fieldName]);
+                if(isset($fields[$fieldName])) {
+                    $field->setField($fields[$fieldName]);
+                }
                 $return[$fieldName] = $field;
             }
         }else{

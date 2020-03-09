@@ -82,10 +82,10 @@ class Form extends Component{
         if ('POST' == $request->getMethod() and $this->form->isSubmitted()) {
             if ($this->form->isValid()) {
                 $em = $this->getConfigurator()->getEntityManager();
-                $this->eventDispatcher->dispatch(new GenericEvent(['entity'=>$entity]), $preEvent);
+                $this->eventDispatcher->dispatch(new GenericEvent($entity), $preEvent);
                 $em->persist($entity);
                 $em->flush();
-                $this->eventDispatcher->dispatch(new GenericEvent(['entity'=>$entity]), $postEvent);
+                $this->eventDispatcher->dispatch(new GenericEvent($entity), $postEvent);
                 if($request->get('id')){
                     $response = new SuccessComponentResponse($this->trans('lego.form.success.edit'));
                 } else {
