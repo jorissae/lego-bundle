@@ -1,7 +1,7 @@
 {%  include '@IdkLego/Default/_flash.html.twig' %}
 
 <div  data-widget-sort-save="{{ configurator.getUrl('sortcomponents', {'suffix_route': configurator.currentComponentSuffixRoute}) }}" class="jsa-widget-container">
-    {% for component in components %}
+    {% for component in components if component.displayIn() %}
         <div data-widget-id="{{ component.id }}" id="{{ component.id }}" class="{% if component.movable %}jsa-widget{% endif %}  {{ component.class }}">
             {% include component.template with component.templateAllParameters %}
         </div>

@@ -34,6 +34,8 @@ abstract class Component implements BrickInterface {
 
     protected $listCanCatchQuery = [];
 
+    protected $displayIn = null;
+
     public function __construct(){
     }
 
@@ -66,7 +68,7 @@ abstract class Component implements BrickInterface {
         return $this;
     }
 
-    public function addCanCatchQuery(self $component){
+    public function addCanCatchQuery(BrickInterface $component){
        $this->listCanCatchQuery[] = $component->getId();
     }
 
@@ -144,7 +146,7 @@ abstract class Component implements BrickInterface {
         return array_merge($this->getTemplateParameters(), ['component'=>$this, 'configurator'=> $this->getConfigurator()]);
     }
 
-    public function canCatchQuery(self $component){
+    public function canCatchQuery(BrickInterface $component){
         return in_array($component->getId(), $this->listCanCatchQuery);
     }
 
@@ -199,6 +201,15 @@ abstract class Component implements BrickInterface {
 
     public function initWithComponents(iterable $components):void{
         return;
+    }
+
+
+    public function isDisplayIn($cid = null){
+        return $cid === $this->displayIn;
+    }
+
+    public function setDisplayIn($cid){
+        $this->displayIn = $cid;
     }
 
 

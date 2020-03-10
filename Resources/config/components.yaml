@@ -36,6 +36,10 @@ services:
         arguments: ['@lego.service.meta_entity_manager']
         tags: [lego.component]
 
+    Idk\LegoBundle\Component\Tab:
+        shared: false
+        tags: [lego.component]
+
     Idk\LegoBundle\Component\ListItems:
         shared: false
         arguments: ['@lego.service.meta_entity_manager']

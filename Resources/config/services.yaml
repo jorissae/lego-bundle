@@ -57,7 +57,7 @@ services:
     lego.service.configurator.builder:
         class: Idk\LegoBundle\Service\ConfiguratorBuilder
         arguments: ["@session","@lego.service.meta_entity_manager","@security.token_storage", "@security.authorization_checker","@twig", "@translator", "@router", "@lego.service.components"]
-        public: true
+        public: false
     Idk\LegoBundle\Service\ConfiguratorBuilder: '@lego.service.configurator.builder'
 
 

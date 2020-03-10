@@ -8,8 +8,16 @@
                 <i class="fa fa-user"></i>
                 <div class="timeline-item">
                     <div>
-                        <b>{{ log.username }}</b>
-                        {{ ("history.action."~log.action) | trans }}<br/>
+                        <b>{{ log.username|capitalize }}</b><br/>
+                        {%  if log.action  == 'update' %}
+                            <i title="{{ ("history.action."~log.action) | trans }}"  class="fa fa-edit"></i>
+                        {%  elseif log.action == 'create' %}
+                            <i title="{{ ("history.action."~log.action) | trans }}" class="fa fa-plus"></i>
+                        {%  elseif log.action == 'remove' %}
+                            <i title="{{ ("history.action."~log.action) | trans }}" class="fa fa-remove"></i>
+                        {%  else %}
+                            {{ ("history.action."~log.action) | trans }}
+                        {%  endif %}
                         {{ ("history.object."~entry.name) | trans }}<br/>
                         <span class="time"><i class="fa fa-clock-o"></i> {{ log.loggedAt|date('d/m H:i') }}</span>
                     </div>

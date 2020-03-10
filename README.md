@@ -110,18 +110,18 @@ TODO
 - order item in itemList (XHR)
 CURRENT v alpha 0.1.2
 
-- Log history [ ] other bundle
-- Media [ ] other bundle
+- Log history [X] other bundle
+- Media [X] other bundle
 - Mail [ ] other bundle
 - Import [ ] other bundle
 - Pagination [X]
 - Field-route [X]
-- Onglet component [ ]
+- Onglet component [X]
 - Default LayoutBase [X]
 - Custom Bulk Action [X]
 - Ressource Action [X]
 - Menu auto [X]
-- Right Bar [ ]
+- Right Bar [X]
 - Sub-Filter and Xhr filter [X]
 - Upload File [X]
 - EntityAction and ListAction auto [X]

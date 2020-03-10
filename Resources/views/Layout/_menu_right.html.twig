@@ -9,8 +9,8 @@
     <div class="tab-content">
         <!-- Home tab content -->
         {%  for k, item in right.items %}
-        <div class="tab-pane" id="control-sidebar-{{ k }}-tab">
-            <h3 class="control-sidebar-heading">{{ item.title }}</h3>
+        <div class="tab-pane {% if(loop.first) %}active{%  endif %}" id="control-sidebar-{{ k }}-tab">
+            <h3 class="control-sidebar-heading">{{ item.title|trans }}</h3>
             {%  if item.rightbar %}
                 {{ render(controller('lego.action.rightbar', {'rightbar': item.rightbar})) }}
             {%  endif %}

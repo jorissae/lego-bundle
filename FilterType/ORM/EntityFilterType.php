@@ -93,7 +93,6 @@ class EntityFilterType extends AbstractORMFilterType
                 $elements = $repo->$m();
             }
         }
-        dump($elements);
         return $elements;
     }
 
