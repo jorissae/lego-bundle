@@ -13,6 +13,8 @@ namespace Idk\LegoBundle\Service;
 
 use Idk\LegoBundle\Lib\LayoutItem\LabelItem;
 use Idk\LegoBundle\Lib\LayoutItem\MenuItem;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,10 +25,12 @@ class Menu implements LegoMenuInterface
 
     private $mem;
     private $configuratorBuilder;
+    protected $request;
 
-    public function __construct(ConfiguratorBuilder $configuratorBuilder) {
+    public function __construct(ConfiguratorBuilder $configuratorBuilder, RequestStack $request) {
         $this->mem = $configuratorBuilder->getMetaEntityManager();
         $this->configuratorBuilder = $configuratorBuilder;
+        $this->request = $request;
     }
 
     public function search(){
@@ -35,6 +39,23 @@ class Menu implements LegoMenuInterface
 
     public function getTemplate(){
         return '@IdkLego/Layout/_menu.html.twig';
+    }
+
+    public function isActif(MenuItem $item){
+
+        if($item->getChildren()){
+            foreach($item->getChildren() as $child){
+                if($this->isActif($child)){
+                    return true;
+                }
+            }
+        }
+        if($item->getPath()) {
+            $r2 = $this->request->getMasterRequest()->get('_route');
+            $r1 = $item->getPath()->getRoute();
+            return (substr($r1, 0, strrpos($r1, '_'))) === (substr($r2, 0, strrpos($r2, '_')));
+        }
+        return false;
     }
 
     public function getItems(){

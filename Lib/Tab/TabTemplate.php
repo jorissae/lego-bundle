@@ -39,6 +39,6 @@ class TabTemplate extends AbstractTab
     }
 
     public function getId(){
-        return md5($this->libelle.$this->template);
+        return 'tab-'.md5($this->libelle.$this->template);
     }
 }

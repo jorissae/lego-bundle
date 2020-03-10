@@ -553,22 +553,22 @@ abstract class AbstractConfigurator
         return $this;
     }
 
-    public function addIndexComponent($className, array $options, $entityClassName = null, $nameConfigurator = null): Component
+    public function addIndexComponent($className, array $options = [], $entityClassName = null, $nameConfigurator = null): Component
     {
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_INDEX, $entityClassName, $nameConfigurator);
     }
 
-    public function addAddComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
+    public function addAddComponent($className, array $options = [], $entityClassName = null, $nameConfigurator = null)
     {
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_ADD, $entityClassName, $nameConfigurator);
     }
 
-    public function addEditComponent($className, array $options,  $entityClassName = null, $nameConfigurator = null)
+    public function addEditComponent($className, array $options = [],  $entityClassName = null, $nameConfigurator = null)
     {
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_EDIT, $entityClassName, $nameConfigurator);
     }
 
-    public function addShowComponent($className, array $options, $entityClassName = null, $nameConfigurator = null)
+    public function addShowComponent($className, array $options = [], $entityClassName = null, $nameConfigurator = null)
     {
         return $this->addComponent($className, $options, self::ROUTE_SUFFIX_SHOW, $entityClassName, $nameConfigurator);
     }

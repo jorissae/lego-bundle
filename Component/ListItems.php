@@ -257,6 +257,9 @@ class ListItems extends Component implements EditInPlaceInterface {
                     $queryBuilder->andWhere('b.' . $fieldAssociation['name'] . ' = :' . $alias);
                 }
                 $queryBuilder->setParameter($alias, $this->request->get('id'));
+                if($this->getOption('query_association', null) && is_callable($this->getOption('query_association'))){
+                    $this->getOption('query_association')($queryBuilder, 'b');
+                }
             }
         }
         if($this->getOption('dql')){

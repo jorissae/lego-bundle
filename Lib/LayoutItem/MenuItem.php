@@ -11,6 +11,8 @@
 namespace Idk\LegoBundle\Lib\LayoutItem;
 
 
+use Idk\LegoBundle\Lib\Path;
+
 class MenuItem{
 
     const TYPE_HEADER = 'header';
@@ -85,7 +87,7 @@ class MenuItem{
     /**
      * @return mixed|null
      */
-    public function getPath()
+    public function getPath(): ?Path
     {
         return $this->path;
     }
@@ -93,7 +95,7 @@ class MenuItem{
     /**
      * @param mixed|null $route
      */
-    public function setPath($path)
+    public function setPath(Path $path)
     {
         $this->path = $path;
     }

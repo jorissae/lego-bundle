@@ -79,7 +79,12 @@ class Filter extends Component{
     }
 
     public function defaultValueFilter(){
-        return [];
+        $v = [
+            'filter_value_prix' => [100,500]
+        ];
+        //dd($v, $this->getOption('default'));
+        return $this->getOption('default', []);
+
     }
 
     public function valueFilter($id){

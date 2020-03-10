@@ -1,13 +1,13 @@
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         {% for tab in component.tabs if tab.displayIn(component.id) %}
-            <li {% if(loop.first) %}class="active"{%  endif %}><a href="#tab-{{ tab.id }}" data-toggle="tab">{{ tab.libelle|trans }}</a></li>
+            <li {% if(loop.first) %}class="active"{%  endif %}><a href="#{{ tab.id }}" data-toggle="tab">{{ tab.libelle|trans }}</a></li>
         {%  endfor %}
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         {% for tab in component.tabs if tab.displayIn(component.id) %}
-            <div id="tab-{{ tab.id }}" class="tab-pane  {{ tab.class }}  {% if(loop.first) %}active{%  endif %}">
+            <div id="{{ tab.id }}" class="tab-pane  {{ tab.class }}  {% if(loop.first) %}active{%  endif %}">
                 {%  if tab.template %}
                     {% include tab.template with tab.templateAllParameters %}
                 {%  else %}
