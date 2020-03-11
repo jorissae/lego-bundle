@@ -31,6 +31,7 @@ class MenuItem{
         $this->libelle = $libelle;
         $this->type = (isset($options['type']))? $options['type']:self::TYPE_BODY;
         $this->icon = (isset($options['icon']))? $options['icon']:null;
+        $this->roles = (isset($options['roles']))? $options['roles']:null;
         $this->path = (isset($options['path']))? $options['path']: null;
         $this->labels = (isset($options['labels']))? $options['labels']:[];
         $this->children = (isset($options['children']))? $options['children']:[];
@@ -135,6 +136,10 @@ class MenuItem{
 
     public function add(MenuItem $item){
         $this->children[] = $item;
+    }
+
+    public function getRole(){
+        return $this->roles;
     }
 
 

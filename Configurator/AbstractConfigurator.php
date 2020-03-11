@@ -449,7 +449,7 @@ abstract class AbstractConfigurator
     }
 
     public function getUser(){
-        return $this->configuratorBuilder()->getUser();
+        return $this->getConfiguratorBuilder()->getUser();
     }
 
 

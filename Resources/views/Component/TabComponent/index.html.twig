@@ -7,13 +7,23 @@
     <!-- Tab panes -->
     <div class="tab-content">
         {% for tab in component.tabs if tab.displayIn(component.id) %}
-            <div id="{{ tab.id }}" class="tab-pane  {{ tab.class }}  {% if(loop.first) %}active{%  endif %}">
-                {%  if tab.template %}
-                    {% include tab.template with tab.templateAllParameters %}
-                {%  else %}
-                    {{ render(controller(tab.controller)) }}
-                {%  endif %}
-            </div>
+            {% if tab.components|length %}
+                <div id="{{ tab.id }}" class="tab-pane {% if(loop.first) %}active{%  endif %}">
+                {%  for component in tab.components %}
+                    <div id="{{ component.id }}" class="tab-pane  {{ component.class }}">
+                        {% include component.template with component.templateAllParameters %}
+                    </div>
+                {%  endfor %}
+                </div>
+            {%  else %}
+                <div id="{{ tab.id }}" class="tab-pane  {{ tab.class }}  {% if(loop.first) %}active{%  endif %}">
+                    {%  if tab.template %}
+                        {% include tab.template with tab.templateAllParameters %}
+                    {%  else %}
+                        {{ render(controller(tab.controller)) }}
+                    {%  endif %}
+                </div>
+            {%  endif %}
         {%  endfor %}
     </div>
 </div>

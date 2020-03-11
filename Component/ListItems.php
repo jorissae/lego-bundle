@@ -246,19 +246,23 @@ class ListItems extends Component implements EditInPlaceInterface {
         }
 
         if($this->request->get('id') and $this->getConfigurator()->getParent()) {
-            $fieldAssociation = $this->getFieldAssociationOfParent();
-            if($fieldAssociation) {
+            if($this->getOption('full_query_association', null) && is_callable($this->getOption('full_query_association'))) {
+                $this->getOption('full_query_association')($queryBuilder, 'b', $this->request->get('id'));
+            }else {
+                $fieldAssociation = $this->getFieldAssociationOfParent();
+                if ($fieldAssociation) {
 
-                if(isset($fieldAssociation['join'])){
-                    $alias = $fieldAssociation['join'] . '_';
-                    $queryBuilder->leftJoin('b.'.$fieldAssociation['join'], $fieldAssociation['alias'])->andWhere($fieldAssociation['name'] . ' = :' . $alias);
-                }else {
-                    $alias = $fieldAssociation['name'] . '_';
-                    $queryBuilder->andWhere('b.' . $fieldAssociation['name'] . ' = :' . $alias);
-                }
-                $queryBuilder->setParameter($alias, $this->request->get('id'));
-                if($this->getOption('query_association', null) && is_callable($this->getOption('query_association'))){
-                    $this->getOption('query_association')($queryBuilder, 'b');
+                    if (isset($fieldAssociation['join'])) {
+                        $alias = $fieldAssociation['join'] . '_';
+                        $queryBuilder->leftJoin('b.' . $fieldAssociation['join'], $fieldAssociation['alias'])->andWhere($fieldAssociation['name'] . ' = :' . $alias);
+                    } else {
+                        $alias = $fieldAssociation['name'] . '_';
+                        $queryBuilder->andWhere('b.' . $fieldAssociation['name'] . ' = :' . $alias);
+                    }
+                    $queryBuilder->setParameter($alias, $this->request->get('id'));
+                    if ($this->getOption('query_association', null) && is_callable($this->getOption('query_association'))) {
+                        $this->getOption('query_association')($queryBuilder, 'b');
+                    }
                 }
             }
         }

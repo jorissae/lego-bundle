@@ -15,6 +15,7 @@ interface TabInterface
 {
     public function getTemplateAllParameters();
     public function getTemplate();
+    public function getComponents();
     public function getController();
     public function getLibelle();
     public function getId();

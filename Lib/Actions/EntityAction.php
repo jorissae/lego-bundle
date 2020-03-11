@@ -59,6 +59,9 @@ class EntityAction
 
     private $cssClass;
 
+    /* @var Path */
+    private $path;
+
     /**
      * @param callable $routerGenerator The generator used to generate the url of an item, when generating the item will
      *                                  be provided.
@@ -68,9 +71,9 @@ class EntityAction
      */
     public function __construct($label,$options)
     {
-
         $this->label = $label;
         $this->route = (isset($options['route']))? $options['route']:null;
+        $this->path = $options['path'] ?? null;
         $this->icon = (isset($options['icon']))? $options['icon']:null;
         $this->template = (isset($options['template']))? $options['template']:null;
         $this->type = (isset($options['type']))? $options['type']:null;
@@ -120,6 +123,9 @@ class EntityAction
                 $returnCall = $item->$m();
             }
             return ($returnCall == $v);
+        }elseif($this->if){
+            $m = $this->if;
+            return $item->$m();
         }else{
             return true;
         }
@@ -141,6 +147,10 @@ class EntityAction
             $params = $this->getParams();
             $params['id'] = $params['id'] ?? $item->getId();
             return new Path($this->route, $params);
+        }elseif($this->path){
+            $params = $this->path->getParams();
+            $params['id'] = $params['id'] ?? $item->getId();
+            return new Path($this->path->getRoute(), $params);
         }
 
         return null;

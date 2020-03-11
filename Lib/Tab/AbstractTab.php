@@ -30,6 +30,10 @@ abstract class AbstractTab implements TabInterface
         return null;
     }
 
+    public function getComponents(){
+        return [];
+    }
+
     public function setDisplayIn($id){
         $this->displayIn = $id;
     }
