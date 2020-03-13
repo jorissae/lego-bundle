@@ -4,7 +4,7 @@
             {% include field.template with {'entity': entity, 'field': field, 'value': configurator.getValue(item, columnName), 'configurator': configurator} %}
         {% else %}
             <dl class="dl-horizontal">
-                <dt>{{ field.header }}</dt>
+                <dt>{{ field.header|trans }}</dt>
                 <dd>{{ render_field_value(component,field,entity) }}</dd>
             </dl>
         {% endif %}
