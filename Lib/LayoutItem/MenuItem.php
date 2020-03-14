@@ -25,6 +25,7 @@ class MenuItem{
     protected $path;
     protected $labels;
     protected $children;
+    protected $cssClass;
 
 
     public function __construct($libelle, array $options = []){
@@ -35,6 +36,7 @@ class MenuItem{
         $this->path = (isset($options['path']))? $options['path']: null;
         $this->labels = (isset($options['labels']))? $options['labels']:[];
         $this->children = (isset($options['children']))? $options['children']:[];
+        $this->cssClass = $options['css_class'] ?? null;
     }
 
     /**
@@ -140,6 +142,10 @@ class MenuItem{
 
     public function getRole(){
         return $this->roles;
+    }
+
+    public function getCssClass(){
+        return $this->cssClass;
     }
 
 

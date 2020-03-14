@@ -20,7 +20,7 @@
                     <li class="header">{{ item.libelle|trans }}</li>
                 {%  else %}
                     {%  if  not item.roles or is_granted(item.roles) %}
-                    <li class="{% if menu.isActif(item) %}active{%  endif %}">
+                    <li class="{% if menu.isActif(item) %}active{%  endif %} {{ item.cssClass }}">
                         <a href="{% if item.path %}{{ path(item.path.route, item.path.params) }}{% else %}#{%  endif %}">
                             <i class="fa fa-{{ item.icon }}"></i> <span>{{ item.libelle|trans }}</span>
                             <span class="pull-right-container">
@@ -36,7 +36,7 @@
                             <ul class="treeview-menu">
                                 {%  for child in item.children %}
                                     {%  if not child.roles or is_granted(child.roles) %}
-                                        <li {% if menu.isActif(child) %}class="active"{%  endif %}><a href="{{ path(child.path.route,child.path.params) }}"><i class="fa fa-{{ child.icon }}"></i>{{ child.libelle|trans }}</a></li>
+                                        <li class="{% if menu.isActif(child) %}active{%  endif %} {{ child.cssClass }}"><a href="{{ path(child.path.route,child.path.params) }}"><i class="fa fa-{{ child.icon }}"></i>{{ child.libelle|trans }}</a></li>
                                     {% endif %}
                                 {%  endfor %}
                             </ul>
