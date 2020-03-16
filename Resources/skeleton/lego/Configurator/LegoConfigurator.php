@@ -15,7 +15,7 @@ class <?= $entity_class ?>Configurator extends AbstractDoctrineORMConfigurator
 {
 
     const ENTITY_CLASS_NAME = <?= $entity_class ?>::class;
-    const TITLE = 'Gestion des <?= strtolower($entity_class) ?>s';
+    const TITLE = 'title.<?= strtolower($entity_class) ?>';
 
     public function buildIndex()
     {
