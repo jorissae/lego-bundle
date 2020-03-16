@@ -13,3 +13,8 @@
 {% endfor %}
 {% include component.partial('item_actions') with {'component':component, 'item':item} %}
 </tr>
+<tr style="display:none;" id="{{ component.gid('line')  }}-{{ item.id }}-tr-detail">
+    <td id="{{ component.gid('line')  }}-{{ item.id }}-td-detail" colspan="{{ component.fields|length +  component.hasBulkActions + not component.hideEntityActions  }}">
+
+    </td>
+</tr>

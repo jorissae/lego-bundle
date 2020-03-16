@@ -83,3 +83,21 @@
 
     </div>
 </div>
+<script>
+    function {{ component.gid('preShowDetail') }}(elm , data){
+        if( $('#' + elm.attr('data-show')).is(":visible")){
+            elm.find('.fa-minus').removeClass('fa-minus').addClass('fa-plus');
+            $('#' + elm.attr('data-show')).hide();
+        }else{
+            elm.find('.fa-plus').removeClass('fa-plus').addClass('fa-minus');
+            $('#' + elm.attr('data-show')).show();
+            $('#' + elm.attr('data-target')).html('<div style="text-align:center;"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>');
+        }
+    }
+
+    function {{ component.gid('showDetail') }}(elm, data){
+        if( $('#' + elm.attr('data-show')).is(":visible")) {
+            $('#' + elm.attr('data-target')).html(data.html);
+        }
+    }
+</script>

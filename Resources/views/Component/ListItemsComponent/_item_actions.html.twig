@@ -43,5 +43,15 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
+        {%  if component.detailPath(item) %}
+            <div class="jsa-ajax pull-right btn btn-default btn-xs"
+                 data-target="{{ component.gid('line')  }}-{{ item.id }}-td-detail"
+                 data-show="{{ component.gid('line')  }}-{{ item.id }}-tr-detail"
+                 data-pre-callback="{{ component.gid('preShowDetail') }}"
+                 data-callback="{{ component.gid('showDetail') }}"
+                 data-method="get"
+                 data-url="{{ component.detailPath(item) }}"
+            ><i class="fa fa-plus"></i></div>
+        {% endif %}
 </td>
 {%  endif %}

@@ -14,6 +14,7 @@ namespace Idk\LegoBundle\Component;
 use Doctrine\ORM\QueryBuilder;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Idk\LegoBundle\Lib\Path;
+use Idk\LegoBundle\Service\ConfiguratorBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -138,7 +139,7 @@ abstract class Component implements BrickInterface {
         return $this->configurator;
     }
 
-    public function getConfiguratorBuilder(){
+    public function getConfiguratorBuilder(): ConfiguratorBuilder{
         return $this->getConfigurator()->getConfiguratorBuilder();
     }
 
@@ -211,6 +212,7 @@ abstract class Component implements BrickInterface {
     public function setDisplayIn($cid){
         $this->displayIn = $cid;
     }
+    
 
 
 

@@ -13,6 +13,7 @@ lego_component:
     defaults:
         _controller: lego.action.component
 
+
 lego_entity_reload:
     path:      /lgo/{entity}/entity/reload/{id}/{cid}/{suffix_route}
     defaults:

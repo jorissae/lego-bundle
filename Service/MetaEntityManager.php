@@ -46,6 +46,10 @@ class MetaEntityManager implements MetaEntityManagerInterface
     public function getClassMetaData($classname){
         return $this->em->getClassMetadata($classname);
     }
+    public function getIdentifier($entity){
+        $identifier = $this->getClassMetaData(get_class($entity))->getIdentifier()[0];
+        return $this->getClassMetaData(get_class($entity))->getIdentifierValues($entity)[$identifier];
+    }
 
     public function getAssociationClass($classname, $fieldname){
         if($this->getClassMetaData($classname)->hasAssociation($fieldname)) {

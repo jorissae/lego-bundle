@@ -357,4 +357,12 @@ class ListItems extends Component implements EditInPlaceInterface {
     public function isTree(){
         return $this->getOption('tree', false);
     }
+    public function getDetailPath($item){
+        $path = $this->getOption('detail_path', null);
+        if($path) {
+            return $this->getConfiguratorBuilder()->getRouter()->generate($path->getRoute(), $path->getParams(['id'=> $this->mem->getIdentifier($item)]));
+        }else{
+            return null;
+        }
+    }
 }
