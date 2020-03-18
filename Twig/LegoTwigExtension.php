@@ -15,6 +15,7 @@ use Idk\LegoBundle\Service\EditInPlaceFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Idk\LegoBundle\Component\Component;
 use Idk\LegoBundle\Annotation\Entity\Field;
+use Twig\Loader\ArrayLoader;
 
 
 class LegoTwigExtension extends \Twig_Extension
@@ -44,7 +45,7 @@ class LegoTwigExtension extends \Twig_Extension
         }
     }
 
-    public function renderFieldValue(\Twig_Environment $env, Component $component, Field $field, $item)
+    public function renderFieldValue(\Twig\Environment $env, Component $component, Field $field, $item)
     {
         $template = $env->loadTemplate("@IdkLego/LegoTwigExtension/_field_value.html.twig");
         $configurator = $component->getConfigurator();
@@ -56,7 +57,8 @@ class LegoTwigExtension extends \Twig_Extension
         }
         if(!$component->getConfiguratorBuilder()->hasAccess(get_class($item),'edit')) $editInPlaceType = null;
         if(!$component->getConfiguratorBuilder()->hasAccess(get_class($item),'edit_in_place')) $editInPlaceType = null;
-        return $template->render(array(
+
+        $params = array(
             'field'        => $field,
             'configurator'      => $component->getConfigurator(),
             'component' => $component,
@@ -65,8 +67,10 @@ class LegoTwigExtension extends \Twig_Extension
             'value' => $field->getValue($component->getConfigurator(), $item),
             'eipType' => $editInPlaceType,
             'path' => ($value)? $configurator->getPathByField($item,$field):null
-        ));
+        );
+        return $template->render($params);
     }
+
 
 
     public function getName()

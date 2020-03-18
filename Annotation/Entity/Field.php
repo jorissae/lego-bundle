@@ -13,6 +13,7 @@ namespace Idk\LegoBundle\Annotation\Entity;
 use Idk\LegoBundle\Configurator\AbstractConfigurator;
 use Idk\LegoBundle\Lib\ViewParams;
 use Idk\LegoBundle\Twig\FilterTwigExtension;
+use Twig\Loader\ArrayLoader;
 use Twig\Template;
 
 /**
@@ -255,11 +256,12 @@ class Field
         return $img;
     }
 
+
     public function generateTwigValue(AbstractConfigurator $configurator, $entity){
         $value = $this->getValue($configurator, $entity);
-        $template = $configurator->getConfiguratorBuilder()->getTwig()->createTemplate($this->getTwig());
-        $render = $template->render(['view' => $this->getViewParams($configurator, $entity, $value)]);
-        return $render;
+        $twig = new \Twig\Environment(new ArrayLoader());
+        $template = $twig->createTemplate($this->getTwig());
+        return $template->render(['view' => $this->getViewParams($configurator, $entity, $value)]);
     }
 
     public function generateTemplateValue(AbstractConfigurator $configurator, $entity){

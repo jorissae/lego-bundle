@@ -61,11 +61,11 @@
                 <tbody>
                     {% if component.currentBreaker %}
                         {% for collection in component.currentBreakerCollection(pager.entities) %}
-                            {% include component.partial('breaker') with {'component':component ,'collection':collection} %}
+                          {% include component.partial('breaker') with {'component':component ,'collection':collection} %}
                         {% endfor %}
                     {%  else %}
                         {% for item in pager.entities %}
-                            {% include component.partial('line') with {'component':component ,'item':item} %}
+                           {% include component.partial('line') with {'component':component ,'item':item} %}
                         {% endfor %}
                     {%  endif %}
                 </tbody>

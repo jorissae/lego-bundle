@@ -13,6 +13,7 @@ namespace Idk\LegoBundle\Action;
 
 use Idk\LegoBundle\Service\ConfiguratorBuilder;
 use Idk\LegoBundle\Service\EditInPlaceFactory;
+use Idk\LegoBundle\Twig\FilterTwigExtension;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +64,9 @@ final class EditInPlaceAction extends AbstractFormAction
             $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
             $configurator->bindRequestCurrentComponents($request, $component);
             $component->xhrBindRequest($request);
-            $template = $this->configuratorBuilder->getTwig()->createTemplate('{{ render_field_value(component, field, item) }}');
+            $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader());
+            $twig->addExtension(new FilterTwigExtension());
+            $template = $twig->createTemplate('{{ render_field_value(component, field, item) }}');
             $html = $template->render(['component'=>$component,'item'=>$entity, 'field'=> $component->getField($fieldName)]);
             $return = array('code' => 'OK', 'val' => (string)html_entity_decode($html));
         }else{

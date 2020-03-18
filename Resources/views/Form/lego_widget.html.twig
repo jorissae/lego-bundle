@@ -631,6 +631,7 @@ $(function(){
             collection.append(addLink);
             addLink.on('click', function(e) {
                 e.preventDefault();
+                console.log('{{ id }}', collection);
                 addForm{{ id }}(collection);
             });
             {%  endif %}
