@@ -365,11 +365,11 @@ var jsa = {
             }
         },
         jBox: function (elm, data) {
-            if (data.status == 'ok') {
+            if (data.status === 'ok') {
                 jsa.update_elm(elm, data);
-                bootbox.alert({title: data.title, message: data.message});
+                bootbox.alert({title: (data.title)? data.title:'Success', message: data.message, className: 'jsa-success'});
             } else {
-                jsa.dialog('Erreur', data.error);
+                bootbox.alert({title: (data.title)? data.title:'Error', message: data.error? data.error:data.message, className: 'jsa-error'});
             }
         },
         jLoadInTarget: function (elm, data) {

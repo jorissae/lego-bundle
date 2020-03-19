@@ -27,6 +27,7 @@ class ListItems extends Component implements EditInPlaceInterface {
     const ENTITY_ACTION_EDIT = 'entity_action.edit';
     const ENTITY_ACTION_SHOW = 'entity_action.show';
     const BULK_ACTION_DELETE = 'bulk_action_delete';
+    const ENTITY_ACTION_WORKFLOW = 'entity_action_workflow';
 
     static public function ENTITY_ACTION_SCREEN($label, $suffixRoute){
         return [$label, $suffixRoute];
@@ -149,8 +150,10 @@ class ListItems extends Component implements EditInPlaceInterface {
             $this->entityActions[] = new EntityAction('lego.action.delete', ['icon'=>'remove', 'css_class' => 'btn-danger' ,'modal' => $this->getPartial('modal_delete')]);
         }else if($action == self::ENTITY_ACTION_EDIT){
             $this->entityActions[] = new EntityAction('lego.action.edit', ['icon'=>'pencil' ,'css_class' => 'btn-primary' ,'route' => $this->getConfigurator()->getPathRoute('edit'), 'params'=>$this->getConfigurator()->getPathParameters()]);
-        }else if($action == self::ENTITY_ACTION_SHOW){
-            $this->entityActions[] = new EntityAction('lego.action.show', ['icon'=>'eye' ,'css_class' => 'btn-success','route' => $this->getConfigurator()->getPathRoute('show'), 'params'=>$this->getConfigurator()->getPathParameters()]);
+        }else if($action == self::ENTITY_ACTION_SHOW) {
+            $this->entityActions[] = new EntityAction('lego.action.show', ['icon' => 'eye', 'css_class' => 'btn-success', 'route' => $this->getConfigurator()->getPathRoute('show'), 'params' => $this->getConfigurator()->getPathParameters()]);
+        }else if($action == self::ENTITY_ACTION_WORKFLOW){
+            $this->entityActions[] = new EntityAction('lego.action.workflow', ['template' => '@IdkLego/Component/ListItemsComponent/_action_workflow.html.twig', 'route' => $this->getConfigurator()->getPathRoute('workflow'), 'params' => $this->getConfigurator()->getPathParameters()]);
         }else if(is_array($action)){
             $this->entityActions[] = new EntityAction($action[0], ['icon'=>'link' ,'css_class' => 'btn-default' ,'route' => $this->getConfigurator()->getPathRoute('default'), 'params'=>$this->getConfigurator()->getPathParameters(['suffix_route'=>$action[1]])]);
         }

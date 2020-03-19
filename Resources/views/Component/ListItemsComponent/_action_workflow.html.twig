@@ -1,0 +1,37 @@
+{%  set open = false %}
+{%  set pl = null %}
+{% for transition in workflow_transitions(item) if workflow_can(item, transition.name) %}
+    {%  set open = true %}
+{%  endfor %}
+{%  for  place in workflow_marked_places(item) if workflow_has_marked_place(item, place) %}
+    {%  set pl = place %}
+{%  endfor %}
+<div class="btn-group">
+    <button type="button" class="btn btn-xs btn-info btn-flat">{{ ("wf.etat."~pl)|trans}}</button>
+    {%  if open %}
+    <button type="button" class="btn btn-xs btn-info btn-flat dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">{{ ("wf.etat."~pl)|trans}}</span>
+    </button>
+    {%  endif %}
+    {%  if open %}
+        <ul class="dropdown-menu">
+            {% for transition in workflow_transitions(item) if workflow_can(item, transition.name)  %}
+                <li>
+                    <a data-line="{{ component.gid('line') }}-{{ item.id }}"
+                       data-type="json"
+                       data-url="{{ path(path.route, path.params({'transition':transition.name })) }}"
+                       data-pre-callback="jPreLoadInTarget"
+                       data-callback="jBox"
+                       data-target="{{ component.gid('wf') }}-{{ item.id }}"
+                       data-content-reload="{{ path(pathline.route,pathline.params) }}"
+                       data-content-reload-callback="legoReloadLine"
+                       class="jsa-ajax">
+                        <i class="fa fa-fw fa-angle-right"></i>
+                        {{ ("wf.transition."~transition.name)|trans }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {%  endif %}
+</div>

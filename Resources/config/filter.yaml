@@ -19,6 +19,11 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
         shared: false
 
+    Idk\LegoBundle\FilterType\ORM\WorkflowFilterType:
+        tags: [lego.filter]
+        arguments: ["@doctrine.orm.entity_manager", "@workflow.registry"]
+        shared: false
+
     lego.filter.chain:
         class: Idk\LegoBundle\Service\Tag\FilterChain
         arguments: [!tagged lego.filter]

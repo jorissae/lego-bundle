@@ -37,21 +37,21 @@ final class EditInPlaceAction extends AbstractFormAction
         $component = $configurator->getComponent($request->get('suffix_route'), $request->get('cid'));
         $field = $component->getField($request->request->get('fieldName'));
 
-
         $this->createFormBuilder();
         $em = $this->getEntityManager();
         $reload = $request->request->get('reload');
         $entity = $em->getRepository($component->getConfigurator()->getRepositoryName())->findOneById($request->request->get('id'));
         $fieldName = $field->getName();
         $class = $request->request->get('cls');
+
         $type = $this->eipFactory->getEditInPlaceType(
             $component->getConfigurator()->getType($entity, $field->getName()),
             $field->getValue($component->getConfigurator(),$entity),
             $field->getName());
-
         $value = $type->getValueFromAction($request, $this);
 
         $persist = $field->setValue($component->getConfigurator(), $entity, $value);
+
         $em->persist($persist);
         $em->flush();
         $stringValue = $configurator->getStringValue($entity,$fieldName);

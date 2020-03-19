@@ -7,3 +7,19 @@
     margin: 0 1em 1em 0;
     height: 50px;
 }
+
+.jsa-error .modal-header{
+    border-top: 4px solid red;
+}
+
+.jsa-success .modal-header{
+    border-top: 4px solid green;
+}
+
+.jsa-warning .modal-header{
+    border-top: 4px solid orange;
+}
+
+.jsa-default .modal-header{
+    border-top: 4px solid blue;
+}

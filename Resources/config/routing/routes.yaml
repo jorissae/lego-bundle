@@ -55,6 +55,13 @@ lego_edit:
     requirements:
         id: \d+
 
+lego_workflow:
+    path: /lgo/{entity}/{id}/wf
+    defaults:
+        _controller: lego.action.workflow
+    requirements:
+        id: \d+
+
 lego_export:
     path:      /lgo/{entity}/{cid}/{suffix_route}/export.{format}
     defaults:
@@ -80,6 +87,7 @@ lego_default:
     path:      /lgo/{entity}/{suffix_route}
     defaults:
         _controller: lego.action.default
+
 
 
 idk_lego_widget_add:

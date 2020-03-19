@@ -13,6 +13,7 @@ namespace Idk\LegoBundle\Traits;
 use Idk\LegoBundle\Action\DefaultAction;
 use Idk\LegoBundle\Action\EditInPlaceEntityChoiceAction;
 use Idk\LegoBundle\Action\EntityReloadAction;
+use Idk\LegoBundle\Action\WorkflowAction;
 use Idk\LegoBundle\Service\Tag\ActionChain;
 use Idk\LegoBundle\Action\AutoCompletionAction;
 use Idk\LegoBundle\Action\EditInPlaceAction;
@@ -80,6 +81,17 @@ trait ControllerTrait
     public function addAction(Request $request): Response
     {
         return $this->getResponse(AddAction::class, $request);
+    }
+
+    /**
+     * The add action
+     *
+     * @Route("/wf", methods={"GET", "POST"})
+     * @return Response
+     */
+    public function workflowAction(Request $request): Response
+    {
+        return $this->getResponse(WorkflowAction::class, $request);
     }
 
     /**

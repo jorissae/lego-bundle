@@ -35,6 +35,11 @@ services:
         arguments: ["@lego.service.configurator.builder"]
         tags: [controller.service_arguments, lego.action]
 
+    lego.action.workflow:
+        class: 'Idk\LegoBundle\Action\WorkflowAction'
+        arguments: ["@lego.service.configurator.builder", "@workflow.registry"]
+        tags: [controller.service_arguments, lego.action]
+
     lego.action.default:
         class: '%lego.action.default.class%'
         arguments: ["@lego.service.configurator.builder"]

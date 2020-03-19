@@ -111,7 +111,7 @@ class Field
 
     public function setName($name){
         $this->name = $name;
-        $this->header = ($this->header)? $this->header:$this->name;
+        $this->header = ($this->header)? $this->header:'field.'.$this->name;
     }
 
 

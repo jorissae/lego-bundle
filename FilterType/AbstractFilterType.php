@@ -42,7 +42,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     {
         $this->config = $config;
         $this->columnName = $columnName;
-        $this->label = (isset($config['label']))? $config['label']:$columnName;
+        $this->label = (isset($config['label']))? $config['label']:'field.'.$columnName;
         $this->alias      = $alias;
         $this->hidden = (isset($confi['hidden']))? $config['hidden']:false;
     }
