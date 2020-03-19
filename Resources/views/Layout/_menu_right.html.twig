@@ -1,14 +1,14 @@
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-        {%  for k, item in right.items %}
+        {%  for k, item in right.items if (item.roles and is_granted(item.roles)) or not item.roles %}
             <li><a href="#control-sidebar-{{ k }}-tab" data-toggle="tab"><i class="fa fa-{{ item.icon }}"></i></a></li>
         {%  endfor %}
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         <!-- Home tab content -->
-        {%  for k, item in right.items %}
+        {%  for k, item in right.items if (item.roles and is_granted(item.roles)) or not item.roles %}
         <div class="tab-pane {% if(loop.first) %}active{%  endif %}" id="control-sidebar-{{ k }}-tab">
             <h3 class="control-sidebar-heading">{{ item.title|trans }}</h3>
             {%  if item.rightbar %}

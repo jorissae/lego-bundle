@@ -24,6 +24,7 @@ class RightItem{
         $this->icon = (isset($options['icon']))? $options['icon']:null;
         $this->title = $options['title'] ?? null;
         $this->rightbar = $options['rightbar'] ?? null;
+        $this->roles = $options['roles'] ?? null;
         $this->template = (isset($options['template']))? $options['template']:null;
         $this->templateParameters = (isset($options['template_parameters']))? $options['template_parameters']:[];
     }
@@ -106,6 +107,10 @@ class RightItem{
     public function setRightbar($rightbar)
     {
         $this->rightbar = $rightbar;
+    }
+
+    public function getRoles(){
+        return $this->roles;
     }
     
     
