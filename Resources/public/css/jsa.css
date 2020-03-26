@@ -16,7 +16,7 @@
     border-top: 4px solid green;
 }
 
-.jsa-warning .modal-header{
+.jsa-warning .modal-header, .jsa-warning-confirm .modal-content{
     border-top: 4px solid orange;
 }
 

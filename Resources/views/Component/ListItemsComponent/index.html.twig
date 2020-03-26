@@ -74,7 +74,7 @@
                 <script>$("#{{ component.gid('table') }}").treetable({ expandable: true });</script>
             {% endif %}
 
-            {% include component.partial('bulk_actions') with {'component':component } %}
+            {% include component.partial('bulks') with {'component':component } %}
 
             <div style="margin-top:5px" class="pull-right">{% include component.partial('pager') with {'component':component} %}</div>
 

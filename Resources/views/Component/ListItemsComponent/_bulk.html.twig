@@ -1,0 +1,24 @@
+<form id="{{ component.gid('form') }}-{{ action.id }}" class="batch_form" action="#" method="POST">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="form-inline" >
+                {% for  field in form %}
+                    {% if field.vars.label or loop.first %}
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span>{{ form_label(field) }}</span>
+                                </span>
+                                {{ form_widget(field) }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="form-group">{{ form_widget(field) }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</form>
+
+

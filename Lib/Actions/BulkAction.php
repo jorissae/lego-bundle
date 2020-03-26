@@ -18,41 +18,13 @@ use Idk\LegoBundle\Lib\Path;
  */
 class BulkAction
 {
-    /**
-     * @var array
-     */
-    private $url;
 
-    /**
-     * @var string
-     */
     private $icon;
-
-    /**
-     * @var string
-     */
     private $label;
-
-    /**
-     * @var null|string
-     */
-    private $template;
-
     private $type;
-
-    private $value;
-
-    private $choices;
-
-    private $field;
-
-    private $role;
-
     private $id;
-
     private $cid;
-
-    private $params;
+    private $role;
 
     /**
      * @param array    $url      The url path and parameters
@@ -64,15 +36,9 @@ class BulkAction
     {
         $this->label = $label;
         $this->id = md5($label);
-        $this->route = (isset($options['route']))? $options['route']:null;
         $this->icon = (isset($options['icon']))? $options['icon']:null;
         $this->type = (isset($options['type']))? $options['type']:null;
-        $this->field = (isset($options['field']))? $options['field']:null;
-        $this->value = (isset($options['value']))? $options['value']:null;
-        $this->template = (isset($options['template']))? $options['template']:null;
-        $this->choices = (isset($options['choices']))? $options['choices']:null;
         $this->role = (isset($options['role']))? $options['role']:null;
-        $this->params = (isset($options['params']))? $options['params']:[];
     }
 
     public function getId(){
@@ -83,10 +49,8 @@ class BulkAction
         $this->cid = $cid;
     }
 
-
-    public function getPath()
-    {
-        return new Path($this->route,  array_merge($this->params, ['ida'=>$this->id, 'cid' => $this->cid]));
+    public function getParams(){
+        return ['ida'=>$this->id, 'cid' => $this->cid, 'type' => md5($this->type)];
     }
 
     /**
@@ -105,27 +69,10 @@ class BulkAction
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    public function getField(){
-        return $this->field;
-    }
-
-    public function getValue(){
-        return $this->value;
-    }
-
-    public function getChoices(){
-        return $this->choices;
-    }
-
     public function getRole(){
         return $this->role;
+    }
+    public function getType(){
+        return $this->type;
     }
 }

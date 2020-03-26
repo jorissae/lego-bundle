@@ -10,6 +10,13 @@ lego.action.back: Retour
 lego.action.erease: Effacer
 lego.action.filter: Filtrer
 lego.action.bulk_delete: Supprimer les éléments
+lego.action.bulk_check: Valider
+lego.bulk_entities: '%nb% éléments traité avec succés'
+lego.bulk_error: Une erreur est survenu
+lego.action.bulk_choice: Action massives
+lego.action.bulk_choice_default: Choisissez une action
+lego.bulk.this_page_only: Uniquement sur la page courante
+lego.bulk.all_page: Sur toutes les pages
 lego.action.modify_nb_entity_per_page: Modifier le nombre de ligne par page
 lego.error.entity_not_found: Elément introuvable
 lego.header.action: Actions

@@ -1,0 +1,145 @@
+<input type="hidden" name="{{ component.gid('all-selection') }}" value="0" id="{{ component.gid('all-selection') }}" class="all-selection">
+<div class="{{ component.gid('batch-actions') }} box hidden">
+    <div class="box-header">
+        <h4><span class="box-header__title">{{ 'lego.action.bulk_choice'|trans }}</span>
+            <div style="display:inline-block" class="dropup">
+                <button id="{{ component.gid('bulk-choice-btn') }}" class="dropdown-toggle btn btn-default {{ component.gid('batch-list') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'lego.action.bulk_choice_default'|trans }}&nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="{{ component.gid('bulk-choice-btn') }}" id="dropdown-batch-bottom">
+                    {% for action in component.bulkActions %}
+                    <li>
+                        <a href="javascript:void(0)" onclick="{{ component.gid('showBatchForm') }}('{{ component.gid(action.id) }}','{{ action.icon }}', '{{ action.label }}')">
+                            <span style="text-align:left;"><i class="fa fa-{{ action.icon }}"></i> {{ action.label|trans }}</span>
+                            <span class="fa fa-angle-right"></span>
+                        </a>
+                    </li>
+                    {%  endfor %}
+                </ul>
+            </div>
+        </h4>
+        <div class="clearfix">
+            <div class="hidden {{ component.gid('js-all-selection-none') }}">
+                <span><i class="fa fa-dot-circle-o"></i>&nbsp;{{ 'lego.bulk.this_page_only'|trans }}</span><br>
+                <span class="{{ component.gid('js-all-selection') }}"><i class="fa fa-circle-o"></i>&nbsp;{{ 'lego.bulk.all_page'|trans }}</span>
+            </div>
+            <div class="hidden {{ component.gid('js-all-selection-active') }}">
+                <span class="{{ component.gid('js-all-selection') }}"><i class="fa fa-circle-o"></i>&nbsp;{{ 'lego.bulk.this_page_only'|trans }}</span><br>
+                <span><i class="fa fa-dot-circle-o"></i>&nbsp;{{ 'lego.bulk.this_page_only'|trans }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                {% for action in component.bulkActions %}
+                    {% if action.type %}
+                        {% set bulkType = component.getBulkType(action.type)  %}
+                            <div class="{{ component.gid('bulk-form') }} hidden" id="{{ component.gid(action.id) }}">
+                                {%  if bulkType.template %}
+                                    {%  include bulkType.template with bulkType.templateParameters %}
+                                {%  endif %}
+                                {%  set path = component.configurator.path('bulk') %}
+                                <button class="btn btn-primary lego-bulk-button"
+                                        data-component-id="{{ component.id }}"
+                                        data-component-url="{{ component.url }}"
+                                        data-container-id="{{ component.gid('body') }}"
+                                        data-ida="{{ action.id }}"
+                                        data-nb-item="{{ component.gid('batch-nb-item') }}"
+                                        data-label-action="{{ component.gid('batch-action-name') }}"
+                                        data-all-selected="{{ component.gid('all-selection') }}"
+                                        href="{{ path(path.route, path.params(action.params|merge({'suffix_route': component.suffixRoute}))) }}"
+                                        data-form="{{ component.gid('form') }}-{{ action.id }}">{{ 'lego.action.bulk_check'|trans }} <span class="{{ component.gid('batch-action-name') }}"></span>
+                                </button>
+                            </div>
+                    {%  endif %}
+                {%  endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function {{ component.gid('showBatchForm') }}(id, icon, label) {
+        $('.{{ component.gid('bulk-form') }}').addClass('hidden');
+        if(id){
+            $('#' + id).removeClass('hidden');
+            $('.{{ component.gid('batch-list') }}').html('<i class="fa fa-' + icon + '"></i>&nbsp;' + label + '&nbsp;(<span class="{{ component.gid('batch-nb-item') }}"></span>)&nbsp;<span class="caret"></span>')
+            $('.{{ component.gid('batch-action-name') }}').html(label);
+            {{ component.gid('afficheSelection') }}();
+        }
+    }
+
+    function {{ component.gid('afficheSelection') }}() {
+        let nbItemsTotal = "{{  component.pager.nbElements }}";
+        let nbItemsSel = $('#{{ component.gid('body') }} .lego-bulk-checkbox:checked').length;
+        if(nbItemsSel > 0){
+            $('.{{ component.gid('batch-actions') }}').removeClass('hidden');
+        }else{
+            $('.{{ component.gid('batch-actions') }}').addClass('hidden');
+        }
+        if($('#{{ component.gid('all-selection') }}').val() == 0) {
+            $('.{{ component.gid('batch-nb-item') }}').html(nbItemsSel);
+        } else {
+            $('.{{ component.gid('batch-nb-item') }}').html(nbItemsTotal);
+        }
+    }
+
+    $(function() {
+
+
+
+        $('body').on('change', '#{{ component.gid('body') }} .lego-bulk-checkbox', function (evt) {
+            var allChecked = true;
+            var oneChecked = false;
+            $('#{{ component.gid('all-selection') }}').val(0);
+            $('#{{ component.gid('body') }} .lego-bulk-checkbox').each(function (evt) {
+                if ($(this).is(':checked')) {
+                    oneChecked = true;
+                } else {
+                    allChecked = false;
+                }
+            });
+            oneChecked = (allChecked)? false:oneChecked;
+            $('#{{ component.gid('all-checkbox') }}').prop('checked', allChecked);
+            if (oneChecked) {
+                $('.{{ component.gid('js-all-selection-none') }}').addClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').addClass('hidden');
+            } else {
+                $('.{{ component.gid('js-all-selection-none') }}').removeClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').addClass('hidden');
+            }
+            {{ component.gid('afficheSelection') }}();
+        });
+
+        $('body').on('change', '#{{ component.gid('all-checkbox') }}', function (evt) {
+            if ($(this).is(':checked') == true) {
+                $('#{{ component.gid('body') }} .lego-bulk-checkbox').prop('checked', true);
+                $('#{{ component.gid('body') }} .lego-bulk-button').removeClass('disabled');
+                $('.{{ component.gid('js-all-selection-none') }}').removeClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').addClass('hidden');
+            } else {
+                $('#{{ component.gid('body') }} .lego-bulk-checkbox').prop('checked', false);
+                $('#{{ component.gid('body') }} .lego-bulk-button').addClass('disabled');
+                $('.{{ component.gid('js-all-selection-none') }}').addClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').addClass('hidden');
+            }
+            {{ component.gid('afficheSelection') }}();
+        });
+
+        $('.{{ component.gid('js-all-selection') }}').click(function() {
+
+            if($('#{{ component.gid('all-selection') }}').val() == 1) {
+                $('#{{ component.gid('all-selection') }}').val(0);
+                $('.{{ component.gid('js-all-selection-none') }}').removeClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').addClass('hidden');
+            } else {
+                $('#{{ component.gid('all-selection') }}').val(1);
+                $('.{{ component.gid('js-all-selection-none') }}').addClass('hidden');
+                $('.{{ component.gid('js-all-selection-active') }}').removeClass('hidden');
+            }
+            {{ component.gid('afficheSelection') }}();
+        });
+    });
+</script>

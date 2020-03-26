@@ -35,6 +35,9 @@ services:
         class: Idk\LegoBundle\Service\Tag\WidgetChain
         arguments: [!tagged lego.widget, '@session']
 
+    Idk\LegoBundle\Service\Tag\BulkChain:
+        arguments: [!tagged lego.bulk_action]
+
     lego.right_bar.chain:
         class: Idk\LegoBundle\Service\Tag\RightBarChain
         arguments: [!tagged lego.right_bar]
@@ -56,7 +59,7 @@ services:
 
     lego.service.configurator.builder:
         class: Idk\LegoBundle\Service\ConfiguratorBuilder
-        arguments: ["@session","@lego.service.meta_entity_manager","@security.token_storage", "@security.authorization_checker","@twig", "@translator", "@router", "@lego.service.components"]
+        arguments: ["@session","@lego.service.meta_entity_manager","@security.token_storage", "@security.authorization_checker","@twig", "@translator.data_collector", "@router", "@lego.service.components"]
         public: false
     Idk\LegoBundle\Service\ConfiguratorBuilder: '@lego.service.configurator.builder'
 

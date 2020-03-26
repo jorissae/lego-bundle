@@ -237,26 +237,47 @@ var jsa = {
         $(".jsa-tabs-v li").removeClass("ui-corner-top").addClass("ui-corner-left");
     },
 
-    ajaxForm: function( $form, callback, type , elm, action){
-        var type = (type)? type:'json';
+    dataForm: function dataForm($form, dataplus){
         var data = null;
         var formdata = (window.FormData) ? new FormData($form[0]) : null;
+        if(formdata !== null){
+            data = formdata;
+            for(var k in dataplus){
+                if(Array.isArray(dataplus[k])){
+                    for(var kk in dataplus[k]){
+                        data.append(k+'[]', dataplus[k][kk])
+                    }
+                } else {
+                    data.append(k, dataplus[k])
+                }
+            }
+        }else{
+            data = $form.serialize();
+            for(var k in dataplus){
+                if(Array.isArray(dataplus[k])){
+                    for(var kk in dataplus[k]){
+                        data = k + '[]=' + dataplus[k][kk] + '&' + data;
+                    }
+                } else {
+                    data = k + '=' + dataplus[k] + '&' + data;
+                }
+            }
+        }
+        return data;
+    },
+
+    ajaxForm: function( $form, callback, type , elm, action){
+        var type = (type)? type:'json';
         var preCallback = ( window[elm.attr('data-pre-callback')]) ? window[elm.attr('data-pre-callback')] : jsa.evt[elm.attr('data-pre-callback')];
         var callback = (window[elm.attr('data-callback')]) ? window[elm.attr('data-callback')] : jsa.evt[elm.attr('data-callback')];
         if(preCallback){
             preCallback(elm);
         }
-        if(formdata !== null){
-            data = formdata;
-            if(elm.attr('name')) {
-                data.append(elm.attr('name'), (elm.attr('value'))? elm.attr('value'):null)
-            }
-        }else{
-            data = $form.serialize();
-            if(elm.attr('name')) {
-                data = elm.attr('name') + '=' + ((elm.attr('value')) ? elm.attr('value') : null) + '&' + data;
-            }
+        let dataplus = {};
+        if(elm.attr('name')) {
+            dataplus[elm.attr('name')] = (elm.attr('value'))? elm.attr('value'):null;
         }
+        var data = jsa.dataForm($form, dataplus);
         var action = (action)? action:$form.attr( 'action' );
         $.ajax({
             type        : $form.attr( 'method' ),

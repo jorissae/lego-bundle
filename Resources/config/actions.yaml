@@ -55,7 +55,7 @@ services:
 
     lego.action.bulk:
         class: '%lego.action.bulk.class%'
-        arguments: ["@lego.service.configurator.builder"]
+        arguments: ["@lego.service.configurator.builder", "@Idk\\LegoBundle\\Service\\Tag\\BulkChain"]
         tags: [controller.service_arguments, lego.action]
 
     lego.action.delete:

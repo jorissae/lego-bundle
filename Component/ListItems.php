@@ -12,8 +12,10 @@ namespace Idk\LegoBundle\Component;
 
 
 use Idk\LegoBundle\Annotation\Entity\Field;
+use Idk\LegoBundle\Bulk\BulkDelete;
 use Idk\LegoBundle\Lib\Actions\EntityAction;
 use Idk\LegoBundle\Lib\Breaker;
+use Idk\LegoBundle\Service\Tag\BulkChain;
 use Symfony\Component\HttpFoundation\Request;
 use Idk\LegoBundle\Lib\Actions\BulkAction;
 use Doctrine\ORM\QueryBuilder;
@@ -41,9 +43,11 @@ class ListItems extends Component implements EditInPlaceInterface {
     private $breakers = [];
     private $sorters = [];
     private $mem;
+    private $bulks;
 
-    public function __construct(MetaEntityManager $mem){
+    public function __construct(MetaEntityManager $mem, BulkChain $bulks){
         $this->mem = $mem;
+        $this->bulks = $bulks;
     }
 
     protected function init(){
@@ -161,7 +165,7 @@ class ListItems extends Component implements EditInPlaceInterface {
 
     public function addPredefinedBulkAction($action){
         if($action == self::BULK_ACTION_DELETE){
-            $this->addBulkAction('lego.action.bulk_delete', ['route'=>$this->getConfigurator()->getPathRoute('bulk'), 'params'=>$this->getConfigurator()->getPathParameters(['type'=>'delete'])]);
+            $this->addBulkAction('lego.action.bulk_delete', ['type' => BulkDelete::class]);
         }
     }
 
@@ -367,5 +371,9 @@ class ListItems extends Component implements EditInPlaceInterface {
         }else{
             return null;
         }
+    }
+
+    public function getBulkType($type){
+        return $this->bulks->get($type);
     }
 }

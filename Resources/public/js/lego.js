@@ -40,23 +40,36 @@ $(function(){
         var container_checkbox_id = $(this).attr('data-container-id');
         var component_url = $(this).attr('data-component-url');
         var component_id =  $(this).attr('data-component-id');
-        var ids = [];
-        $('#'+container_checkbox_id+' .lego-bulk-checkbox').each(function (evt) {
-            if ($(this).is(':checked')) {
-                ids.push(parseInt($(this).val()));
-            }
-        });
-        lego.post($(this).attr('href'), {
-            'ids': ids
-        }, function (data) {
-            if(data.status == 'ok'){
-                var msg = data.message;
-                lego.post(component_url, {},function(data){
-                    $('#'+component_id).html(data.html);
-                    lego.success(msg);
-                });
-            }
-        });
+        var all_selected = $('#'+$(this).attr('data-all-selected'));
+        var label = $('.'+$(this).attr('data-label-action')).first().html();
+        var nbItem = $('.'+$(this).attr('data-nb-item')).first().html();
+        var form = $('#' + $(this).attr('data-form'));
+        let ids = [];
+        let elm = $(this);
+        bootbox.confirm({
+            message: "<div class='text-center'><div style='font-size:18px;'>Executer <strong>" + label + "</strong> sur</div><div style='font-weight:bolder; font-size:40px;'>" + nbItem + "</div><div>élément(s)</div></div>",
+            className: 'jsa-warning-confirm',
+            callback: function(result) {
+                if(result) {
+                    $('#' + container_checkbox_id + ' .lego-bulk-checkbox').each(function (evt) {
+                        if ($(this).is(':checked')) {
+                            ids.push(parseInt($(this).val()));
+                        }
+                    });
+                    lego.post(elm.attr('href'), jsa.dataForm(form, {'ids': ids, 'all': all_selected.val()})
+                        , function (data) {
+                            if (data.status === 'ok') {
+                                var msg = data.message;
+                                lego.post(component_url, {}, function (data) {
+                                    $('#' + component_id).html(data.html);
+                                    lego.success(msg);
+                                });
+                            }else{
+                                lego.error(data.message);
+                            }
+                        });
+                }
+            }});
     });
 
     $('body').on('change', '.lego-bulk-combobox', function (evt) {
@@ -282,6 +295,8 @@ var lego = {
             type        : 'POST',
             url         : url,
             data        : params,
+            contentType : false, // obligatoire pour de l'upload
+            processData : false,
             dataType    : 'json',
             success     : function(data) {
                 callback(data);
@@ -300,12 +315,12 @@ var lego = {
         return false;
     },
 
-    success: function(message){
-        $('<div>'+message+'</div>').dialog({title:'Success'});
+    success: function(message, title){
+        bootbox.alert({title: (title)? title:'Success', message: message, className: 'jsa-success'});
     },
 
-    error: function(message){
-        $('<div>'+message+'</div>').dialog({title:'Error'});
+    error: function(message, title){
+        bootbox.alert({title: (title)? title:'Error', message: message, className: 'jsa-error'});
     }
 };
 
@@ -323,7 +338,6 @@ if(jsa) {
     };
 
     jsa.evt.legoPreChoiceBreaker = function (elm, data) {
-        console.log('ok');
         var elm = $(elm).parents('.btn-group').first().find('.caret');
         elm.removeClass();
         elm.addClass('fa fa-spinner fa-pulse fa-fw');

@@ -42,7 +42,7 @@ services:
 
     Idk\LegoBundle\Component\ListItems:
         shared: false
-        arguments: ['@lego.service.meta_entity_manager']
+        arguments: ['@lego.service.meta_entity_manager', '@Idk\LegoBundle\Service\Tag\BulkChain']
         tags: [lego.component]
 
     Idk\LegoBundle\Component\TreeItems:

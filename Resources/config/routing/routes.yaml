@@ -20,7 +20,7 @@ lego_entity_reload:
         _controller: lego.action.entityreload
 
 lego_bulk:
-    path:      /lgo/{entity}/bulk/{cid}/{ida}
+    path:      /lgo/{entity}/bulk/{cid}/{ida}/{suffix_route}/{type}
     defaults:
         _controller: lego.action.bulk
 

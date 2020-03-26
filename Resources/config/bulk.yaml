@@ -1,0 +1,4 @@
+services:
+  Idk\LegoBundle\Bulk\BulkDelete:
+    tags: [lego.bulk_action]
+    arguments: ["@doctrine.orm.entity_manager"]

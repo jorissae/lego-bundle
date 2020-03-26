@@ -14,6 +14,7 @@ use Idk\LegoBundle\Component\BrickInterface;
 use Idk\LegoBundle\DependencyInjection\Compiler\ComponentPass;
 //use Idk\LegoBundle\DependencyInjection\Compiler\WidgetPass;
 use Idk\LegoBundle\EditInPlaceType\EipTypeInterface;
+use Idk\LegoBundle\Service\BulkActionInterface;
 use Idk\LegoBundle\Service\RightBar\RightBarInterface;
 use Idk\LegoBundle\Widget\WidgetInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -54,6 +55,7 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $loader->load('components.yaml');
         $loader->load('widgets.yaml');
         $loader->load('actions.yaml');
+        $loader->load('bulk.yaml');
 
         $configuration = new Configuration();
         $processedConfig =  $this->processConfiguration($configuration, $configs);
@@ -73,6 +75,7 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $container->registerForAutoconfiguration(FilterTypeInterface::class)->addTag('lego.filter');
         $container->registerForAutoconfiguration(BrickInterface::class)->addTag('lego.component');
         $container->registerForAutoconfiguration(RightBarInterface::class)->addTag('lego.right_bar');
+        $container->registerForAutoconfiguration(BulkActionInterface::class)->addTag('lego.bulk_action');
        // $container->registerForAutoconfiguration(EipTypeInterface::class)->addTag('lego.eip');
         $container->registerForAutoconfiguration(WidgetInterface::class)->addTag('lego.widget');
         //exporter and batch and sidebar

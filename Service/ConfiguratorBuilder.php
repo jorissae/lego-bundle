@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Idk\LegoBundle\Configurator\DefaultConfigurator;
 use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfiguratorBuilder
 {
@@ -40,7 +41,7 @@ class ConfiguratorBuilder
         TokenStorageInterface $security,
         AuthorizationCheckerInterface $authorizationChecker,
         \Twig_Environment $twig,
-        TranslatorBagInterface $translator,
+        TranslatorInterface $translator,
         Router $router,
         ComponentChain $componentChain
 ){
