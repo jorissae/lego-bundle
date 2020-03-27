@@ -330,10 +330,10 @@ if(jsa) {
     };
 
     jsa.evt.legoDeleteLine = function (elm, data) {
-        if (data.status == 'ok') {
+        if (data.status === 'ok') {
             $('#' + elm.attr('data-line')).hide();
         } else {
-            this.error(data.message);
+            lego.error(data.message);
         }
     };
 

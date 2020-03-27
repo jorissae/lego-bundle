@@ -46,7 +46,7 @@ class Item extends Component implements EditInPlaceInterface {
     }
 
     public function getFields(){
-        $fields = array_merge($this->fields, $this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')));
+        $fields = array_merge($this->mem->generateFields($this->getConfigurator()->getEntityName(), $this->getOption('fields')), $this->fields);
         foreach($this->getOption('fields_exclude', []) as $excludeFieldName){
             unset($fields[$excludeFieldName]);
         }

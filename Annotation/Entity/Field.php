@@ -57,6 +57,8 @@ class Field
 
     private $options;
 
+    private $cssClass;
+
     /**
      * @param string $name     The name
      * @param string $header   The header
@@ -86,6 +88,7 @@ class Field
         $this->path = (isset($options['path']))? $options['path']:null;
         $this->edit_in_place = (isset($options['edit_in_place']))? $options['edit_in_place']:false;
         $this->template = (isset($options['template']))? $options['template']:null;
+        $this->cssClass = (isset($options['css_class']))? $options['css_class']:null;
         $this->twig = (isset($options['twig']))? $options['twig']:null;
         $this->style = (isset($options['style']))? $options['style']:null;
         $this->type = (isset($options['type']))? $options['type']:null;
@@ -285,6 +288,10 @@ class Field
 
     public function getSort(){
         return $this->sort;
+    }
+
+    public function getCssClass(){
+        return $this->cssClass;
     }
 
 

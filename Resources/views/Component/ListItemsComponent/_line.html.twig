@@ -7,7 +7,7 @@
     </td>
 {% endif %}
 {% for field in component.fields%}
-    <td>
+    <td {%  if field.cssClass %}class="{{ field.cssClass }}"{%  endif %}>
         {{ render_field_value(component, field, item) }}
     </td>
 {% endfor %}
