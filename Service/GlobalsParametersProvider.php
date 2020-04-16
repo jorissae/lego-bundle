@@ -29,6 +29,10 @@ class GlobalsParametersProvider
         return $this->params->get('lego.skin');
     }
 
+    public function getFavicon(){
+        return $this->params->get('lego.favicon');
+    }
+
     /**
      * @return mixed
      */

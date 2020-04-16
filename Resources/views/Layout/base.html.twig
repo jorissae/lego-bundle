@@ -6,7 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="icon" href="/bundles/idklego/images/favicon.ico" />
+    <link rel="icon" href="{{ lego_view.favicon ?? '/bundles/idklego/images/favicon.ico' }}" />
     {% block stylesheet %}
         <!-- Bootstrap 3.3.6 -->
         <link rel="stylesheet" href="/bundles/idklego/adminLte/bootstrap/css/bootstrap.min.css">

@@ -61,6 +61,7 @@ class IdkLegoExtension extends Extension implements ExtensionInterface, PrependE
         $processedConfig =  $this->processConfiguration($configuration, $configs);
 
         $container->setParameter( 'lego.skin', $processedConfig[ 'skin' ] );
+        $container->setParameter( 'lego.favicon', $processedConfig[ 'favicon' ] );
         $container->setParameter( 'lego.layout', $processedConfig[ 'layout' ] );
         $container->setParameter( 'lego.layout_login', $processedConfig[ 'layout_login' ] );
         $container->setParameter( 'lego.route.login', $processedConfig['route_login']);
