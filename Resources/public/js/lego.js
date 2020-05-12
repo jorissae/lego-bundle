@@ -67,7 +67,12 @@ $(function(){
                             }else{
                                 lego.error(data.message);
                             }
-                        });
+                        },
+                        function( xhr, ajaxOptions, thrownError) {
+                            console.log(xhr, ajaxOptions, thrownError);
+                            lego.error("Erreur action impossible");
+                        }
+                    );
                 }
             }});
     });
@@ -302,7 +307,7 @@ var lego = {
                 callback(data);
             },
             error : function(xhr, ajaxOptions, thrownError){
-                if (errorCallback) errorCallback(elm, xhr, ajaxOptions, thrownError);
+                if (errorCallback) errorCallback(xhr, ajaxOptions, thrownError);
             }
         });
     },

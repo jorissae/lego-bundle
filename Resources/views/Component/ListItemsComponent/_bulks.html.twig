@@ -9,7 +9,7 @@
                 <ul class="dropdown-menu" aria-labelledby="{{ component.gid('bulk-choice-btn') }}" id="dropdown-batch-bottom">
                     {% for action in component.bulkActions %}
                     <li>
-                        <a href="javascript:void(0)" onclick="{{ component.gid('showBatchForm') }}('{{ component.gid(action.id) }}','{{ action.icon }}', '{{ action.label }}')">
+                        <a href="javascript:void(0)" onclick="{{ component.gid('showBatchForm') }}('{{ component.gid(action.id) }}','{{ action.icon }}', '{{ action.label|trans }}')">
                             <span style="text-align:left;"><i class="fa fa-{{ action.icon }}"></i> {{ action.label|trans }}</span>
                             <span class="fa fa-angle-right"></span>
                         </a>
