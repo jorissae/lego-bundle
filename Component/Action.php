@@ -19,6 +19,7 @@ class Action extends Component{
     private $actions = [];
 
     const ADD = 'add';
+    const EDIT= 'edit';
     const BACK = 'back';
     const LOGS = 'logs';
     const EXPORT_CSV = 'export_csv';
@@ -64,6 +65,8 @@ class Action extends Component{
             }else{
                 if($action == self::ADD){
                     $action = new ListAction('lego.action.add', ['route'=>$this->getConfigurator()->getPathRoute('add'), 'params'=>$this->getConfigurator()->getPathParameters()]);
+                }elseif($action == self::EDIT){
+                    $action = new ListAction('lego.action.edit', ['route'=>$this->getConfigurator()->getPathRoute('edit'), 'params'=>$this->getConfigurator()->getPathParameters(['id'=>$request->get('id')])]);
                 }elseif($action == self::BACK){
                     if($request->headers->get('referer')){
                         $action = new ListAction('lego.action.back', ['url'=>$request->headers->get('referer')]);
