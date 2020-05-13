@@ -1,7 +1,7 @@
 {% extends lego_view.layout %}
-{% block title %}{{ parent() }} - {{configurator.getTitle()}}{% endblock %}
-{% block page_title %}{{configurator.getTitle()}}{% endblock %}
-{% block page_subtitle %}{{configurator.getSubTitle()}}{% endblock %}
+{% block title %}{{ parent() }} - {{configurator.getTitle()|trans}}{% endblock %}
+{% block page_title %}{{configurator.getTitle()|trans}}{% endblock %}
+{% block page_subtitle %}{{configurator.getSubTitle()|trans}}{% endblock %}
 
 
 
