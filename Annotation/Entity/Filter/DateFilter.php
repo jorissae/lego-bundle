@@ -15,7 +15,7 @@ use Idk\LegoBundle\FilterType\ORM as Type;
 /**
  * @Annotation
  */
-class DateFilter
+class DateFilter extends AbstractFilter
 {
 
 
