@@ -97,7 +97,7 @@ class StringFilterType extends AbstractORMFilterType
     {
         parent::load($columnName, $config, $alias);
         $this->defaultValue = (isset($config['defaultValue']))? $config['defaultValue']:"";
-        $this->defaultComparator = (isset($config['defaultComparator']))? $config['defaultComparator']:"startswith";
+        $this->defaultComparator = (isset($config['defaultComparator']))? $config['defaultComparator']:"contains";
     }
 
     public function getDefaultComparator() {
