@@ -60,6 +60,11 @@ class ManyToManyJoinType extends AbstractType
         $builder->addEventSubscriber($resizeListener);
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['prototype_name'] = $options['prototype_name'];
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
 
@@ -67,10 +72,15 @@ class ManyToManyJoinType extends AbstractType
             if(!isset($value['fields'])) {
                 $value = ['fields' => [], 'data_class' => $options['entity'], 'block_name' => 'entry', 'allow_extra_fields' => true, 'by_reference' => true];
                 foreach ($this->mem->generateFormFields($options['entity']) as $field) {
+                    if($field->getType() === self::class){
+                        $options = array_merge(['prototype_name'=> '__name'.$field->getName().'__'],$field->getOptions());
+                    }else{
+                        $options = $field->getOptions();
+                    }
                     $value['fields'][] = [
                         'name' => $field->getName(),
                         'type' => $field->getType(),
-                        'options' => $field->getOptions(),
+                        'options' => $options,
                     ];
                 }
             }

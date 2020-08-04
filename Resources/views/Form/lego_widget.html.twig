@@ -607,7 +607,9 @@ $(function(){
         function addForm{{ id }}($collectionHolder) {
             var index = $collectionHolder.data('index');
             var newLine = $collectionHolder.data('prototype');
-            newLine = $(newLine.replace(/__name__/g, index));
+
+            newLine = $(newLine.replace(/{{ prototype_name }}/g, index));
+
             $collectionHolder.data('index', index + 1);
             {% if allow_delete %}addFormDeleteLink{{ id }}(newLine);{%  endif %}
             $('#tbody_{{ id }}').append(newLine);
@@ -642,8 +644,6 @@ $(function(){
                 }
             });
             {%  endif %}
-
-
             collection.data('index', collection.find('tr').length);
         });
     </script>
