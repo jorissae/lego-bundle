@@ -80,9 +80,12 @@ class CsvManager{
         return $donnes;
     }
 
-    public function isUtf8($path){
-        //TODO
-        return false;
+    public function isUtf8($filename){
+        $info = finfo_open(FILEINFO_MIME_ENCODING);
+        $type = finfo_buffer($info, file_get_contents($filename));
+        finfo_close($info);
+
+        return ($type == 'utf-8' || $type == 'us-ascii');
     }
 
 }
