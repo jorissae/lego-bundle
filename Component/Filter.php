@@ -43,8 +43,7 @@ class Filter extends Component{
     }
 
     public function add($name, $class, $options){
-        $reflectionClass = new \ReflectionClass($class);
-        $this->getFilterBuilder()->add($reflectionClass->newInstance($name, $options));
+        $this->getFilterBuilder()->add($this->filterChain->get($class, $name, $options));
         return $this;
     }
 
