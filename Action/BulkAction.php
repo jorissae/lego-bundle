@@ -48,7 +48,7 @@ final class BulkAction extends AbstractAction
 
     }
 
-    public function getAllItems($configurateur, $request){
+    public function getAllItems($configurator, $request){
         $response = $this->comunicateComponents($configurator, $request);
         if($response){
             return $response;
