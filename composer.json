@@ -6,8 +6,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Joris saenger",
-            "email": "joris.saenger@gmail.com"
+            "name": "jsa"
         }
     ],
     "require": {
